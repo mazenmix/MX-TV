@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#080b11" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>MX Dollar — Iraq Market Monitor</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <style>
+    :root{
+      --bg:#080b11;--panel:#0f141d;--panel2:#121925;--line:#202a3a;--text:#f5f7fb;
+      --muted:#8d99aa;--green:#38d996;--red:#ff6472;--gold:#f3c75f;--blue:#7ca8ff;
+      --shadow:0 24px 70px rgba(0,0,0,.42);--radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{background:var(--bg);color-scheme:dark}
+    body{
+      margin:0;min-height:100vh;color:var(--text);
+      font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(900px 460px at 15% -10%,rgba(64,111,255,.16),transparent 62%),
+        radial-gradient(760px 430px at 92% 8%,rgba(243,199,95,.10),transparent 60%),
+        linear-gradient(180deg,#080b11 0%,#090d14 100%);
+    }
+    button{font:inherit}
+    .shell{width:min(1120px,calc(100% - 28px));margin:0 auto;padding:28px 0 34px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:20px;
+    }
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{
+      width:50px;height:50px;border-radius:16px;display:grid;place-items:center;
+      background:linear-gradient(145deg,#1b2331,#0d121b);border:1px solid #263247;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 12px 28px rgba(0,0,0,.34);
+    }
+    .logo svg{width:29px;height:29px}
+    .title h1{font-size:22px;letter-spacing:.2px;margin:0;font-weight:780}
+    .title p{margin:5px 0 0;color:var(--muted);font-size:13px}
+    .refresh{
+      border:1px solid #263247;background:#111824;color:#eaf0fa;height:44px;padding:0 16px;
+      border-radius:14px;display:flex;align-items:center;gap:9px;cursor:pointer;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);transition:.18s ease;
+    }
+    .refresh:hover{transform:translateY(-1px);border-color:#3a4b67;background:#141d2a}
+    .refresh:active{transform:translateY(0)}
+    .refresh svg{width:17px;height:17px}
+    .refresh.loading svg{animation:spin .72s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .hero{
+      background:linear-gradient(145deg,rgba(19,26,38,.95),rgba(11,15,23,.97));
+      border:1px solid #222d40;border-radius:28px;box-shadow:var(--shadow);
+      padding:26px;margin-bottom:18px;position:relative;overflow:hidden;
+    }
+    .hero:after{
+      content:"";position:absolute;width:300px;height:300px;right:-120px;top:-155px;border-radius:50%;
+      background:radial-gradient(circle,rgba(124,168,255,.14),transparent 66%);pointer-events:none;
+    }
+    .herohead{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:24px}
+    .eyebrow{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#7f91aa;font-weight:750}
+    .big{font-size:clamp(34px,6vw,58px);font-weight:830;letter-spacing:-2.2px;margin:8px 0 2px}
+    .big span{font-size:.34em;letter-spacing:.2px;color:#8e9bad;font-weight:700;margin-left:7px}
+    .delta{display:flex;align-items:center;gap:7px;color:var(--green);font-size:13px;font-weight:700;margin-top:7px}
+    .live{
+      display:inline-flex;align-items:center;gap:8px;border:1px solid #243047;background:#101722;
+      border-radius:999px;padding:8px 11px;color:#a9b4c4;font-size:11px;white-space:nowrap
+    }
+    .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(56,217,150,.10)}
+    .marketgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .market{
+      border:1px solid #202b3d;background:linear-gradient(180deg,#111824,#0e141e);
+      border-radius:18px;padding:16px 17px;
+    }
+    .market .name{color:#a6b2c2;font-size:12px;margin-bottom:8px}
+    .market .value{font-size:23px;font-weight:790;letter-spacing:-.7px}
+    .market .unit{font-size:11px;color:#758298;margin-left:4px}
+    .move{margin-top:9px;font-size:11px;font-weight:720}
+    .up{color:var(--green)} .down{color:var(--red)} .flat{color:#8996a8}
+    .content{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+    .card{
+      background:linear-gradient(160deg,#101620,#0c1119);border:1px solid #202a3a;border-radius:var(--radius);
+      box-shadow:0 18px 48px rgba(0,0,0,.25);padding:20px;
+    }
+    .cardhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+    .cardtitle{display:flex;align-items:center;gap:9px;font-weight:780;font-size:15px}
+    .coin{
+      width:30px;height:30px;border-radius:10px;display:grid;place-items:center;
+      color:#131009;background:linear-gradient(145deg,#ffe18e,#c69736);font-weight:900;font-size:14px;
+      box-shadow:0 8px 22px rgba(243,199,95,.14)
+    }
+    .tag{font-size:10px;color:#8190a3;border:1px solid #253247;border-radius:999px;padding:6px 8px}
+    .goldrow{
+      display:grid;grid-template-columns:90px 1fr auto;align-items:center;gap:14px;
+      padding:14px 0;border-bottom:1px solid #1b2533
+    }
+    .goldrow:last-child{border-bottom:0}
+    .karat{font-size:13px;color:#a4b0c1;font-weight:690}
+    .bar{height:5px;background:#161f2d;border-radius:99px;overflow:hidden}
+    .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#9f7930,#f3c75f)}
+    .gprice{text-align:right;font-size:15px;font-weight:780}
+    .gprice small{display:block;color:#748195;font-size:9px;margin-top:3px;font-weight:600}
+    .mithqal{
+      margin-top:15px;padding:16px;border-radius:17px;
+      background:linear-gradient(145deg,rgba(243,199,95,.12),rgba(243,199,95,.035));
+      border:1px solid rgba(243,199,95,.22);display:flex;justify-content:space-between;align-items:center;gap:12px
+    }
+    .mithqal .m1{font-size:12px;color:#d5bc7a}.mithqal .m2{font-size:20px;font-weight:820;color:#ffe293}
+    .side{display:flex;flex-direction:column;gap:18px}
+    .status{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .stat{border:1px solid #1f2a3b;border-radius:16px;background:#0e151f;padding:14px}
+    .stat label{display:block;color:#728096;font-size:10px;margin-bottom:7px;text-transform:uppercase;letter-spacing:.8px}
+    .stat strong{font-size:13px}
+    .source{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #1b2533}
+    .source:last-child{border-bottom:0}
+    .source span{font-size:12px;color:#9eabbd}.ok{color:var(--green)!important;font-weight:720}
+    .foot{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:18px;
+      color:#6f7c8f;font-size:11px;padding:0 4px
+    }
+    .signature{color:#9ca9ba;font-weight:750;letter-spacing:.5px}
+    .preview{
+      position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(120px);
+      background:#e8edf6;color:#111722;border-radius:14px;padding:11px 15px;font-size:12px;font-weight:750;
+      box-shadow:0 18px 50px rgba(0,0,0,.4);opacity:0;transition:.28s ease;z-index:10
+    }
+    .preview.show{transform:translateX(-50%) translateY(0);opacity:1}
+    @media(max-width:760px){
+      .shell{width:min(100% - 18px,620px);padding-top:16px}
+      .topbar{margin-bottom:13px}.logo{width:45px;height:45px;border-radius:14px}
+      .title h1{font-size:19px}.title p{font-size:11px}.refresh span{display:none}.refresh{width:44px;padding:0;justify-content:center}
+      .hero{padding:19px;border-radius:23px}.herohead{margin-bottom:18px}.big{font-size:39px}
+      .marketgrid{grid-template-columns:1fr}.market{display:grid;grid-template-columns:1fr auto;align-items:center}
+      .market .name{margin:0}.market .value{font-size:20px}.move{grid-column:1/-1;margin-top:5px}
+      .content{grid-template-columns:1fr}.card{padding:17px;border-radius:20px}.goldrow{grid-template-columns:64px 1fr auto;gap:10px}
+      .foot{padding-bottom:9px}
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none">
+            <path d="M10 45 31 10l23 35h-9L31 24 18 45h-8Z" fill="#F4C95F"/>
+            <path d="M22 45 31 30l10 15h-7l-3-5-3 5h-6Z" fill="#F4F6FA"/>
+          </svg>
+        </div>
+        <div class="title"><h1>MX Dollar</h1><p>Iraq market monitor</p></div>
+      </div>
+      <button class="refresh" id="refresh" type="button" aria-label="Refresh">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 6v5h-5"/><path d="M4 18v-5h5"/><path d="M18.5 9A7 7 0 0 0 6 6.5L4 9M5.5 15A7 7 0 0 0 18 17.5l2-2.5"/>
+        </svg><span>Refresh</span>
+      </button>
+    </header>
+
+    <section class="hero">
+      <div class="herohead">
+        <div>
+          <div class="eyebrow">USD / IQD · Baghdad</div>
+          <div class="big">149,250 <span>IQD / $100</span></div>
+          <div class="delta">▲ 250 &nbsp;·&nbsp; +0.17%</div>
+        </div>
+        <div class="live"><i class="dot"></i> PREVIEW</div>
+      </div>
+      <div class="marketgrid">
+        <div class="market"><div class="name">Kifah Market</div><div><span class="value">149,250</span><span class="unit">IQD</span></div><div class="move up">▲ 250</div></div>
+        <div class="market"><div class="name">Harithiya</div><div><span class="value">149,500</span><span class="unit">IQD</span></div><div class="move up">▲ 500</div></div>
+        <div class="market"><div class="name">Kukh Alomlat</div><div><span class="value">149,100</span><span class="unit">IQD</span></div><div class="move down">▼ 100</div></div>
+      </div>
+    </section>
+
+    <div class="content">
+      <section class="card">
+        <div class="cardhead">
+          <div class="cardtitle"><div class="coin">Au</div> Gold Iraq</div>
+          <div class="tag">IQD / gram</div>
+        </div>
+        <div class="goldrow"><div class="karat">18K</div><div class="bar"><i style="width:75%"></i></div><div class="gprice">92,800<small>IQD / g</small></div></div>
+        <div class="goldrow"><div class="karat">21K</div><div class="bar"><i style="width:88%"></i></div><div class="gprice">108,250<small>IQD / g</small></div></div>
+        <div class="goldrow"><div class="karat">24K</div><div class="bar"><i style="width:100%"></i></div><div class="gprice">123,700<small>IQD / g</small></div></div>
+        <div class="mithqal">
+          <div><div class="m1">21K MITHQAL · 5 g</div><div style="font-size:10px;color:#7f8997;margin-top:4px">Iraq standard display</div></div>
+          <div class="m2">541,250</div>
+        </div>
+      </section>
+
+      <div class="side">
+        <section class="card">
+          <div class="cardhead"><div class="cardtitle">Market Status</div><div class="tag">Auto</div></div>
+          <div class="status">
+            <div class="stat"><label>Connection</label><strong style="color:var(--green)">Online</strong></div>
+            <div class="stat"><label>Refresh</label><strong>60 sec</strong></div>
+            <div class="stat"><label>Currency</label><strong>IQD</strong></div>
+            <div class="stat"><label>Mode</label><strong>Dark</strong></div>
+          </div>
+        </section>
+        <section class="card">
+          <div class="cardhead"><div class="cardtitle">Sources</div><div class="tag">3 active</div></div>
+          <div class="source"><span>Kifah Market</span><span class="ok">● Active</span></div>
+          <div class="source"><span>Harithiya</span><span class="ok">● Active</span></div>
+          <div class="source"><span>Kukh Alomlat</span><span class="ok">● Active</span></div>
+        </section>
+      </div>
+    </div>
+
+    <footer class="foot">
+      <span id="updated">Updated just now</span>
+      <span class="signature">MazenmiX</span>
+    </footer>
+  </main>
+  <div class="preview" id="toast">MX Dollar refreshed</div>
+
+  <script>
+    const refresh = document.getElementById('refresh');
+    const updated = document.getElementById('updated');
+    const toast = document.getElementById('toast');
+    const stamp = () => {
+      const d = new Date();
+      updated.textContent = 'Updated ' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    };
+    stamp();
+    refresh.addEventListener('click', () => {
+      refresh.classList.add('loading');
+      setTimeout(() => {
+        refresh.classList.remove('loading');
+        stamp();
+        toast.classList.add('show');
+        setTimeout(()=>toast.classList.remove('show'),1500);
+      },650);
+    });
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  </script>
+</body>
+</html>
