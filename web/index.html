@@ -12,8 +12,8 @@
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;min-height:100%;overflow-x:hidden;overflow-y:auto;background:#070a0f;color:#f5f7fa;font-family:"Segoe UI",Tahoma,Arial,sans-serif}
 body{display:grid;place-items:center}
-#viewport{position:relative;width:760px;height:1160px;transform-origin:center center}
-#app{position:absolute;inset:0;width:760px;height:1160px;background:#0a0e14;overflow:hidden;box-shadow:0 26px 80px rgba(0,0,0,.55)}
+#viewport{position:relative;width:760px;height:708px;transform-origin:center center}
+#app{position:absolute;inset:0;width:760px;height:708px;background:#0a0e14;overflow:hidden;box-shadow:0 26px 80px rgba(0,0,0,.55)}
 .abs{position:absolute}
 .header{left:0;top:0;width:760px;height:76px;background:#0d121a;border-bottom:1px solid #232a34}
 .brandbox{left:28px;top:18px;width:40px;height:40px;border-radius:20px;background:#19212d;border:1px solid #cca855;display:flex;align-items:center;justify-content:center;color:#e5c576;font-weight:700;font-size:24px;direction:ltr}
@@ -53,30 +53,13 @@ body{display:grid;place-items:center}
 .gprice{left:16px;top:55px;right:16px;height:40px;display:flex;align-items:center;justify-content:center;color:#f6f2e6;direction:ltr;font-size:24px;font-weight:700}
 .giqd{left:16px;top:93px;right:16px;height:19px;display:flex;align-items:center;justify-content:center;color:#7c735b;direction:rtl;font-size:11px;font-weight:600}
 
-.ex-title{left:28px;top:610px;width:330px;height:30px;direction:rtl;text-align:left;line-height:30px;color:#83c0f7;font-size:17px;font-weight:700}
-.ex-note{left:365px;top:610px;width:367px;height:30px;direction:rtl;text-align:right;line-height:30px;color:#7d8999;font-size:11px;font-weight:600}
-.exgrid{position:absolute;left:28px;top:646px;width:704px;display:grid;grid-template-columns:repeat(3,220px);gap:14px 22px}
-.excard{height:122px;border-radius:18px;background:#0f151e;border:1px solid #253140;padding:10px 12px 9px;direction:rtl;overflow:hidden}
-.exhead{height:40px;display:flex;flex-direction:column;align-items:stretch;justify-content:center;border-bottom:1px solid #1d2734;padding-bottom:6px}
-.exname{display:block;width:100%;color:#dce4ec;font-size:12.5px;font-weight:700;line-height:18px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.exarea{display:block;width:100%;color:#7d8999;font-size:9.5px;line-height:14px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.exvals{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px;direction:ltr}
-.exbuy,.exsell{height:34px;border-radius:10px;background:#111923;border:1px solid #202b39;display:flex;align-items:center;justify-content:space-between;padding:0 7px;direction:rtl}
-.exval{font-size:12px;font-weight:700;color:#f2f5f8;direction:ltr;white-space:nowrap}
-.exlbl{font-size:9px;font-weight:700;direction:rtl}
-.exsell .exlbl{color:#dca062}.exbuy .exlbl{color:#5bcc94}
-.exfoot{height:24px;margin-top:6px;display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:8.8px;line-height:22px}
-.exstatus{color:#8d98a7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:128px}
-.exstatus.liveprice{color:#67e0a8}.exstatus.stale{color:#e4b365}.exstatus.none{color:#8d98a7}
-.exsource{color:#67b7f2;text-decoration:none;font-weight:700;white-space:nowrap}
-.exsource:hover{text-decoration:underline}
-.footer{left:28px;top:1060px;width:704px;height:72px;border-radius:20px;background:#0d121a}
+.footer{left:28px;top:610px;width:704px;height:72px;border-radius:20px;background:#0d121a}
 .updated{left:10px;top:7px;width:494px;height:29px;display:flex;align-items:center;justify-content:center;direction:rtl;color:#768292;font-size:12px;font-weight:600;white-space:nowrap}
 .sig{left:10px;top:34px;width:494px;height:28px;display:flex;align-items:center;justify-content:center;color:#e5c576;font-size:13px;font-weight:700;direction:ltr}
 .refresh{left:517px;top:14px;width:177px;height:46px;border:0;border-radius:14px;background:#2470a8;color:#f5f9fc;font-size:13px;font-weight:700;direction:rtl;cursor:pointer}
 .refresh:hover{filter:brightness(1.08)}.refresh:active{filter:brightness(.94)}
 .refresh:disabled{cursor:default;filter:none}
-.err{left:28px;top:1133px;width:704px;height:19px;text-align:center;direction:rtl;color:#7f8b9a;font-size:10px;line-height:19px}
+.err{left:28px;top:683px;width:704px;height:19px;text-align:center;direction:rtl;color:#7f8b9a;font-size:10px;line-height:19px}
 </style>
 </head>
 <body>
@@ -114,20 +97,6 @@ body{display:grid;place-items:center}
   <section class="goldcard g21"><div class="kbadge abs">21K</div><div class="kar abs">عيار 21</div><div class="gprice abs" id="g21">973,197</div><div class="giqd abs">د.ع</div></section>
   <section class="goldcard g24"><div class="kbadge abs">24K</div><div class="kar abs">عيار 24</div><div class="gprice abs" id="g24">1,112,225</div><div class="giqd abs">د.ع</div></section>
 
-  <div class="ex-title abs">شركات صيرفة معروفة في بغداد</div>
-  <div class="ex-note abs">كل كرت يعتمد مصدر الصيرفة نفسها فقط</div>
-  <section class="exgrid" id="exchangeGrid">
-    <div class="excard"><div class="exhead"><div class="exname">شركة الطيف للصيرفة</div><div class="exarea">الكرادة داخل / بغداد</div></div><div class="exvals"><div class="exbuy"><span class="exlbl">شراء</span><span class="exval">غير منشور</span></div><div class="exsell"><span class="exlbl">بيع</span><span class="exval">غير منشور</span></div></div><div class="exfoot"><span class="exstatus none">لوحة Forex موجودة؛ السعر النقدي غير قابل للقراءة آلياً حالياً</span><a class="exsource" href="https://taif.money/" target="_blank" rel="noopener">المصدر ↗</a></div></div>
-    <div class="excard"><div class="exhead"><div class="exname">شركة الفنجان للصرافة</div><div class="exarea">الكرادة / فروع بغداد</div></div><div class="exvals"><div class="exbuy"><span class="exlbl">شراء</span><span class="exval">غير منشور</span></div><div class="exsell"><span class="exlbl">بيع</span><span class="exval">غير منشور</span></div></div><div class="exfoot"><span class="exstatus none">غير منشور</span><a class="exsource" href="https://t.me/s/alfenganexchange" target="_blank" rel="noopener">المصدر ↗</a></div></div>
-    <div class="excard"><div class="exhead"><div class="exname">شركة القند للصرافة</div><div class="exarea">المنصور</div></div><div class="exvals"><div class="exbuy"><span class="exlbl">شراء</span><span class="exval">غير منشور</span></div><div class="exsell"><span class="exlbl">بيع</span><span class="exval">غير منشور</span></div></div><div class="exfoot"><span class="exstatus none">غير منشور</span><a class="exsource" href="https://t.me/s/alqand_iq" target="_blank" rel="noopener">المصدر ↗</a></div></div>
-    <div class="excard"><div class="exhead"><div class="exname">شركة سما بغداد للصرافة</div><div class="exarea">السعدون / فروع بغداد</div></div><div class="exvals"><div class="exbuy"><span class="exlbl">شراء</span><span class="exval">غير منشور</span></div><div class="exsell"><span class="exlbl">بيع</span><span class="exval">132,000 رسمي</span></div></div><div class="exfoot"><span class="exstatus none">سعر 1320 الرسمي منشور؛ شراء السوق غير منشور</span><a class="exsource" href="https://samabaghdad-ex.iq/" target="_blank" rel="noopener">المصدر ↗</a></div></div>
-    <div class="excard"><div class="exhead"><div class="exname">شركة الأثير للصرافة</div><div class="exarea">العرصات الهندية</div></div><div class="exvals"><div class="exbuy"><span class="exlbl">شراء</span><span class="exval">غير منشور</span></div><div class="exsell"><span class="exlbl">بيع</span><span class="exval">غير منشور</span></div></div><div class="exfoot"><span class="exstatus none">لا يوجد شراء/بيع سوق منشور</span><a class="exsource" href="https://al-atheer.iq/" target="_blank" rel="noopener">المصدر ↗</a></div></div>
-    <div class="excard"><div class="exhead"><div class="exname">شركة الميار للصرافة</div><div class="exarea">ساحة كهرمانة</div></div><div class="exvals"><div class="exbuy"><span class="exlbl">شراء</span><span class="exval">غير منشور</span></div><div class="exsell"><span class="exlbl">بيع</span><span class="exval">غير منشور</span></div></div><div class="exfoot"><span class="exstatus none">لا يوجد شراء/بيع سوق منشور</span><a class="exsource" href="https://almayarex.com/" target="_blank" rel="noopener">المصدر ↗</a></div></div>
-    <div class="excard"><div class="exhead"><div class="exname">شركة كربلاء للصيرفة</div><div class="exarea">الحارثية / مقابل معرض بغداد الدولي</div></div><div class="exvals"><div class="exbuy"><span class="exlbl">شراء</span><span class="exval">غير منشور</span></div><div class="exsell"><span class="exlbl">بيع</span><span class="exval">غير منشور</span></div></div><div class="exfoot"><span class="exstatus none">لا يوجد سعر سوق علني قابل للقراءة حالياً</span><a class="exsource" href="https://www.facebook.com/karbala.exchange" target="_blank" rel="noopener">المصدر ↗</a></div></div>
-    <div class="excard"><div class="exhead"><div class="exname">شركة الريان للصرافة</div><div class="exarea">المنصور / شارع 14 رمضان</div></div><div class="exvals"><div class="exbuy"><span class="exlbl">شراء</span><span class="exval">غير منشور</span></div><div class="exsell"><span class="exlbl">بيع</span><span class="exval">132,000 مسافرين</span></div></div><div class="exfoot"><span class="exstatus none">آخر سعر منشور للمسافرين؛ سعر السوق غير منشور</span><a class="exsource" href="https://t.me/s/rayyanexco" target="_blank" rel="noopener">المصدر ↗</a></div></div>
-    <div class="excard"><div class="exhead"><div class="exname">صيرفة الزهراء</div><div class="exarea">الكرادة / شارع محمد كبة</div></div><div class="exvals"><div class="exbuy"><span class="exlbl">شراء</span><span class="exval">غير منشور</span></div><div class="exsell"><span class="exlbl">بيع</span><span class="exval">غير منشور</span></div></div><div class="exfoot"><span class="exstatus none">لم أجد مصدراً رسمياً موثقاً</span><span class="exsource" style="color:#66717f">بلا مصدر</span></div></div>
-  </section>
-
   <section class="footer abs">
     <div class="updated abs" id="updated">آخر تحديث: --:--:--</div>
     <div class="sig abs">MazenmiX</div>
@@ -146,7 +115,7 @@ function fit(){
   const s=Math.min(innerWidth/760,1);
   const vp=$('viewport');
   vp.style.transform='scale('+s+')';
-  vp.style.height=(1160*s)+'px';
+  vp.style.height=(708*s)+'px';
   vp.style.width=(760*s)+'px';
   vp.style.margin='0 auto';
 }
@@ -161,28 +130,6 @@ function clockFromIso(iso){
   }catch(e){
     return new Date().toLocaleTimeString('ar-IQ');
   }
-}
-
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function exchangeVal(v){return v?fmt(v):'غير منشور';}
-function renderExchanges(exchanges){
-  if(exchanges.sama){exchanges.sama.buy_text='غير منشور';exchanges.sama.sell_text='132,000 رسمي';exchanges.sama.status='سعر 1320 الرسمي منشور؛ شراء السوق غير منشور';}
-  if(exchanges.rayyan){exchanges.rayyan.buy_text='غير منشور';exchanges.rayyan.sell_text='132,000 مسافرين';exchanges.rayyan.status='آخر سعر منشور للمسافرين؛ سعر السوق غير منشور';}
-  const order=['taif','finjan','qand','sama','atheer','mayar','karbala','rayyan','zahra'];
-  const grid=$('exchangeGrid');
-  grid.innerHTML=order.map(k=>{
-    const x=exchanges[k]||{};
-    const cls=x.state==='live'?'liveprice':x.state==='stale'?'stale':'none';
-    const source=x.source_url?'<a class="exsource" href="'+esc(x.source_url)+'" target="_blank" rel="noopener">المصدر ↗</a>':'<span class="exsource" style="color:#66717f">بلا مصدر</span>';
-    const buyText=x.buy_text||esc(buyText);
-    const sellText=x.sell_text||esc(sellText);
-    return '<div class="excard">'+
-      '<div class="exhead"><div class="exname">'+esc(x.name||k)+'</div><div class="exarea">'+esc(x.area||'')+'</div></div>'+
-      '<div class="exvals"><div class="exbuy"><span class="exlbl">شراء</span><span class="exval">'+exchangeVal(x.buy)+'</span></div>'+
-      '<div class="exsell"><span class="exlbl">بيع</span><span class="exval">'+exchangeVal(x.sell)+'</span></div></div>'+
-      '<div class="exfoot"><span class="exstatus '+cls+'">'+esc(x.status||'غير منشور')+'</span>'+source+'</div>'+
-    '</div>';
-  }).join('');
 }
 
 function render(d){
@@ -200,7 +147,6 @@ function render(d){
   $('g18').textContent=fmt(d.gold.k18);
   $('g21').textContent=fmt(d.gold.k21);
   $('g24').textContent=fmt(d.gold.k24);
-  renderExchanges(d.exchanges||{});
   $('updated').textContent='آخر تحديث: '+clockFromIso(d.updated_at);
 }
 
