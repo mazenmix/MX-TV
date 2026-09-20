@@ -1,0 +1,33 @@
+name: Update MX Dollar market data
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "web/update_market.py"
+      - ".github/workflows/update-mx-dollar-data.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch latest market data
+        run: python web/update_market.py
+      - name: Commit market data
+        run: |
+          git config user.name "MX Dollar Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add web/data.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update MX Dollar market data"
+          git push
