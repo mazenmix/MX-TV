@@ -16,7 +16,7 @@ def strip(s):
     s = re.sub(r"(?is)<script.*?</script>|<style.*?</style>", " ", s)
     s = re.sub(r"(?s)<[^>]*>", "\n", s)
     s = htmlmod.unescape(s).replace("\u200f"," ").replace("\u200e"," ")
-    return re.sub(r"\s+"," ",s)
+    return re.sub(r"\s+"," ",s).strip()
 
 def norm_price(s):
     s=s.strip()
@@ -30,18 +30,32 @@ def norm_price(s):
     n=int(s)
     return n*100 if 1000 <= n <= 9999 else n
 
-def parse_market(txt,name):
-    patterns=[
+def parse_market(text,name):
+    for p in [
         rf"{name}\s*([0-9]{{3,4}}(?:\.[0-9]{{2}})?)\s*\|\s*([0-9]{{3,4}}(?:\.[0-9]{{2}})?)",
         rf"{name}\s*([0-9]{{1,3}}(?:,[0-9]{{3}}))\s*\|\s*([0-9]{{1,3}}(?:,[0-9]{{3}}))",
-    ]
-    found=[]
-    for p in patterns:
-        found += re.findall(p,txt)
-    if not found:
-        return None
-    buy,sell=found[-1]
-    return {"buy":norm_price(buy),"sell":norm_price(sell)}
+    ]:
+        m=re.search(p,text)
+        if m:
+            return {"buy":norm_price(m.group(1)),"sell":norm_price(m.group(2))}
+    return None
+
+def parse_baghdad_same_post(body):
+    blocks=re.findall(r'(?is)<div[^>]+class="[^"]*tgme_widget_message_text[^"]*"[^>]*>(.*?)</div>',body)
+    for raw in reversed(blocks):
+        txt=strip(raw)
+        if "كفاح" not in txt or "حارثية" not in txt:
+            continue
+        k=parse_market(txt,"كفاح")
+        h=parse_market(txt,"حارثية")
+        if k and h:
+            tm=re.search(r"تحديث\s*([0-9]{1,2}:[0-9]{2})",txt)
+            return k,h,(tm.group(1) if tm else "")
+    # Safe fallback: use the whole page only if both can be parsed.
+    txt=strip(body)
+    k=parse_market(txt,"كفاح")
+    h=parse_market(txt,"حارثية")
+    return k,h,""
 
 def get_gold(txt,k):
     m=re.search(rf"مثقال ذهب عيار\s*{k}[^0-9]{{0,100}}([0-9]{{1,3}}(?:,[0-9]{{3}}){{1,2}})\s*د\.ع",txt)
@@ -53,16 +67,22 @@ if OUT.exists():
     except Exception: old={}
 
 errors=[]
-data={"kifah":old.get("kifah",{}),"harithiya":old.get("harithiya",{}),"gold":old.get("gold",{})}
+data={
+    "kifah":old.get("kifah",{}),
+    "harithiya":old.get("harithiya",{}),
+    "gold":old.get("gold",{}),
+    "usd_source_time":old.get("usd_source_time",""),
+}
 
 try:
-    t=strip(fetch("https://t.me/s/dollariraqi"))
-    k=parse_market(t,"كفاح")
-    h=parse_market(t,"حارثية")
-    if k: data["kifah"]=k
-    else: errors.append("kifah")
-    if h: data["harithiya"]=h
-    else: errors.append("harithiya")
+    body=fetch("https://t.me/s/dollariraqi")
+    k,h,src_time=parse_baghdad_same_post(body)
+    if k and h:
+        data["kifah"]=k
+        data["harithiya"]=h
+        data["usd_source_time"]=src_time
+    else:
+        errors.append("usd-parse")
 except Exception as e:
     errors.append("usd:"+type(e).__name__)
 
@@ -79,7 +99,7 @@ try:
     if k21 and k24:
         data["gold"]={"k18":k18,"k21":k21,"k24":k24}
     else:
-        errors.append("gold")
+        errors.append("gold-parse")
 except Exception as e:
     errors.append("gold:"+type(e).__name__)
 
