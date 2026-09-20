@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0A0E14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>MX Dollar</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;min-height:100%;overflow-x:hidden;overflow-y:auto;background:#070a0f;color:#f5f7fa;font-family:"Segoe UI",Tahoma,Arial,sans-serif}
+body{display:grid;place-items:center}
+#viewport{position:relative;width:760px;height:1160px;transform-origin:center center}
+#app{position:absolute;inset:0;width:760px;height:1160px;background:#0a0e14;overflow:hidden;box-shadow:0 26px 80px rgba(0,0,0,.55)}
+.abs{position:absolute}
+.header{left:0;top:0;width:760px;height:76px;background:#0d121a;border-bottom:1px solid #232a34}
+.brandbox{left:28px;top:18px;width:40px;height:40px;border-radius:20px;background:#19212d;border:1px solid #cca855;display:flex;align-items:center;justify-content:center;color:#e5c576;font-weight:700;font-size:24px;direction:ltr}
+.brand{left:82px;top:17px;width:218px;height:27px;direction:ltr;text-align:left;font-weight:700;font-size:24px;line-height:27px;color:#f5f7fa}
+.subtitle{left:82px;top:43px;width:218px;height:18px;direction:ltr;text-align:left;font-weight:600;font-size:12px;line-height:18px;color:#7d8999;letter-spacing:.2px}
+.live{right:28px;top:24px;width:88px;height:28px;border-radius:14px;background:#132b23;display:flex;align-items:center;justify-content:center;gap:8px;direction:ltr;color:#67e0a8;font-weight:700;font-size:12px}
+.live i{width:8px;height:8px;border-radius:50%;background:#4bd197;display:block}
+
+.hero{left:28px;top:98px;width:704px;height:184px;border-radius:24px;background:#10161f;border:1px solid #2b3441;overflow:hidden}
+.accent{left:0;top:0;width:10px;height:184px;border-radius:6px;background:#59b5ff}
+.usdlabel{left:27px;top:20px;width:195px;height:28px;direction:ltr;text-align:left;font-size:15px;font-weight:700;line-height:28px;color:#83c0f7}
+.heroar{left:27px;top:48px;width:285px;height:29px;text-align:left;direction:rtl;font-size:16px;font-weight:600;line-height:29px;color:#acb5c1}
+.mainprice{left:27px;top:73px;width:355px;height:63px;direction:ltr;text-align:left;font-size:45px;line-height:63px;font-weight:700;color:#f8fafc;letter-spacing:-1px}
+.iqd{left:379px;top:87px;width:61px;height:41px;direction:rtl;text-align:left;font-size:16px;line-height:41px;font-weight:700;color:#8894a3}
+.chip{position:absolute;left:472px;width:197px;height:53px;border-radius:15px;display:flex;align-items:center}
+.buy{top:27px;background:#12251f}.sell{top:92px;background:#2a1f19}
+.chiplabel{width:85px;text-align:center;direction:rtl;font-weight:600;font-size:13px}
+.buy .chiplabel{color:#67e0a8}.sell .chiplabel{color:#f1b46f}
+.chipval{width:95px;text-align:right;direction:ltr;font-weight:700;font-size:17px}
+.buy .chipval{color:#e6eeea}.sell .chipval{color:#f6ece0}
+
+.source{position:absolute;top:302px;width:343px;height:97px;border-radius:18px;background:#0f151e;border:1px solid #252e3a}
+.s1{left:28px}.s2{left:389px}
+.code{left:20px;top:14px;width:80px;height:24px;direction:ltr;text-align:left;line-height:24px;color:#68b2ec;font-size:12px;font-weight:700}
+.arname{left:108px;top:12px;right:18px;height:28px;direction:rtl;text-align:right;line-height:28px;color:#b9c2cd;font-size:13px;font-weight:600}
+.selllab{left:20px;top:49px;width:45px;height:29px;direction:rtl;text-align:left;line-height:29px;color:#dca062;font-size:12px;font-weight:600}
+.sellvalue{left:70px;top:48px;width:90px;height:30px;direction:ltr;text-align:left;line-height:30px;color:#f2f5f8;font-size:17px;font-weight:700}
+.buylab{left:190px;top:49px;width:53px;height:29px;direction:rtl;text-align:left;line-height:29px;color:#5bcc94;font-size:12px;font-weight:600}
+.buyvalue{left:245px;top:48px;right:18px;height:30px;direction:ltr;text-align:right;line-height:30px;color:#f2f5f8;font-size:17px;font-weight:700}
+
+.goldtitle{left:28px;top:424px;width:292px;height:30px;direction:ltr;text-align:left;line-height:30px;color:#e5c576;font-size:17px;font-weight:700}
+.goldsub{left:440px;top:424px;width:292px;height:30px;direction:rtl;text-align:right;line-height:30px;color:#7d8999;font-size:13px;font-weight:600}
+.goldcard{position:absolute;top:466px;width:220px;height:120px;border-radius:18px;background:#12161c;border:1px solid #3b3425}
+.g18{left:28px}.g21{left:270px}.g24{left:512px}
+.kbadge{left:16px;top:15px;width:53px;height:28px;border-radius:14px;background:#302818;color:#e5c576;display:grid;place-items:center;direction:ltr;font-size:12px;font-weight:700}
+.kar{left:82px;top:15px;right:15px;height:28px;display:flex;align-items:center;justify-content:flex-end;color:#97a0ac;direction:rtl;font-size:12px;font-weight:600}
+.gprice{left:16px;top:55px;right:16px;height:40px;display:flex;align-items:center;justify-content:center;color:#f6f2e6;direction:ltr;font-size:24px;font-weight:700}
+.giqd{left:16px;top:93px;right:16px;height:19px;display:flex;align-items:center;justify-content:center;color:#7c735b;direction:rtl;font-size:11px;font-weight:600}
+
+.ex-title{left:28px;top:610px;width:330px;height:30px;direction:rtl;text-align:left;line-height:30px;color:#83c0f7;font-size:17px;font-weight:700}
+.ex-note{left:365px;top:610px;width:367px;height:30px;direction:rtl;text-align:right;line-height:30px;color:#7d8999;font-size:11px;font-weight:600}
+.exgrid{position:absolute;left:28px;top:646px;width:704px;display:grid;grid-template-columns:repeat(3,220px);gap:14px 22px}
+.excard{height:122px;border-radius:18px;background:#0f151e;border:1px solid #253140;padding:10px 12px 9px;direction:rtl;overflow:hidden}
+.exhead{height:40px;display:flex;flex-direction:column;align-items:stretch;justify-content:center;border-bottom:1px solid #1d2734;padding-bottom:6px}
+.exname{display:block;width:100%;color:#dce4ec;font-size:12.5px;font-weight:700;line-height:18px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.exarea{display:block;width:100%;color:#7d8999;font-size:9.5px;line-height:14px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.exvals{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px;direction:ltr}
+.exbuy,.exsell{height:34px;border-radius:10px;background:#111923;border:1px solid #202b39;display:flex;align-items:center;justify-content:space-between;padding:0 7px;direction:rtl}
+.exval{font-size:12.5px;font-weight:700;color:#f2f5f8;direction:ltr}
+.exlbl{font-size:9px;font-weight:700;direction:rtl}
+.exsell .exlbl{color:#dca062}.exbuy .exlbl{color:#5bcc94}
+.exfoot{height:24px;margin-top:6px;display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:8.8px;line-height:22px}
+.exstatus{color:#8d98a7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:128px}
+.exstatus.liveprice{color:#67e0a8}.exstatus.stale{color:#e4b365}.exstatus.none{color:#8d98a7}
+.exsource{color:#67b7f2;text-decoration:none;font-weight:700;white-space:nowrap}
+.exsource:hover{text-decoration:underline}
+.footer{left:28px;top:1060px;width:704px;height:72px;border-radius:20px;background:#0d121a}
+.updated{left:10px;top:7px;width:494px;height:29px;display:flex;align-items:center;justify-content:center;direction:rtl;color:#768292;font-size:12px;font-weight:600;white-space:nowrap}
+.sig{left:10px;top:34px;width:494px;height:28px;display:flex;align-items:center;justify-content:center;color:#e5c576;font-size:13px;font-weight:700;direction:ltr}
+.refresh{left:517px;top:14px;width:177px;height:46px;border:0;border-radius:14px;background:#2470a8;color:#f5f9fc;font-size:13px;font-weight:700;direction:rtl;cursor:pointer}
+.refresh:hover{filter:brightness(1.08)}.refresh:active{filter:brightness(.94)}
+.refresh:disabled{cursor:default;filter:none}
+.err{left:28px;top:1133px;width:704px;height:19px;text-align:center;direction:rtl;color:#7f8b9a;font-size:10px;line-height:19px}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="app">
+  <div class="header abs"></div>
+  <div class="brandbox abs">$</div>
+  <div class="brand abs">MX DOLLAR</div>
+  <div class="subtitle abs">IRAQ MARKET WATCH</div>
+  <div class="live abs"><i></i>LIVE</div>
+
+  <section class="hero abs">
+    <div class="accent abs"></div>
+    <div class="usdlabel abs">USD / IQD</div>
+    <div class="heroar abs">السعر الأعلى الآن لكل 100$</div>
+    <div class="mainprice abs" id="highSell">158,300</div>
+    <div class="iqd abs">د.ع</div>
+    <div class="chip buy"><div class="chiplabel">شراء</div><div class="chipval" id="highBuy">158,300</div></div>
+    <div class="chip sell"><div class="chiplabel">بيع</div><div class="chipval" id="highSell2">158,300</div></div>
+  </section>
+
+  <section class="source s1">
+    <div class="code abs">KIFAH</div><div class="arname abs">بورصة الكفاح</div>
+    <div class="selllab abs">بيع</div><div class="sellvalue abs" id="kifahSell">158,300</div>
+    <div class="buylab abs">شراء</div><div class="buyvalue abs" id="kifahBuy">158,300</div>
+  </section>
+  <section class="source s2">
+    <div class="code abs">HARITHIYA</div><div class="arname abs">بورصة الحارثية</div>
+    <div class="selllab abs">بيع</div><div class="sellvalue abs" id="harSell">158,000</div>
+    <div class="buylab abs">شراء</div><div class="buyvalue abs" id="harBuy">157,900</div>
+  </section>
+
+  <div class="goldtitle abs">GOLD · الذهب</div>
+  <div class="goldsub abs">سعر المثقال · 5 غرام</div>
+  <section class="goldcard g18"><div class="kbadge abs">18K</div><div class="kar abs">عيار 18</div><div class="gprice abs" id="g18">834,169</div><div class="giqd abs">د.ع</div></section>
+  <section class="goldcard g21"><div class="kbadge abs">21K</div><div class="kar abs">عيار 21</div><div class="gprice abs" id="g21">973,197</div><div class="giqd abs">د.ع</div></section>
+  <section class="goldcard g24"><div class="kbadge abs">24K</div><div class="kar abs">عيار 24</div><div class="gprice abs" id="g24">1,112,225</div><div class="giqd abs">د.ع</div></section>
+
+  <div class="ex-title abs">شركات صيرفة معروفة في بغداد</div>
+  <div class="ex-note abs">كل كرت يعتمد مصدر الصيرفة نفسها فقط</div>
+  <section class="exgrid" id="exchangeGrid"></section>
+
+  <section class="footer abs">
+    <div class="updated abs" id="updated">آخر تحديث: --:--:--</div>
+    <div class="sig abs">MazenmiX</div>
+    <button class="refresh abs" id="refresh">تحديث الأسعار</button>
+  </section>
+  <div class="err abs" id="err"></div>
+</div></div>
+
+<script>
+const DATA_URL='https://raw.githubusercontent.com/mazenmix/MX-TV/main/web/data.json';
+const $=id=>document.getElementById(id);
+const fmt=n=>Number(n||0).toLocaleString('en-US');
+let lastData=null;
+
+function fit(){
+  const s=Math.min(innerWidth/760,1);
+  const vp=$('viewport');
+  vp.style.transform='scale('+s+')';
+  vp.style.height=(1160*s)+'px';
+  vp.style.width=(760*s)+'px';
+  vp.style.margin='0 auto';
+}
+addEventListener('resize',fit);fit();
+
+function clockFromIso(iso){
+  try{
+    return new Intl.DateTimeFormat('ar-IQ',{
+      timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit',second:'2-digit',
+      hour12:true
+    }).format(new Date(iso));
+  }catch(e){
+    return new Date().toLocaleTimeString('ar-IQ');
+  }
+}
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function exchangeVal(v){return v?fmt(v):'—';}
+function renderExchanges(exchanges){
+  const order=['taif','finjan','qand','sama','atheer','mayar','karbala','rayyan','zahra'];
+  const grid=$('exchangeGrid');
+  grid.innerHTML=order.map(k=>{
+    const x=exchanges[k]||{};
+    const cls=x.state==='live'?'liveprice':x.state==='stale'?'stale':'none';
+    const source=x.source_url?'<a class="exsource" href="'+esc(x.source_url)+'" target="_blank" rel="noopener">المصدر ↗</a>':'<span class="exsource" style="color:#66717f">بلا مصدر</span>';
+    return '<div class="excard">'+
+      '<div class="exhead"><div class="exname">'+esc(x.name||k)+'</div><div class="exarea">'+esc(x.area||'')+'</div></div>'+
+      '<div class="exvals"><div class="exbuy"><span class="exlbl">شراء</span><span class="exval">'+exchangeVal(x.buy)+'</span></div>'+
+      '<div class="exsell"><span class="exlbl">بيع</span><span class="exval">'+exchangeVal(x.sell)+'</span></div></div>'+
+      '<div class="exfoot"><span class="exstatus '+cls+'">'+esc(x.status||'غير منشور')+'</span>'+source+'</div>'+
+    '</div>';
+  }).join('');
+}
+
+function render(d){
+  if(!d || !d.kifah || !d.harithiya || !d.gold) return;
+  lastData=d;
+  const hs=Math.max(d.kifah.sell||0,d.harithiya.sell||0);
+  const hb=Math.max(d.kifah.buy||0,d.harithiya.buy||0);
+  $('highSell').textContent=fmt(hs);
+  $('highSell2').textContent=fmt(hs);
+  $('highBuy').textContent=fmt(hb);
+  $('kifahSell').textContent=fmt(d.kifah.sell);
+  $('kifahBuy').textContent=fmt(d.kifah.buy);
+  $('harSell').textContent=fmt(d.harithiya.sell);
+  $('harBuy').textContent=fmt(d.harithiya.buy);
+  $('g18').textContent=fmt(d.gold.k18);
+  $('g21').textContent=fmt(d.gold.k21);
+  $('g24').textContent=fmt(d.gold.k24);
+  renderExchanges(d.exchanges||{});
+  $('updated').textContent='آخر تحديث: '+clockFromIso(d.updated_at);
+}
+
+async function refresh(manual=false){
+  const b=$('refresh');
+  const old=b.textContent;
+  b.disabled=true;
+  b.textContent='جارِ التحديث...';
+  b.style.background='#1f4968';
+  $('err').textContent='';
+  try{
+    const r=await fetch(DATA_URL+'?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    if(!d.kifah?.sell || !d.harithiya?.sell || !d.gold?.k21 || !d.gold?.k24) throw new Error('incomplete');
+    render(d);
+    if(d.error) $('err').textContent='آخر تحديث استخدم بعض البيانات المحفوظة';
+    else if(manual) $('err').textContent='تم تحديث الأسعار بنجاح';
+  }catch(e){
+    $('err').textContent='تعذر جلب آخر الأسعار — البيانات الظاهرة هي آخر بيانات محفوظة';
+    if(lastData) render(lastData);
+  }finally{
+    b.disabled=false;
+    b.textContent=old;
+    b.style.background='#2470a8';
+  }
+}
+$('refresh').addEventListener('click',()=>refresh(true));
+refresh(false);
+setInterval(()=>refresh(false),60000);
+
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body>
+</html>
