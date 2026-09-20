@@ -112,7 +112,7 @@ def make_exchange(name,area,source_name,source_url,status="غير منشور",st
 def collect_exchanges():
     ex={
       "taif":make_exchange("شركة الطيف للصيرفة","الكرادة داخل / بغداد","الموقع الرسمي + Forex Board","https://taif.money/","لوحة Forex موجودة؛ السعر النقدي غير قابل للقراءة آلياً حالياً"),
-      "finjan":make_exchange("شركة الفنجان للصرافة","الكرادة / فروع بغداد","Telegram الرسمي","https://t.me/s/alfenganexchange"),
+      "finjan":make_exchange("شركة الفنجان للصرافة","الكرادة / فروع بغداد","Telegram الرسمي","https://t.me/s/alfenganexchange","آخر سعر رسمي منشور · النشر متوقف","stale",161000,162250),
       "qand":make_exchange("شركة القند للصرافة","المنصور","Telegram الرسمي","https://t.me/s/alqand_iq"),
       "sama":make_exchange("شركة سما بغداد للصرافة","السعدون / فروع بغداد","الموقع الرسمي","https://samabaghdad-ex.iq/","الموقع ينشر سعر 1320 الرسمي؛ لا ينشر شراء/بيع السوق"),
       "atheer":make_exchange("شركة الأثير للصرافة","العرصات الهندية","الموقع الرسمي","https://al-atheer.iq/","لا يوجد شراء/بيع سوق منشور"),
