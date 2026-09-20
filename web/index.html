@@ -10,10 +10,10 @@
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070a0f;color:#f5f7fa;font-family:"Segoe UI",Tahoma,Arial,sans-serif}
+html,body{margin:0;width:100%;min-height:100%;overflow-x:hidden;overflow-y:auto;background:#070a0f;color:#f5f7fa;font-family:"Segoe UI",Tahoma,Arial,sans-serif}
 body{display:grid;place-items:center}
-#viewport{position:relative;width:760px;height:708px;transform-origin:center center}
-#app{position:absolute;inset:0;width:760px;height:708px;background:#0a0e14;overflow:hidden;box-shadow:0 26px 80px rgba(0,0,0,.55)}
+#viewport{position:relative;width:760px;height:970px;transform-origin:center center}
+#app{position:absolute;inset:0;width:760px;height:970px;background:#0a0e14;overflow:hidden;box-shadow:0 26px 80px rgba(0,0,0,.55)}
 .abs{position:absolute}
 .header{left:0;top:0;width:760px;height:76px;background:#0d121a;border-bottom:1px solid #232a34}
 .brandbox{left:28px;top:18px;width:40px;height:40px;border-radius:20px;background:#19212d;border:1px solid #cca855;display:flex;align-items:center;justify-content:center;color:#e5c576;font-weight:700;font-size:24px;direction:ltr}
@@ -53,13 +53,23 @@ body{display:grid;place-items:center}
 .gprice{left:16px;top:55px;right:16px;height:40px;display:flex;align-items:center;justify-content:center;color:#f6f2e6;direction:ltr;font-size:24px;font-weight:700}
 .giqd{left:16px;top:93px;right:16px;height:19px;display:flex;align-items:center;justify-content:center;color:#7c735b;direction:rtl;font-size:11px;font-weight:600}
 
-.footer{left:28px;top:610px;width:704px;height:72px;border-radius:20px;background:#0d121a}
+.ex-title{left:28px;top:610px;width:330px;height:30px;direction:rtl;text-align:left;line-height:30px;color:#83c0f7;font-size:17px;font-weight:700}
+.ex-note{left:365px;top:610px;width:367px;height:30px;direction:rtl;text-align:right;line-height:30px;color:#7d8999;font-size:11px;font-weight:600}
+.exgrid{position:absolute;left:28px;top:646px;width:704px;display:grid;grid-template-columns:repeat(3,220px);gap:12px 22px}
+.excard{height:96px;border-radius:18px;background:#0f151e;border:1px solid #253140;padding:12px 14px;direction:rtl}
+.exname{height:26px;display:flex;align-items:center;justify-content:flex-start;color:#d8e0e9;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.exarea{color:#7d8999;font-size:10px;margin-top:-2px}
+.exvals{display:flex;align-items:center;justify-content:space-between;margin-top:11px;direction:ltr}
+.exval{font-size:16px;font-weight:700;color:#f2f5f8}
+.exlbl{font-size:10px;font-weight:700;margin-bottom:3px;direction:rtl}
+.exsell .exlbl{color:#dca062}.exbuy .exlbl{color:#5bcc94}
+.footer{left:28px;top:870px;width:704px;height:72px;border-radius:20px;background:#0d121a}
 .updated{left:10px;top:7px;width:494px;height:29px;display:flex;align-items:center;justify-content:center;direction:rtl;color:#768292;font-size:12px;font-weight:600;white-space:nowrap}
 .sig{left:10px;top:34px;width:494px;height:28px;display:flex;align-items:center;justify-content:center;color:#e5c576;font-size:13px;font-weight:700;direction:ltr}
 .refresh{left:517px;top:14px;width:177px;height:46px;border:0;border-radius:14px;background:#2470a8;color:#f5f9fc;font-size:13px;font-weight:700;direction:rtl;cursor:pointer}
 .refresh:hover{filter:brightness(1.08)}.refresh:active{filter:brightness(.94)}
 .refresh:disabled{cursor:default;filter:none}
-.err{left:28px;top:683px;width:704px;height:19px;text-align:center;direction:rtl;color:#7f8b9a;font-size:10px;line-height:19px}
+.err{left:28px;top:943px;width:704px;height:19px;text-align:center;direction:rtl;color:#7f8b9a;font-size:10px;line-height:19px}
 </style>
 </head>
 <body>
@@ -97,6 +107,17 @@ body{display:grid;place-items:center}
   <section class="goldcard g21"><div class="kbadge abs">21K</div><div class="kar abs">عيار 21</div><div class="gprice abs" id="g21">973,197</div><div class="giqd abs">د.ع</div></section>
   <section class="goldcard g24"><div class="kbadge abs">24K</div><div class="kar abs">عيار 24</div><div class="gprice abs" id="g24">1,112,225</div><div class="giqd abs">د.ع</div></section>
 
+  <div class="ex-title abs">شركات صيرفة معروفة في بغداد</div>
+  <div class="ex-note abs">الأسعار أدناه مرجع سوق بغداد وليست لوحة خاصة بالشركة</div>
+  <section class="exgrid">
+    <div class="excard"><div class="exname">شركة الطيف للصيرفة</div><div class="exarea">الكرادة داخل</div><div class="exvals"><div class="exbuy"><div class="exlbl">شراء</div><div class="exval officeBuy">157,750</div></div><div class="exsell"><div class="exlbl">بيع</div><div class="exval officeSell">158,750</div></div></div></div>
+    <div class="excard"><div class="exname">شركة الفنجان للصرافة</div><div class="exarea">الكرادة خارج / فروع بغداد</div><div class="exvals"><div class="exbuy"><div class="exlbl">شراء</div><div class="exval officeBuy">157,750</div></div><div class="exsell"><div class="exlbl">بيع</div><div class="exval officeSell">158,750</div></div></div></div>
+    <div class="excard"><div class="exname">شركة القند للصرافة</div><div class="exarea">المنصور / بابل مول</div><div class="exvals"><div class="exbuy"><div class="exlbl">شراء</div><div class="exval officeBuy">157,750</div></div><div class="exsell"><div class="exlbl">بيع</div><div class="exval officeSell">158,750</div></div></div></div>
+    <div class="excard"><div class="exname">شركة سما بغداد للصرافة</div><div class="exarea">الكرادة / السعدون / الحارثية</div><div class="exvals"><div class="exbuy"><div class="exlbl">شراء</div><div class="exval officeBuy">157,750</div></div><div class="exsell"><div class="exlbl">بيع</div><div class="exval officeSell">158,750</div></div></div></div>
+    <div class="excard"><div class="exname">شركة الأثير للصرافة</div><div class="exarea">عرصات الهندية / الكاظمية</div><div class="exvals"><div class="exbuy"><div class="exlbl">شراء</div><div class="exval officeBuy">157,750</div></div><div class="exsell"><div class="exlbl">بيع</div><div class="exval officeSell">158,750</div></div></div></div>
+    <div class="excard"><div class="exname">شركة الميار للصرافة</div><div class="exarea">الحارثية / خلف بغداد مول</div><div class="exvals"><div class="exbuy"><div class="exlbl">شراء</div><div class="exval officeBuy">157,750</div></div><div class="exsell"><div class="exlbl">بيع</div><div class="exval officeSell">158,750</div></div></div></div>
+  </section>
+
   <section class="footer abs">
     <div class="updated abs" id="updated">آخر تحديث: --:--:--</div>
     <div class="sig abs">MazenmiX</div>
@@ -112,8 +133,12 @@ const fmt=n=>Number(n||0).toLocaleString('en-US');
 let lastData=null;
 
 function fit(){
-  const s=Math.min(innerWidth/760,innerHeight/708,1);
-  $('viewport').style.transform='scale('+s+')';
+  const s=Math.min(innerWidth/760,1);
+  const vp=$('viewport');
+  vp.style.transform='scale('+s+')';
+  vp.style.height=(970*s)+'px';
+  vp.style.width=(760*s)+'px';
+  vp.style.margin='0 auto';
 }
 addEventListener('resize',fit);fit();
 
