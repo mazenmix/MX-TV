@@ -61,11 +61,12 @@ def parse_baghdad_same_post(body):
 def parse_baghdad_retail_from_shafaq():
     base="https://shafaq.com"
     cat=fetch(base+"/ar/%D8%A7%D9%82%D8%AA%D8%B5%D9%80%D8%A7%D8%AF")
-    anchors=re.findall(r'(?is)<a[^>]+href="([^"]+)"[^>]*>(.*?)</a>',cat)
+    from urllib.parse import unquote
+    hrefs=re.findall(r'(?is)href=["\']([^"\']+)["\']',cat)
     candidates=[]
-    for href,inner in anchors:
-        title=strip(inner)
-        if "الدولار" in title and "بغداد" in title:
+    for href in hrefs:
+        decoded=unquote(href)
+        if "الدولار" in decoded and "بغداد" in decoded:
             url=href if href.startswith("http") else base+href
             if url not in candidates:
                 candidates.append(url)
