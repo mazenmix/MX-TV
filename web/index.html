@@ -12,17 +12,15 @@
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070a0f;color:#f5f7fa;font-family:"Segoe UI",Tahoma,Arial,sans-serif}
 body{display:grid;place-items:center}
-#viewport{position:relative;width:760px;height:760px;transform-origin:center center}
-#app{position:absolute;inset:0;width:760px;height:760px;background:#0a0e14;overflow:hidden;box-shadow:0 26px 80px rgba(0,0,0,.55)}
+#viewport{position:relative;width:760px;height:708px;transform-origin:center center}
+#app{position:absolute;inset:0;width:760px;height:708px;background:#0a0e14;overflow:hidden;box-shadow:0 26px 80px rgba(0,0,0,.55)}
 .abs{position:absolute}
 .header{left:0;top:0;width:760px;height:76px;background:#0d121a;border-bottom:1px solid #232a34}
 .brandbox{left:28px;top:18px;width:40px;height:40px;border-radius:20px;background:#19212d;border:1px solid #cca855;display:flex;align-items:center;justify-content:center;color:#e5c576;font-weight:700;font-size:24px;direction:ltr}
 .brand{left:82px;top:17px;width:218px;height:27px;direction:ltr;text-align:left;font-weight:700;font-size:24px;line-height:27px;color:#f5f7fa}
 .subtitle{left:82px;top:43px;width:218px;height:18px;direction:ltr;text-align:left;font-weight:600;font-size:12px;line-height:18px;color:#7d8999;letter-spacing:.2px}
-.live{left:554px;top:24px;width:88px;height:28px;border-radius:14px;background:#132b23;display:flex;align-items:center;justify-content:center;gap:8px;direction:ltr;color:#67e0a8;font-weight:700;font-size:12px}
+.live{right:28px;top:24px;width:88px;height:28px;border-radius:14px;background:#132b23;display:flex;align-items:center;justify-content:center;gap:8px;direction:ltr;color:#67e0a8;font-weight:700;font-size:12px}
 .live i{width:8px;height:8px;border-radius:50%;background:#4bd197;display:block}
-.winbtn{top:18px;height:36px;border:0;border-radius:12px;background:#141b25;color:#a6b0bc;display:grid;place-items:center;cursor:default;padding:0}
-.min{left:660px;width:40px;font-size:18px;padding-bottom:5px}.close{left:706px;width:36px;font-size:22px}
 
 .hero{left:28px;top:98px;width:704px;height:184px;border-radius:24px;background:#10161f;border:1px solid #2b3441;overflow:hidden}
 .accent{left:0;top:0;width:10px;height:184px;border-radius:6px;background:#59b5ff}
@@ -60,42 +58,37 @@ body{display:grid;place-items:center}
 .sig{left:10px;top:34px;width:494px;height:28px;display:flex;align-items:center;justify-content:center;color:#e5c576;font-size:13px;font-weight:700;direction:ltr}
 .refresh{left:517px;top:14px;width:177px;height:46px;border:0;border-radius:14px;background:#2470a8;color:#f5f9fc;font-size:13px;font-weight:700;direction:rtl;cursor:pointer}
 .refresh:hover{filter:brightness(1.08)}.refresh:active{filter:brightness(.94)}
+.refresh:disabled{cursor:default;filter:none}
 .err{left:28px;top:683px;width:704px;height:19px;text-align:center;direction:rtl;color:#7f8b9a;font-size:10px;line-height:19px}
-
-.upstrip{left:28px;top:708px;width:704px;height:38px;border-radius:14px;background:#0e141c;border:1px solid #242e3b;display:flex;align-items:center;justify-content:center;direction:rtl;color:#8491a1;font-size:12px;font-weight:600}
-@media(max-width:760px),(max-height:760px){#app{box-shadow:0 18px 55px rgba(0,0,0,.45)}}
 </style>
 </head>
 <body>
-<div id="viewport">
-<div id="app">
+<div id="viewport"><div id="app">
   <div class="header abs"></div>
   <div class="brandbox abs">$</div>
   <div class="brand abs">MX DOLLAR</div>
   <div class="subtitle abs">IRAQ MARKET WATCH</div>
   <div class="live abs"><i></i>LIVE</div>
-  <button class="winbtn min abs">—</button>
-  <button class="winbtn close abs">×</button>
 
   <section class="hero abs">
     <div class="accent abs"></div>
     <div class="usdlabel abs">USD / IQD</div>
     <div class="heroar abs">السعر الأعلى الآن لكل 100$</div>
-    <div class="mainprice abs" id="highSell">158,250</div>
+    <div class="mainprice abs" id="highSell">158,750</div>
     <div class="iqd abs">د.ع</div>
-    <div class="chip buy"><div class="chiplabel">شراء</div><div class="chipval" id="highBuy">158,250</div></div>
-    <div class="chip sell"><div class="chiplabel">بيع</div><div class="chipval" id="highSell2">158,250</div></div>
+    <div class="chip buy"><div class="chiplabel">شراء</div><div class="chipval" id="highBuy">158,700</div></div>
+    <div class="chip sell"><div class="chiplabel">بيع</div><div class="chipval" id="highSell2">158,750</div></div>
   </section>
 
   <section class="source s1">
     <div class="code abs">KIFAH</div><div class="arname abs">بورصة الكفاح</div>
-    <div class="selllab abs">بيع</div><div class="sellvalue abs" id="kifahSell">158,250</div>
-    <div class="buylab abs">شراء</div><div class="buyvalue abs" id="kifahBuy">158,250</div>
+    <div class="selllab abs">بيع</div><div class="sellvalue abs" id="kifahSell">158,750</div>
+    <div class="buylab abs">شراء</div><div class="buyvalue abs" id="kifahBuy">158,700</div>
   </section>
   <section class="source s2">
     <div class="code abs">HARITHIYA</div><div class="arname abs">بورصة الحارثية</div>
-    <div class="selllab abs">بيع</div><div class="sellvalue abs" id="harSell">158,250</div>
-    <div class="buylab abs">شراء</div><div class="buyvalue abs" id="harBuy">158,250</div>
+    <div class="selllab abs">بيع</div><div class="sellvalue abs" id="harSell">158,700</div>
+    <div class="buylab abs">شراء</div><div class="buyvalue abs" id="harBuy">158,700</div>
   </section>
 
   <div class="goldtitle abs">GOLD · الذهب</div>
@@ -105,97 +98,83 @@ body{display:grid;place-items:center}
   <section class="goldcard g24"><div class="kbadge abs">24K</div><div class="kar abs">عيار 24</div><div class="gprice abs" id="g24">1,112,225</div><div class="giqd abs">د.ع</div></section>
 
   <section class="footer abs">
-    <div class="updated abs" id="updated">آخر تحديث</div>
+    <div class="updated abs" id="updated">آخر تحديث: --:--:--</div>
     <div class="sig abs">MazenmiX</div>
     <button class="refresh abs" id="refresh">تحديث الأسعار</button>
   </section>
   <div class="err abs" id="err"></div>
-  <div class="upstrip abs">MX Dollar v3.2.2 · البرنامج محدّث</div>
-</div>
-</div>
+</div></div>
 
 <script>
+const DATA_URL='https://raw.githubusercontent.com/mazenmix/MX-TV/main/web/data.json';
 const $=id=>document.getElementById(id);
-const initial={
-  kifah:{buy:158250,sell:158250},\n  harithiya:{buy:158250,sell:158250},
-  gold:{k18:834169,k21:973197,k24:1112225}
-};
-const fmt=n=>Number(n).toLocaleString('en-US');
+const fmt=n=>Number(n||0).toLocaleString('en-US');
+let lastData=null;
+
+function fit(){
+  const s=Math.min(innerWidth/760,innerHeight/708,1);
+  $('viewport').style.transform='scale('+s+')';
+}
+addEventListener('resize',fit);fit();
+
+function clockFromIso(iso){
+  try{
+    return new Intl.DateTimeFormat('ar-IQ',{
+      timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit',second:'2-digit',
+      hour12:true
+    }).format(new Date(iso));
+  }catch(e){
+    return new Date().toLocaleTimeString('ar-IQ');
+  }
+}
+
 function render(d){
+  if(!d || !d.kifah || !d.harithiya || !d.gold) return;
+  lastData=d;
   const hs=Math.max(d.kifah.sell||0,d.harithiya.sell||0);
   const hb=Math.max(d.kifah.buy||0,d.harithiya.buy||0);
-  $('highSell').textContent=fmt(hs);$('highSell2').textContent=fmt(hs);$('highBuy').textContent=fmt(hb);
-  $('kifahSell').textContent=fmt(d.kifah.sell);$('kifahBuy').textContent=fmt(d.kifah.buy);
-  $('harSell').textContent=fmt(d.harithiya.sell);$('harBuy').textContent=fmt(d.harithiya.buy);
-  $('g18').textContent=fmt(d.gold.k18);$('g21').textContent=fmt(d.gold.k21);$('g24').textContent=fmt(d.gold.k24);
-  stamp();
+  $('highSell').textContent=fmt(hs);
+  $('highSell2').textContent=fmt(hs);
+  $('highBuy').textContent=fmt(hb);
+  $('kifahSell').textContent=fmt(d.kifah.sell);
+  $('kifahBuy').textContent=fmt(d.kifah.buy);
+  $('harSell').textContent=fmt(d.harithiya.sell);
+  $('harBuy').textContent=fmt(d.harithiya.buy);
+  $('g18').textContent=fmt(d.gold.k18);
+  $('g21').textContent=fmt(d.gold.k21);
+  $('g24').textContent=fmt(d.gold.k24);
+  $('updated').textContent='آخر تحديث: '+clockFromIso(d.updated_at);
 }
-function stamp(){
-  const t=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  $('updated').textContent='آخر تحديث  '+t;
-}
-function fit(){
-  const s=Math.min(innerWidth/760,innerHeight/760,1);
-  const vp=$('viewport');vp.style.transform='scale('+s+')';
-  vp.style.width='760px';vp.style.height='760px';
-}
-addEventListener('resize',fit);fit();render(initial);
 
-function stripHTML(s){
-  const doc=new DOMParser().parseFromString(s,'text/html');
-  return (doc.body?.textContent||s).replace(/[\u200e\u200f]/g,' ').replace(/\s+/g,' ');
-}
-function parseDollar(body){
-  const txt=stripHTML(body);
-  const one=name=>{
-    const re=new RegExp(name+'\\s*([0-9]{4}\\.[0-9]{2})\\s*\\|\\s*([0-9]{4}\\.[0-9]{2})','g');
-    let m,last; while((m=re.exec(txt))!==null) last=m;
-    if(!last) return null;
-    return {buy:Math.round(parseFloat(last[1])*100),sell:Math.round(parseFloat(last[2])*100)};
-  };
-  return {kifah:one('كفاح'),harithiya:one('حارثية')};
-}
-function parseGold(body){
-  const txt=stripHTML(body);
-  const get=k=>{
-    const re=new RegExp('مثقال ذهب عيار\\s*'+k+'[^0-9]{0,80}([0-9]{2,3}(?:,[0-9]{3}){1,2})\\s*د\\.ع');
-    const m=txt.match(re);return m?parseInt(m[1].replace(/,/g,''),10):0;
-  };
-  let k21=get('21'),k24=get('24'),k18=0;
-  if(k24) k18=Math.round(k24*.75);
-  else if(k21){k18=Math.round(k21*(18/21));k24=Math.round(k21*(24/21));}
-  return {k18,k21,k24};
-}
-async function grab(url){
-  try{const r=await fetch(url,{cache:'no-store'});if(r.ok)return await r.text();}catch(e){}
-  const p='https://api.allorigins.win/raw?url='+encodeURIComponent(url);
-  const r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new Error('proxy');
-  return await r.text();
-}
-async function refresh(){
-  const b=$('refresh'); b.disabled=true;b.textContent='جارِ التحديث...';b.style.background='#1f4968';$('err').textContent='';
-  let d=JSON.parse(JSON.stringify(initial)),ok=false;
+async function refresh(manual=false){
+  const b=$('refresh');
+  const old=b.textContent;
+  b.disabled=true;
+  b.textContent='جارِ التحديث...';
+  b.style.background='#1f4968';
+  $('err').textContent='';
   try{
-    const [usd,gold]=await Promise.allSettled([
-      grab('https://t.me/s/dollariraqi'),
-      grab('https://mithqaly.com/%D8%A7%D8%B3%D8%B9%D8%A7%D8%B1-%D8%A7%D9%84%D8%B0%D9%87%D8%A8/')
-    ]);
-    if(usd.status==='fulfilled'){
-      const x=parseDollar(usd.value);
-      if(x.kifah&&x.harithiya){d.kifah=x.kifah;d.harithiya=x.harithiya;ok=true;}
-    }
-    if(gold.status==='fulfilled'){
-      const x=parseGold(gold.value);
-      if(x.k21&&x.k24){d.gold=x;ok=true;}
-    }
+    const r=await fetch(DATA_URL+'?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    if(!d.kifah?.sell || !d.harithiya?.sell || !d.gold?.k21 || !d.gold?.k24) throw new Error('incomplete');
     render(d);
-    if(!ok)$('err').textContent='آخر تحديث استخدم بيانات محفوظة';
-  }catch(e){$('err').textContent='آخر تحديث استخدم بيانات محفوظة';render(d)}
-  b.disabled=false;b.textContent='تحديث الأسعار';b.style.background='#2470a8';
+    if(d.error) $('err').textContent='آخر تحديث استخدم بعض البيانات المحفوظة';
+    else if(manual) $('err').textContent='تم تحديث الأسعار بنجاح';
+  }catch(e){
+    $('err').textContent='تعذر جلب آخر الأسعار — البيانات الظاهرة هي آخر بيانات محفوظة';
+    if(lastData) render(lastData);
+  }finally{
+    b.disabled=false;
+    b.textContent=old;
+    b.style.background='#2470a8';
+  }
 }
-$('refresh').addEventListener('click',refresh);
-if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
-// Preview opens on the latest verified Baghdad closing snapshot; manual refresh remains available.
+$('refresh').addEventListener('click',()=>refresh(true));
+refresh(false);
+setInterval(()=>refresh(false),60000);
+
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
 </body>
 </html>
