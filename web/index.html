@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#0A0E14">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>MX Dollar</title>
@@ -11,9 +11,9 @@
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;min-height:100%;overflow-x:hidden;overflow-y:auto;background:#070a0f;color:#f5f7fa;font-family:"Segoe UI",Tahoma,Arial,sans-serif}
-body{display:grid;place-items:center}
-#viewport{position:relative;width:760px;height:708px;transform-origin:center center}
-#app{position:absolute;inset:0;width:760px;height:708px;background:#0a0e14;overflow:hidden;box-shadow:0 26px 80px rgba(0,0,0,.55)}
+body{display:block;min-height:100dvh}
+#viewport{position:relative;width:760px;height:708px;margin:0 auto}
+#app{position:absolute;left:0;top:0;width:760px;height:708px;background:#0a0e14;overflow:hidden;box-shadow:0 26px 80px rgba(0,0,0,.55);transform-origin:top left}
 .abs{position:absolute}
 .header{left:0;top:0;width:760px;height:76px;background:#0d121a;border-bottom:1px solid #232a34}
 .brandbox{left:28px;top:18px;width:40px;height:40px;border-radius:20px;background:#19212d;border:1px solid #cca855;display:flex;align-items:center;justify-content:center;color:#e5c576;font-weight:700;font-size:24px;direction:ltr}
@@ -112,14 +112,29 @@ const fmt=n=>Number(n||0).toLocaleString('en-US');
 let lastData=null;
 
 function fit(){
-  const s=Math.min(innerWidth/760,1);
+  const DESIGN_W=760;
+  const DESIGN_H=708;
+  const viewportWidth=(window.visualViewport&&window.visualViewport.width)||window.innerWidth||document.documentElement.clientWidth;
+  const available=Math.max(280,viewportWidth);
+  const scale=Math.min(available/DESIGN_W,1);
+
   const vp=$('viewport');
-  vp.style.transform='scale('+s+')';
-  vp.style.height=(708*s)+'px';
-  vp.style.width=(760*s)+'px';
+  const app=$('app');
+
+  vp.style.width=(DESIGN_W*scale)+'px';
+  vp.style.height=(DESIGN_H*scale)+'px';
   vp.style.margin='0 auto';
+  vp.style.transform='none';
+
+  app.style.transform='scale('+scale+')';
 }
-addEventListener('resize',fit);fit();
+window.addEventListener('resize',fit,{passive:true});
+window.addEventListener('orientationchange',()=>setTimeout(fit,120),{passive:true});
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize',fit,{passive:true});
+}
+document.addEventListener('DOMContentLoaded',fit);
+fit();
 
 function clockFromIso(iso){
   try{
