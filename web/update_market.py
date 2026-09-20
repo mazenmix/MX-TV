@@ -57,6 +57,32 @@ def parse_baghdad_same_post(body):
     h=parse_market(txt,"حارثية")
     return k,h,""
 
+
+def parse_baghdad_retail_from_shafaq():
+    base="https://shafaq.com"
+    cat=fetch(base+"/ar/%D8%A7%D9%82%D8%AA%D8%B5%D9%80%D8%A7%D8%AF")
+    anchors=re.findall(r'(?is)<a[^>]+href="([^"]+)"[^>]*>(.*?)</a>',cat)
+    candidates=[]
+    for href,inner in anchors:
+        title=strip(inner)
+        if "الدولار" in title and "بغداد" in title:
+            url=href if href.startswith("http") else base+href
+            if url not in candidates:
+                candidates.append(url)
+    for url in candidates[:8]:
+        try:
+            txt=strip(fetch(url))
+            sm=re.search(r'سعر البيع[^0-9]{0,120}([0-9]{3}(?:[,،]?[0-9]{3}))',txt)
+            bm=re.search(r'سعر الشراء[^0-9]{0,120}([0-9]{3}(?:[,،]?[0-9]{3}))',txt)
+            if sm and bm:
+                sell=int(sm.group(1).replace(",","").replace("،",""))
+                buy=int(bm.group(1).replace(",","").replace("،",""))
+                if 120000 <= buy <= 200000 and 120000 <= sell <= 200000:
+                    return {"buy":buy,"sell":sell,"source":"Shafaq News Baghdad retail market"}
+        except Exception:
+            pass
+    return None
+
 def get_gold(txt,k):
     m=re.search(rf"مثقال ذهب عيار\s*{k}[^0-9]{{0,100}}([0-9]{{1,3}}(?:,[0-9]{{3}}){{1,2}})\s*د\.ع",txt)
     return int(m.group(1).replace(",","")) if m else 0
@@ -71,6 +97,7 @@ data={
     "kifah":old.get("kifah",{}),
     "harithiya":old.get("harithiya",{}),
     "gold":old.get("gold",{}),
+    "retail_baghdad":old.get("retail_baghdad",{}),
     "usd_source_time":old.get("usd_source_time",""),
 }
 
@@ -85,6 +112,15 @@ try:
         errors.append("usd-parse")
 except Exception as e:
     errors.append("usd:"+type(e).__name__)
+
+try:
+    retail=parse_baghdad_retail_from_shafaq()
+    if retail:
+        data["retail_baghdad"]=retail
+    else:
+        errors.append("retail-parse")
+except Exception as e:
+    errors.append("retail:"+type(e).__name__)
 
 try:
     gtxt=strip(fetch("https://mithqaly.com/%D8%A7%D8%B3%D8%B9%D8%A7%D8%B1-%D8%A7%D9%84%D8%B0%D9%87%D8%A8/"))
@@ -108,12 +144,14 @@ old_core={
     "kifah":old.get("kifah",{}),
     "harithiya":old.get("harithiya",{}),
     "gold":old.get("gold",{}),
+    "retail_baghdad":old.get("retail_baghdad",{}),
     "error":old.get("error",""),
 }
 new_core={
     "kifah":data.get("kifah",{}),
     "harithiya":data.get("harithiya",{}),
     "gold":data.get("gold",{}),
+    "retail_baghdad":data.get("retail_baghdad",{}),
     "error":new_error,
 }
 data["updated_at"]=(datetime.now(BAGHDAD).isoformat()
