@@ -59,22 +59,30 @@ def parse_baghdad_same_post(body):
 
 
 def parse_baghdad_retail_from_shafaq():
+    from urllib.parse import unquote
     base="https://shafaq.com"
     cat=fetch(base+"/ar/%D8%A7%D9%82%D8%AA%D8%B5%D9%80%D8%A7%D8%AF")
-    from urllib.parse import unquote
-    hrefs=re.findall(r'(?is)href=["\']([^"\']+)["\']',cat)
+    raw=[]
+    raw += re.findall(r'(?is)href=["\\\']([^"\\\']+)["\\\']',cat)
+    raw += re.findall(r'(?is)(https?://(?:www\\.)?shafaq\\.com/ar/[^"\\\'<>\\s]+)',cat)
+    raw += re.findall(r'(?is)(/ar/[^"\\\'<>\\s]+)',cat)
     candidates=[]
-    for href in hrefs:
+    for href in raw:
+        href=htmlmod.unescape(href).replace("\\/","/")
         decoded=unquote(href)
         if "الدولار" in decoded and "بغداد" in decoded:
             url=href if href.startswith("http") else base+href
             if url not in candidates:
                 candidates.append(url)
-    for url in candidates[:8]:
+    # Known-current article fallback; discovery above normally replaces this on later runs.
+    fallback=base+"/ar/%D8%A7%D9%82%D8%AA%D8%B5%D9%80%D8%A7%D8%AF/%D8%A7%D9%84%D8%AF%D9%88%D9%84%D8%A7%D8%B1-%D9%8A%D8%BA%D9%84%D9%82-%D9%85%D9%86%D8%AE%D9%81%D8%B6%D8%A7-%D9%81%D9%8A-%D8%A8%D8%BA%D8%AF%D8%A7%D8%AF-%D9%88-%D8%B1%D8%A8%D9%8A%D9%84-7"
+    if fallback not in candidates:
+        candidates.append(fallback)
+    for url in candidates[:12]:
         try:
             txt=strip(fetch(url))
-            sm=re.search(r'سعر البيع[^0-9]{0,120}([0-9]{3}(?:[,،]?[0-9]{3}))',txt)
-            bm=re.search(r'سعر الشراء[^0-9]{0,120}([0-9]{3}(?:[,،]?[0-9]{3}))',txt)
+            sm=re.search(r'سعر البيع[^0-9]{0,140}([0-9]{6}|[0-9]{3}[,،][0-9]{3})',txt)
+            bm=re.search(r'سعر الشراء[^0-9]{0,140}([0-9]{6}|[0-9]{3}[,،][0-9]{3})',txt)
             if sm and bm:
                 sell=int(sm.group(1).replace(",","").replace("،",""))
                 buy=int(bm.group(1).replace(",","").replace("،",""))
