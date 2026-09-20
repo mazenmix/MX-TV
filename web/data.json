@@ -13,6 +13,11 @@
     "k24": 1112225
   },
   "usd_source_time": "",
-  "updated_at": "2026-09-20T20:16:21.992625+03:00",
-  "error": ""
+  "updated_at": "2026-09-20T20:16:58+03:00",
+  "error": "",
+  "retail_baghdad": {
+    "buy": 157750,
+    "sell": 158750,
+    "source": "Shafaq News Baghdad retail market"
+  }
 }
