@@ -81,21 +81,21 @@ body{display:grid;place-items:center}
     <div class="accent abs"></div>
     <div class="usdlabel abs">USD / IQD</div>
     <div class="heroar abs">السعر الأعلى الآن لكل 100$</div>
-    <div class="mainprice abs" id="highSell">158,750</div>
+    <div class="mainprice abs" id="highSell">158,250</div>
     <div class="iqd abs">د.ع</div>
-    <div class="chip buy"><div class="chiplabel">شراء</div><div class="chipval" id="highBuy">158,700</div></div>
-    <div class="chip sell"><div class="chiplabel">بيع</div><div class="chipval" id="highSell2">158,750</div></div>
+    <div class="chip buy"><div class="chiplabel">شراء</div><div class="chipval" id="highBuy">158,250</div></div>
+    <div class="chip sell"><div class="chiplabel">بيع</div><div class="chipval" id="highSell2">158,250</div></div>
   </section>
 
   <section class="source s1">
     <div class="code abs">KIFAH</div><div class="arname abs">بورصة الكفاح</div>
-    <div class="selllab abs">بيع</div><div class="sellvalue abs" id="kifahSell">158,750</div>
-    <div class="buylab abs">شراء</div><div class="buyvalue abs" id="kifahBuy">158,700</div>
+    <div class="selllab abs">بيع</div><div class="sellvalue abs" id="kifahSell">158,250</div>
+    <div class="buylab abs">شراء</div><div class="buyvalue abs" id="kifahBuy">158,250</div>
   </section>
   <section class="source s2">
     <div class="code abs">HARITHIYA</div><div class="arname abs">بورصة الحارثية</div>
-    <div class="selllab abs">بيع</div><div class="sellvalue abs" id="harSell">158,700</div>
-    <div class="buylab abs">شراء</div><div class="buyvalue abs" id="harBuy">158,700</div>
+    <div class="selllab abs">بيع</div><div class="sellvalue abs" id="harSell">158,250</div>
+    <div class="buylab abs">شراء</div><div class="buyvalue abs" id="harBuy">158,250</div>
   </section>
 
   <div class="goldtitle abs">GOLD · الذهب</div>
@@ -117,8 +117,7 @@ body{display:grid;place-items:center}
 <script>
 const $=id=>document.getElementById(id);
 const initial={
-  kifah:{buy:158700,sell:158750},
-  harithiya:{buy:158700,sell:158700},
+  kifah:{buy:158250,sell:158250},\n  harithiya:{buy:158250,sell:158250},
   gold:{k18:834169,k21:973197,k24:1112225}
 };
 const fmt=n=>Number(n).toLocaleString('en-US');
@@ -196,7 +195,7 @@ async function refresh(){
 }
 $('refresh').addEventListener('click',refresh);
 if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
-setTimeout(refresh,500);
+// Preview opens on the latest verified Baghdad closing snapshot; manual refresh remains available.
 </script>
 </body>
 </html>
