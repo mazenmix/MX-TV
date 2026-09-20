@@ -30,10 +30,10 @@
       "area": "الكرادة / فروع بغداد",
       "source_name": "Telegram الرسمي",
       "source_url": "https://t.me/s/alfenganexchange",
-      "status": "آخر سعر رسمي منشور · النشر متوقف",
-      "state": "stale",
-      "buy": 161000,
-      "sell": 162250,
+      "status": "غير منشور",
+      "state": "none",
+      "buy": null,
+      "sell": null,
       "published_at": ""
     },
     "qand": {
@@ -114,6 +114,6 @@
       "published_at": ""
     }
   },
-  "updated_at": "2026-09-20T20:34:43.497214+03:00",
+  "updated_at": "2026-09-20T20:35:23.716612+03:00",
   "error": ""
 }
