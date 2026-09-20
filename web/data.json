@@ -13,8 +13,6 @@
     "k24": 1110113
   },
   "usd_source_time": "",
-  "updated_at": "2026-09-20T20:24:05.878365+03:00",
-  "error": "",
   "exchanges": {
     "taif": {
       "name": "شركة الطيف للصيرفة",
@@ -43,7 +41,7 @@
       "area": "المنصور",
       "source_name": "Telegram الرسمي",
       "source_url": "https://t.me/s/alqand_iq",
-      "status": "السعر النقدي غير منشور",
+      "status": "غير منشور",
       "state": "none",
       "buy": null,
       "sell": null,
@@ -54,7 +52,7 @@
       "area": "السعدون / فروع بغداد",
       "source_name": "الموقع الرسمي",
       "source_url": "https://samabaghdad-ex.iq/",
-      "status": "ينشر 1320 الرسمي؛ لا ينشر شراء/بيع السوق",
+      "status": "الموقع ينشر سعر 1320 الرسمي؛ لا ينشر شراء/بيع السوق",
       "state": "none",
       "buy": null,
       "sell": null,
@@ -65,7 +63,7 @@
       "area": "العرصات الهندية",
       "source_name": "الموقع الرسمي",
       "source_url": "https://al-atheer.iq/",
-      "status": "السعر النقدي غير منشور",
+      "status": "لا يوجد شراء/بيع سوق منشور",
       "state": "none",
       "buy": null,
       "sell": null,
@@ -76,7 +74,7 @@
       "area": "ساحة كهرمانة",
       "source_name": "الموقع الرسمي",
       "source_url": "https://almayarex.com/",
-      "status": "السعر النقدي غير منشور",
+      "status": "لا يوجد شراء/بيع سوق منشور",
       "state": "none",
       "buy": null,
       "sell": null,
@@ -87,7 +85,7 @@
       "area": "الحارثية / مقابل معرض بغداد الدولي",
       "source_name": "Facebook الرسمي",
       "source_url": "https://www.facebook.com/karbala.exchange",
-      "status": "السعر النقدي غير منشور علناً حالياً",
+      "status": "لا يوجد سعر سوق علني قابل للقراءة حالياً",
       "state": "none",
       "buy": null,
       "sell": null,
@@ -98,7 +96,7 @@
       "area": "المنصور / شارع 14 رمضان",
       "source_name": "Telegram الرسمي",
       "source_url": "https://t.me/s/rayyanexco",
-      "status": "ينشر دولار المسافرين؛ سعر السوق غير منشور",
+      "status": "ينشر دولار المسافرين؛ لا ينشر سعر السوق النقدي",
       "state": "none",
       "buy": null,
       "sell": null,
@@ -115,5 +113,7 @@
       "sell": null,
       "published_at": ""
     }
-  }
+  },
+  "updated_at": "2026-09-20T20:34:43.497214+03:00",
+  "error": ""
 }
