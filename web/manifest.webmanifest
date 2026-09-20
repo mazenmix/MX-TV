@@ -1,0 +1,12 @@
+{
+  "name": "MX Dollar",
+  "short_name": "MX Dollar",
+  "description": "Iraq USD and gold market monitor by MazenmiX",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#080b11",
+  "theme_color": "#080b11",
+  "icons": [
+    {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
