@@ -103,7 +103,22 @@ try:
 except Exception as e:
     errors.append("gold:"+type(e).__name__)
 
-data["updated_at"]=datetime.now(BAGHDAD).isoformat()
-data["error"]=", ".join(errors) if errors else ""
+new_error=", ".join(errors) if errors else ""
+old_core={
+    "kifah":old.get("kifah",{}),
+    "harithiya":old.get("harithiya",{}),
+    "gold":old.get("gold",{}),
+    "error":old.get("error",""),
+}
+new_core={
+    "kifah":data.get("kifah",{}),
+    "harithiya":data.get("harithiya",{}),
+    "gold":data.get("gold",{}),
+    "error":new_error,
+}
+data["updated_at"]=(datetime.now(BAGHDAD).isoformat()
+                    if new_core != old_core or not old.get("updated_at")
+                    else old["updated_at"])
+data["error"]=new_error
 OUT.write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 print(json.dumps(data,ensure_ascii=False))
