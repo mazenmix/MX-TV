@@ -146,6 +146,9 @@ function clockFromIso(iso){
     return new Date().toLocaleTimeString('ar-IQ');
   }
 }
+function stampRefreshTime(){
+  $('updated').textContent='آخر تحديث: '+clockFromIso(new Date().toISOString());
+}
 
 function render(d){
   if(!d || !d.kifah || !d.harithiya || !d.gold) return;
@@ -162,10 +165,11 @@ function render(d){
   $('g18').textContent=fmt(d.gold.k18);
   $('g21').textContent=fmt(d.gold.k21);
   $('g24').textContent=fmt(d.gold.k24);
-  $('updated').textContent='آخر تحديث: '+clockFromIso(d.updated_at);
+  stampRefreshTime();
 }
 
 async function refresh(manual=false){
+  stampRefreshTime();
   const b=$('refresh');
   const old=b.textContent;
   b.disabled=true;
@@ -190,6 +194,7 @@ async function refresh(manual=false){
   }
 }
 $('refresh').addEventListener('click',()=>refresh(true));
+stampRefreshTime();
 refresh(false);
 setInterval(()=>refresh(false),60000);
 
