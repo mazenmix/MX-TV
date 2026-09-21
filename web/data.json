@@ -7,18 +7,18 @@
     "buy": 157400,
     "sell": 157450
   },
-  "gold": {
-    "k18": 831647,
-    "k21": 970255,
-    "k24": 1108863
-  },
-  "usd_source_time": "11:40",
-  "updated_at": "2026-09-21T15:53:12.487Z",
-  "error": "",
   "kukh": {
     "buy": 157250,
     "sell": 158000,
     "source": "https://t.me/s/Kukh_alomlat",
-    "published_at": ""
-  }
+    "published_at": "2026-09-21T14:46:14+00:00"
+  },
+  "gold": {
+    "k18": 829017,
+    "k21": 967186,
+    "k24": 1105356
+  },
+  "usd_source_time": "11:40",
+  "updated_at": "2026-09-21T18:53:34.467628+03:00",
+  "error": ""
 }
