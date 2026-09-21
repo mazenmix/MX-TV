@@ -118,9 +118,7 @@ new_core={
     "gold":data.get("gold",{}),
     "error":new_error,
 }
-data["updated_at"]=(datetime.now(BAGHDAD).isoformat()
-                    if new_core != old_core or not old.get("updated_at")
-                    else old["updated_at"])
+data["updated_at"]=datetime.now(BAGHDAD).isoformat()
 data["error"]=new_error
 OUT.write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 print(json.dumps(data,ensure_ascii=False))
