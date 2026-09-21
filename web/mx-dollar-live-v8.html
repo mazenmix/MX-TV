@@ -198,7 +198,11 @@ stampRefreshTime();
 refresh(false);
 setInterval(()=>refresh(false),60000);
 
-if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js?v=12',{updateViaCache:'none'})
+    .then(reg=>reg.update().catch(()=>{}))
+    .catch(()=>{});
+}
 </script>
 </body>
 </html>
