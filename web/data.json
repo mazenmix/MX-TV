@@ -13,6 +13,12 @@
     "k24": 1108863
   },
   "usd_source_time": "11:40",
-  "updated_at": "2026-09-21T16:24:04.942031+03:00",
-  "error": ""
+  "updated_at": "2026-09-21T15:53:12.487Z",
+  "error": "",
+  "kukh": {
+    "buy": 157250,
+    "sell": 158000,
+    "source": "https://t.me/s/Kukh_alomlat",
+    "published_at": ""
+  }
 }
