@@ -34,5 +34,5 @@ jobs:
           cp /tmp/mx-dollar-data.json web/data.json
           git add web/data.json
           git diff --cached --quiet && exit 0
-          git commit -m "Update MX Dollar market data"
+          git commit -m "[CF-Pages-Skip] Update MX Dollar market data"
           git push origin main
