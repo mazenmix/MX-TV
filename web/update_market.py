@@ -59,6 +59,26 @@ def parse_baghdad_same_post(body):
 
 
 
+
+def parse_kukh_latest(body):
+    blocks=re.findall(r'(?is)<div[^>]+class="[^"]*tgme_widget_message_wrap[^"]*"[^>]*>(.*?)</div>\s*</div>',body)
+    if not blocks:
+        blocks=body.split("tgme_widget_message_wrap")
+    for raw in reversed(blocks):
+        txt=strip(raw)
+        if "سعر الان" not in txt and "سعر الصرف" not in txt:
+            continue
+        # First USD buy/sell pair in each Kukh price post.
+        sm=re.search(r"البيع[\.\s]*([0-9]{3}(?:[,،][0-9]{3}))",txt)
+        bm=re.search(r"(?:الشراء|لشراء)[\.\s]*([0-9]{3}(?:[,،][0-9]{3}))",txt)
+        if sm and bm:
+            sell=int(sm.group(1).replace(",","").replace("،",""))
+            buy=int(bm.group(1).replace(",","").replace("،",""))
+            if 120000 <= buy <= 220000 and 120000 <= sell <= 220000:
+                tm=re.search(r'datetime="([^"]+)"',raw)
+                return {"buy":buy,"sell":sell,"source":"https://t.me/s/Kukh_alomlat","published_at":tm.group(1) if tm else ""}
+    return None
+
 def get_gold(txt,k):
     m=re.search(rf"مثقال ذهب عيار\s*{k}[^0-9]{{0,100}}([0-9]{{1,3}}(?:,[0-9]{{3}}){{1,2}})\s*د\.ع",txt)
     return int(m.group(1).replace(",","")) if m else 0
@@ -72,6 +92,7 @@ errors=[]
 data={
     "kifah":old.get("kifah",{}),
     "harithiya":old.get("harithiya",{}),
+    "kukh":old.get("kukh",{}),
     "gold":old.get("gold",{}),
     "usd_source_time":old.get("usd_source_time",""),
 }
@@ -87,6 +108,16 @@ try:
         errors.append("usd-parse")
 except Exception as e:
     errors.append("usd:"+type(e).__name__)
+
+try:
+    kbody=fetch("https://t.me/s/Kukh_alomlat")
+    kr=parse_kukh_latest(kbody)
+    if kr:
+        data["kukh"]=kr
+    else:
+        errors.append("kukh-parse")
+except Exception as e:
+    errors.append("kukh:"+type(e).__name__)
 
 try:
     gtxt=strip(fetch("https://mithqaly.com/%D8%A7%D8%B3%D8%B9%D8%A7%D8%B1-%D8%A7%D9%84%D8%B0%D9%87%D8%A8/"))
@@ -109,12 +140,14 @@ new_error=", ".join(errors) if errors else ""
 old_core={
     "kifah":old.get("kifah",{}),
     "harithiya":old.get("harithiya",{}),
+    "kukh":old.get("kukh",{}),
     "gold":old.get("gold",{}),
     "error":old.get("error",""),
 }
 new_core={
     "kifah":data.get("kifah",{}),
     "harithiya":data.get("harithiya",{}),
+    "kukh":data.get("kukh",{}),
     "gold":data.get("gold",{}),
     "error":new_error,
 }
