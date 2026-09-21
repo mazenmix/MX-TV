@@ -35,14 +35,14 @@ body{display:block;min-height:100dvh}
 .chipval{width:95px;text-align:right;direction:ltr;font-weight:700;font-size:17px}
 .buy .chipval{color:#e6eeea}.sell .chipval{color:#f6ece0}
 
-.source{position:absolute;top:302px;width:343px;height:97px;border-radius:18px;background:#0f151e;border:1px solid #252e3a}
-.s1{left:28px}.s2{left:389px}
-.code{left:20px;top:14px;width:80px;height:24px;direction:ltr;text-align:left;line-height:24px;color:#68b2ec;font-size:12px;font-weight:700}
-.arname{left:108px;top:12px;right:18px;height:28px;direction:rtl;text-align:right;line-height:28px;color:#b9c2cd;font-size:13px;font-weight:600}
-.selllab{left:20px;top:49px;width:45px;height:29px;direction:rtl;text-align:left;line-height:29px;color:#dca062;font-size:12px;font-weight:600}
-.sellvalue{left:70px;top:48px;width:90px;height:30px;direction:ltr;text-align:left;line-height:30px;color:#f2f5f8;font-size:17px;font-weight:700}
-.buylab{left:190px;top:49px;width:53px;height:29px;direction:rtl;text-align:left;line-height:29px;color:#5bcc94;font-size:12px;font-weight:600}
-.buyvalue{left:245px;top:48px;right:18px;height:30px;direction:ltr;text-align:right;line-height:30px;color:#f2f5f8;font-size:17px;font-weight:700}
+.source{position:absolute;top:302px;width:220px;height:97px;border-radius:18px;background:#0f151e;border:1px solid #252e3a}
+.s1{left:28px}.s2{left:270px}.s3{left:512px}
+.code{left:16px;top:12px;width:82px;height:22px;direction:ltr;text-align:left;line-height:22px;color:#68b2ec;font-size:11px;font-weight:700}
+.arname{left:92px;top:10px;right:14px;height:25px;direction:rtl;text-align:right;line-height:25px;color:#b9c2cd;font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.selllab{left:15px;top:48px;width:30px;height:27px;direction:rtl;text-align:left;line-height:27px;color:#dca062;font-size:10px;font-weight:600}
+.sellvalue{left:50px;top:47px;width:68px;height:28px;direction:ltr;text-align:left;line-height:28px;color:#f2f5f8;font-size:14px;font-weight:700}
+.buylab{left:120px;top:48px;width:35px;height:27px;direction:rtl;text-align:left;line-height:27px;color:#5bcc94;font-size:10px;font-weight:600}
+.buyvalue{left:158px;top:47px;right:12px;height:28px;direction:ltr;text-align:right;line-height:28px;color:#f2f5f8;font-size:14px;font-weight:700}
 
 .goldtitle{left:28px;top:424px;width:292px;height:30px;direction:ltr;text-align:left;line-height:30px;color:#e5c576;font-size:17px;font-weight:700}
 .goldsub{left:440px;top:424px;width:292px;height:30px;direction:rtl;text-align:right;line-height:30px;color:#7d8999;font-size:13px;font-weight:600}
@@ -89,6 +89,11 @@ body{display:block;min-height:100dvh}
     <div class="code abs">HARITHIYA</div><div class="arname abs">بورصة الحارثية</div>
     <div class="selllab abs">بيع</div><div class="sellvalue abs" id="harSell">158,000</div>
     <div class="buylab abs">شراء</div><div class="buyvalue abs" id="harBuy">157,900</div>
+  </section>
+  <section class="source s3">
+    <div class="code abs">KUKH</div><div class="arname abs">كوخ العملات</div>
+    <div class="selllab abs">بيع</div><div class="sellvalue abs" id="kukhSell">158,000</div>
+    <div class="buylab abs">شراء</div><div class="buyvalue abs" id="kukhBuy">157,250</div>
   </section>
 
   <div class="goldtitle abs">GOLD · الذهب</div>
@@ -153,8 +158,8 @@ function stampRefreshTime(){
 function render(d){
   if(!d || !d.kifah || !d.harithiya || !d.gold) return;
   lastData=d;
-  const hs=Math.max(d.kifah.sell||0,d.harithiya.sell||0);
-  const hb=Math.max(d.kifah.buy||0,d.harithiya.buy||0);
+  const hs=Math.max(d.kifah.sell||0,d.harithiya.sell||0,d.kukh?.sell||0);
+  const hb=Math.max(d.kifah.buy||0,d.harithiya.buy||0,d.kukh?.buy||0);
   $('highSell').textContent=fmt(hs);
   $('highSell2').textContent=fmt(hs);
   $('highBuy').textContent=fmt(hb);
@@ -162,6 +167,10 @@ function render(d){
   $('kifahBuy').textContent=fmt(d.kifah.buy);
   $('harSell').textContent=fmt(d.harithiya.sell);
   $('harBuy').textContent=fmt(d.harithiya.buy);
+  if(d.kukh){
+    $('kukhSell').textContent=fmt(d.kukh.sell);
+    $('kukhBuy').textContent=fmt(d.kukh.buy);
+  }
   $('g18').textContent=fmt(d.gold.k18);
   $('g21').textContent=fmt(d.gold.k21);
   $('g24').textContent=fmt(d.gold.k24);
