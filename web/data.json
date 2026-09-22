@@ -1,11 +1,11 @@
 {
   "kifah": {
-    "buy": 157400,
-    "sell": 157450
+    "buy": 158000,
+    "sell": 159000
   },
   "harithiya": {
-    "buy": 157400,
-    "sell": 157450
+    "buy": 158000,
+    "sell": 159000
   },
   "kukh": {
     "buy": 157250,
@@ -14,19 +14,19 @@
     "published_at": "2026-09-22T08:14:45+00:00"
   },
   "gold": {
-    "k18": 819653,
-    "k21": 956262,
-    "k24": 1092871
+    "k18": 819958,
+    "k21": 956618,
+    "k24": 1093278
   },
   "usd_meta": {
-    "source": "Telegram @dollariraqi",
-    "source_url": "https://t.me/s/dollariraqi",
-    "published_at": "2026-09-21T08:44:06+00:00",
-    "state": "stale",
-    "note": "آخر سعر Telegram متوفر لكنه قديم",
-    "source_time": "11:40"
+    "source": "ArabRates",
+    "source_url": "https://arabrates.net/iq/currency/usd/",
+    "published_at": "2026-09-22T00:00:00+03:00",
+    "state": "backup",
+    "note": "آخر fallback يومي",
+    "source_time": ""
   },
-  "usd_source_time": "11:40",
-  "updated_at": "2026-09-22T11:27:21.809104+03:00",
+  "usd_source_time": "",
+  "updated_at": "2026-09-22T11:28:28.217164+03:00",
   "error": ""
 }
