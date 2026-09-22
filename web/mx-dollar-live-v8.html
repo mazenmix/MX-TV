@@ -68,7 +68,7 @@ body{display:block;min-height:100dvh}
   <div class="brandbox abs">$</div>
   <div class="brand abs">MX DOLLAR</div>
   <div class="subtitle abs">IRAQ MARKET WATCH</div>
-  <div class="live abs"><i></i>LIVE</div>
+  <div class="live abs" id="marketState"><i></i><span id="marketStateText">LIVE</span></div>
 
   <section class="hero abs">
     <div class="accent abs"></div>
@@ -155,6 +155,25 @@ function stampRefreshTime(){
   $('updated').textContent='آخر تحديث: '+clockFromIso(new Date().toISOString());
 }
 
+function renderUsdMeta(m){
+  const box=$('marketState');
+  const label=$('marketStateText');
+  const state=m.state||'stale';
+  if(state==='live'){
+    box.style.background='#132b23'; box.style.color='#67e0a8';
+    box.querySelector('i').style.background='#4bd197'; label.textContent='LIVE';
+  }else if(state==='backup'){
+    box.style.background='#3a2d16'; box.style.color='#e5c576';
+    box.querySelector('i').style.background='#e5c576'; label.textContent='BACKUP';
+  }else{
+    box.style.background='#3a2020'; box.style.color='#ef8b8b';
+    box.querySelector('i').style.background='#e96d6d'; label.textContent='STALE';
+  }
+  let t='';
+  if(m.published_at) t=' · '+clockFromIso(m.published_at);
+  $('err').textContent='مصدر الدولار: '+(m.source||'غير معروف')+t+(m.note?' · '+m.note:'');
+}
+
 function render(d){
   if(!d || !d.kifah || !d.harithiya || !d.gold) return;
   lastData=d;
@@ -174,6 +193,7 @@ function render(d){
   $('g18').textContent=fmt(d.gold.k18);
   $('g21').textContent=fmt(d.gold.k21);
   $('g24').textContent=fmt(d.gold.k24);
+  renderUsdMeta(d.usd_meta||{});
   stampRefreshTime();
 }
 
@@ -191,8 +211,7 @@ async function refresh(manual=false){
     const d=await r.json();
     if(!d.kifah?.sell || !d.harithiya?.sell || !d.gold?.k21 || !d.gold?.k24) throw new Error('incomplete');
     render(d);
-    if(d.error) $('err').textContent='آخر تحديث استخدم بعض البيانات المحفوظة';
-    else if(manual) $('err').textContent='تم تحديث الأسعار بنجاح';
+    if(d.error) $('err').textContent += ' · بعض البيانات استخدمت آخر قيمة محفوظة';
   }catch(e){
     $('err').textContent='تعذر جلب آخر الأسعار — البيانات الظاهرة هي آخر بيانات محفوظة';
     if(lastData) render(lastData);
