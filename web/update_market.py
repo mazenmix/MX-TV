@@ -127,7 +127,8 @@ def parse_common_baghdad_price(txt):
         m=re.search(p,txt,re.I)
         if m:
             n=norm_price(m.group(1))
-            if 120000<=n<=220000: return n
+            if 120000<=n<=220000:
+                return n
     return 0
 
 def latest_shafaq():
