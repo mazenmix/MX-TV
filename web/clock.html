@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05070a">
+<title>MX Clock</title>
+<style>
+:root{
+  --bg:#05070a;
+  --panel:rgba(16,22,31,.66);
+  --line:rgba(255,255,255,.08);
+  --text:#f6f8fb;
+  --muted:#8f9baa;
+  --gold:#ddb86f;
+  --gold2:#f2d99a;
+  --shadow:0 24px 80px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 72% 20%,rgba(221,184,111,.13),transparent 25%),
+    radial-gradient(circle at 20% 84%,rgba(72,105,165,.10),transparent 28%),
+    linear-gradient(160deg,#090d13,#040609 62%);
+}
+.wrap{
+  width:100%;height:100%;min-height:100dvh;
+  display:grid;place-items:center;padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));
+}
+.clock-card{
+  width:min(1100px,94vw);
+  border:1px solid var(--line);
+  border-radius:clamp(24px,4vw,42px);
+  background:linear-gradient(145deg,rgba(15,21,30,.74),rgba(8,12,18,.56));
+  backdrop-filter:blur(28px);
+  -webkit-backdrop-filter:blur(28px);
+  box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.03);
+  padding:clamp(26px,5vw,64px);
+  position:relative;
+  overflow:hidden;
+}
+.clock-card:before{
+  content:"MX";
+  position:absolute;
+  right:-1vw;top:50%;
+  transform:translateY(-53%);
+  font-weight:950;
+  font-size:min(28vw,330px);
+  letter-spacing:-.08em;
+  color:rgba(255,255,255,.022);
+  pointer-events:none;
+}
+.top{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  position:relative;z-index:2;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:52px;height:52px;border-radius:16px;display:grid;place-items:center;
+  background:linear-gradient(145deg,var(--gold2),#a77f45);
+  color:#080a0d;font-weight:950;letter-spacing:-2px;font-size:20px;
+  box-shadow:0 12px 30px rgba(221,184,111,.16);
+}
+.brand-copy strong{display:block;font-size:17px}
+.brand-copy span{display:block;margin-top:2px;color:var(--muted);font-size:11px}
+.controls{display:flex;gap:8px}
+button{
+  border:1px solid var(--line);background:rgba(255,255,255,.035);color:#c5ccd6;
+  min-width:44px;height:44px;border-radius:14px;cursor:pointer;padding:0 13px;
+  font-weight:800;transition:.18s ease;
+}
+button:hover,button:focus-visible{
+  outline:none;border-color:rgba(221,184,111,.45);color:#fff;transform:translateY(-1px);
+}
+.time{
+  position:relative;z-index:2;
+  display:flex;align-items:baseline;justify-content:center;
+  margin:clamp(34px,6vh,70px) 0 12px;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.hhmm{
+  font-size:clamp(68px,17vw,210px);
+  line-height:.82;
+  font-weight:850;
+  letter-spacing:-.07em;
+}
+.seconds{
+  margin-left:clamp(10px,2vw,26px);
+  font-size:clamp(22px,5vw,62px);
+  color:var(--gold2);
+  font-weight:800;
+  letter-spacing:-.03em;
+}
+.period{
+  margin-left:clamp(8px,1.5vw,18px);
+  font-size:clamp(14px,2.5vw,30px);
+  color:var(--muted);
+  font-weight:850;
+  letter-spacing:.08em;
+}
+.date-row{
+  position:relative;z-index:2;
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  color:#a7b1bf;font-size:clamp(14px,2.2vw,24px);font-weight:650;
+  text-align:center;
+}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.zone{
+  position:relative;z-index:2;
+  margin-top:20px;text-align:center;color:#6f7a88;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+}
+@media(max-width:600px){
+  .clock-card{width:96vw;padding:24px 18px 30px}
+  .brand-copy{display:none}
+  .hhmm{font-size:clamp(68px,22vw,105px)}
+  .seconds{font-size:clamp(22px,7vw,34px)}
+  .time{margin-top:44px}
+  .date-row{flex-direction:column;gap:7px}
+  .dot{display:none}
+}
+@media(min-width:1800px){
+  .clock-card{width:min(1500px,88vw);padding:76px}
+  .logo{width:70px;height:70px;font-size:26px}
+  .brand-copy strong{font-size:24px}
+  .brand-copy span{font-size:14px}
+  button{height:56px;min-width:56px;font-size:17px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <main class="clock-card">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">MX</div>
+        <div class="brand-copy">
+          <strong>MX Clock</strong>
+          <span>by MazenmiX</span>
+        </div>
+      </div>
+      <div class="controls">
+        <button id="formatBtn" title="Switch 12/24 hour">24H</button>
+        <button id="fullBtn" title="Fullscreen">⛶</button>
+      </div>
+    </div>
+
+    <div class="time">
+      <span class="hhmm" id="hhmm">00:00</span>
+      <span class="seconds" id="seconds">00</span>
+      <span class="period" id="period"></span>
+    </div>
+
+    <div class="date-row">
+      <span id="weekday">Monday</span>
+      <span class="dot"></span>
+      <span id="date">01 January 2026</span>
+    </div>
+    <div class="zone" id="zone">Local Time</div>
+  </main>
+</div>
+
+<script>
+let use24=true;
+
+const hhmm=document.getElementById('hhmm');
+const seconds=document.getElementById('seconds');
+const period=document.getElementById('period');
+const weekday=document.getElementById('weekday');
+const dateEl=document.getElementById('date');
+const zone=document.getElementById('zone');
+const formatBtn=document.getElementById('formatBtn');
+
+function update(){
+  const now=new Date();
+  let h=now.getHours();
+  let p='';
+  if(!use24){
+    p=h>=12?'PM':'AM';
+    h=h%12||12;
+  }
+  hhmm.textContent=String(h).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  seconds.textContent=String(now.getSeconds()).padStart(2,'0');
+  period.textContent=p;
+
+  weekday.textContent=new Intl.DateTimeFormat(undefined,{weekday:'long'}).format(now);
+  dateEl.textContent=new Intl.DateTimeFormat(undefined,{day:'2-digit',month:'long',year:'numeric'}).format(now);
+
+  try{
+    const z=Intl.DateTimeFormat().resolvedOptions().timeZone;
+    zone.textContent=z.replaceAll('_',' ');
+  }catch{
+    zone.textContent='Local Time';
+  }
+}
+formatBtn.addEventListener('click',()=>{
+  use24=!use24;
+  formatBtn.textContent=use24?'24H':'12H';
+  update();
+});
+document.getElementById('fullBtn').addEventListener('click',async()=>{
+  try{
+    if(!document.fullscreenElement) await document.documentElement.requestFullscreen();
+    else await document.exitFullscreen();
+  }catch{}
+});
+update();
+setInterval(update,250);
+</script>
+</body>
+</html>
