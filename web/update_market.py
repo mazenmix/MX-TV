@@ -200,61 +200,33 @@ def arabrates_daily():
         return None
 
 def choose_usd():
-    tg=None
-    try: tg=parse_telegram_baghdad(fetch(TELEGRAM_URL))
-    except Exception: pass
-
-    sh=latest_shafaq()
-
-    if tg and age_minutes(tg.get("published_at",""))<=90:
-        meta={
-            "source":tg["source"],"source_url":tg["source_url"],
-            "published_at":tg.get("published_at",""),"state":"live",
-            "note":"المصدر اللحظي الرئيسي","source_time":tg.get("source_time",""),
-        }
-        if sh and same_baghdad_day(sh.get("published_at","")):
-            meta["verification"]={
-                "source":"Shafaq News","price":sh["kifah"]["sell"],
-                "published_at":sh.get("published_at",""),"source_url":sh.get("source_url",""),
-            }
-        return tg["kifah"],tg["harithiya"],meta
-
-    if sh and same_baghdad_day(sh.get("published_at","")):
-        meta={
-            "source":sh["source"],"source_url":sh["source_url"],
-            "published_at":sh.get("published_at",""),"state":"backup",
-            "note":"Telegram غير حديث؛ تم استخدام شفق اليوم","source_time":"",
-        }
-        if tg:
-            meta["telegram_last"]={
-                "published_at":tg.get("published_at",""),
-                "kifah":tg.get("kifah"),"harithiya":tg.get("harithiya"),
-            }
-        return sh["kifah"],sh["harithiya"],meta
-
-    al=latest_alsumaria()
-    if al and same_baghdad_day(al.get("published_at","")):
-        return al["kifah"],al["harithiya"],{
-            "source":al["source"],"source_url":al["source_url"],
-            "published_at":al.get("published_at",""),"state":"backup",
-            "note":"Telegram وشفق غير حديثين؛ تم استخدام السومرية","source_time":"",
-        }
-
-    ar=arabrates_daily()
-    if ar:
-        return ar["kifah"],ar["harithiya"],{
-            "source":ar["source"],"source_url":ar["source_url"],
-            "published_at":ar.get("published_at",""),"state":"backup",
-            "note":"آخر fallback يومي","source_time":"",
-        }
-
+    try:
+        tg=parse_telegram_baghdad(fetch(TELEGRAM_URL))
+    except Exception:
+        tg=None
     if tg:
-        return tg["kifah"],tg["harithiya"],{
-            "source":tg["source"],"source_url":tg["source_url"],
-            "published_at":tg.get("published_at",""),"state":"stale",
-            "note":"آخر سعر Telegram متوفر لكنه قديم","source_time":tg.get("source_time",""),
+        state="live" if age_minutes(tg.get("published_at",""))<=90 else "stale"
+        note="المصدر الوحيد: Telegram @dollariraqi"
+        if state=="stale":
+            note+=" · آخر منشور متاح من القناة"
+        meta={
+            "source":"Telegram @dollariraqi",
+            "source_url":TELEGRAM_URL,
+            "published_at":tg.get("published_at",""),
+            "state":state,
+            "note":note,
+            "source_time":tg.get("source_time",""),
         }
-    return None,None,{"source":"Unavailable","source_url":"","published_at":"","state":"stale","note":"لا يوجد مصدر متاح","source_time":""}
+        return tg["kifah"],tg["harithiya"],meta
+    return None,None,{
+        "source":"Telegram @dollariraqi",
+        "source_url":TELEGRAM_URL,
+        "published_at":"",
+        "state":"stale",
+        "note":"تعذر جلب آخر منشور من قناة الدولار العراقي",
+        "source_time":"",
+    }
+
 
 def parse_kukh_latest(body):
     blocks=body.split("tgme_widget_message_wrap")
@@ -299,7 +271,7 @@ try:
         data["usd_meta"]=meta
         data["usd_source_time"]=meta.get("source_time","")
     else:
-        errors.append("usd-all-sources")
+        errors.append("usd-telegram")
 except Exception as e:
     errors.append("usd:"+type(e).__name__)
 
