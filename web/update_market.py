@@ -8,7 +8,7 @@ UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/153 Sa
 OUT = Path(__file__).with_name("data.json")
 BAGHDAD = ZoneInfo("Asia/Baghdad")
 TELEGRAM_URL = "https://t.me/s/dollariraqi"
-SHFAQ_ECON = "https://www.shafaq.com/en/Economy"
+SHFAQ_ECON = "https://www.shafaq.com/en/tags/Baghdad"
 ALSUMARIA_ECON = "https://www.alsumaria.tv/economy-news"
 ARABRATES_URL = "https://arabrates.net/iq/currency/usd/"
 
@@ -29,9 +29,11 @@ def strip(s):
 
 def norm_price(s):
     s=s.strip().replace("،",",")
-    if "," in s:
-        n=int(s.replace(",",""))
-        return n
+    # 1,580.00 -> 1580.00
+    if "," in s and "." in s:
+        s=s.replace(",","")
+    elif "," in s:
+        return int(s.replace(",",""))
     if "." in s:
         a,b=s.rsplit(".",1)
         if len(b)==2:
@@ -134,7 +136,6 @@ def latest_shafaq():
         candidates=anchor_candidates(listing,"https://www.shafaq.com",["dollar","baghdad"])
         if not candidates:
             candidates=anchor_candidates(listing,"https://www.shafaq.com",["usd","baghdad"])
-        print("DEBUG_SHFAQ_CANDIDATES", len(candidates), candidates[:5])
         for url in candidates[:12]:
             body=fetch(url)
             txt=strip(body)
@@ -149,8 +150,8 @@ def latest_shafaq():
                     "source_url":url,
                     "note":"سعر بورصتي الكفاح والحارثية المنشور من مراسل شفق",
                 }
-    except Exception as e:
-        print("DEBUG_SHFAQ_ERROR", type(e).__name__, str(e)[:180])
+    except Exception:
+        pass
     return None
 
 def latest_alsumaria():
@@ -180,8 +181,8 @@ def arabrates_daily():
     try:
         body=fetch(ARABRATES_URL)
         txt=strip(body)
-        bm=re.search(r"شراء السوق[^0-9]{0,80}([0-9]{1,4}(?:[.,][0-9]{1,2})?)",txt)
-        sm=re.search(r"بيع السوق[^0-9]{0,80}([0-9]{1,4}(?:[.,][0-9]{1,2})?)",txt)
+        bm=re.search(r"شراء السوق[^0-9]{0,120}([0-9]{1,3}(?:,[0-9]{3})(?:\.[0-9]{1,2})?|[0-9]{3,4}(?:\.[0-9]{1,2})?)",txt)
+        sm=re.search(r"بيع السوق[^0-9]{0,120}([0-9]{1,3}(?:,[0-9]{3})(?:\.[0-9]{1,2})?|[0-9]{3,4}(?:\.[0-9]{1,2})?)",txt)
         if not (bm and sm): return None
         buy=norm_price(bm.group(1)); sell=norm_price(sm.group(1))
         if not (120000<=buy<=220000 and 120000<=sell<=220000): return None
@@ -194,8 +195,7 @@ def arabrates_daily():
             "source_url":ARABRATES_URL,
             "note":"تحديث يومي لسوق الكفاح والحارثية",
         }
-    except Exception as e:
-        print("DEBUG_ARABRATES_ERROR", type(e).__name__, str(e)[:180])
+    except Exception:
         return None
 
 def choose_usd():
