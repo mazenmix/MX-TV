@@ -1,32 +1,32 @@
 {
   "kifah": {
-    "buy": 158000,
-    "sell": 159000
+    "buy": 157750,
+    "sell": 157800
   },
   "harithiya": {
-    "buy": 158000,
-    "sell": 159000
+    "buy": 157600,
+    "sell": 157650
   },
   "kukh": {
-    "buy": 157250,
+    "buy": 157500,
     "sell": 158000,
     "source": "https://t.me/s/Kukh_alomlat",
-    "published_at": "2026-09-22T08:14:45+00:00"
+    "published_at": "2026-09-22T10:00:11+00:00"
   },
   "gold": {
-    "k18": 819901,
-    "k21": 956551,
-    "k24": 1093201
+    "k18": 825159,
+    "k21": 962685,
+    "k24": 1100212
   },
   "usd_meta": {
-    "source": "ArabRates",
-    "source_url": "https://arabrates.net/iq/currency/usd/",
-    "published_at": "2026-09-22T00:00:00+03:00",
-    "state": "backup",
-    "note": "آخر fallback يومي",
-    "source_time": ""
+    "source": "Telegram @dollariraqi",
+    "source_url": "https://t.me/s/dollariraqi",
+    "published_at": "2026-09-22T09:37:33+00:00",
+    "state": "live",
+    "note": "المصدر اللحظي الرئيسي",
+    "source_time": "12:35"
   },
-  "usd_source_time": "",
-  "updated_at": "2026-09-22T11:29:42.809687+03:00",
+  "usd_source_time": "12:35",
+  "updated_at": "2026-09-22T13:16:30.223837+03:00",
   "error": ""
 }
