@@ -29,7 +29,7 @@ jobs:
         run: |
           git config user.name "MX Dollar Bot"
           git config user.email "actions@users.noreply.github.com"
-          for attempt in 1 2 3; do
+          for attempt in 1 2 3 4; do
             git fetch origin main
             git reset --hard origin/main
             cp /tmp/mx-dollar-data.json web/data.json
@@ -37,7 +37,6 @@ jobs:
             git diff --cached --quiet && exit 0
             git commit -m "[CF-Pages-Skip] Update MX Dollar market data"
             git push origin main && exit 0
-            echo "Push race detected; retrying..."
             sleep 2
           done
           exit 1
