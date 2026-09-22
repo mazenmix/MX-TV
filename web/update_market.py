@@ -8,7 +8,7 @@ UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/153 Sa
 OUT = Path(__file__).with_name("data.json")
 BAGHDAD = ZoneInfo("Asia/Baghdad")
 TELEGRAM_URL = "https://t.me/s/dollariraqi"
-SHFAQ_ECON = "https://www.shafaq.com/en/tags/Baghdad"
+SHFAQ_ECON = "https://api.shafaq.com/en/tags/Baghdad"
 ALSUMARIA_ECON = "https://www.alsumaria.tv/economy-news"
 ARABRATES_URL = "https://arabrates.net/iq/currency/usd/"
 
@@ -133,9 +133,9 @@ def parse_common_baghdad_price(txt):
 def latest_shafaq():
     try:
         listing=fetch(SHFAQ_ECON)
-        candidates=anchor_candidates(listing,"https://www.shafaq.com",["dollar","baghdad"])
+        candidates=anchor_candidates(listing,"https://api.shafaq.com",["dollar","baghdad"])
         if not candidates:
-            candidates=anchor_candidates(listing,"https://www.shafaq.com",["usd","baghdad"])
+            candidates=anchor_candidates(listing,"https://api.shafaq.com",["usd","baghdad"])
         for url in candidates[:12]:
             body=fetch(url)
             txt=strip(body)
