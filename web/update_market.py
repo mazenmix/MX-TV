@@ -8,7 +8,7 @@ UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/153 Sa
 OUT = Path(__file__).with_name("data.json")
 BAGHDAD = ZoneInfo("Asia/Baghdad")
 TELEGRAM_URL = "https://t.me/s/dollariraqi"
-SHFAQ_ECON = "https://shafaq.com/ar/%D8%A7%D9%82%D8%AA%D8%B5%D9%80%D8%A7%D8%AF"
+SHFAQ_ECON = "https://www.shafaq.com/en/Economy"
 ALSUMARIA_ECON = "https://www.alsumaria.tv/economy-news"
 ARABRATES_URL = "https://arabrates.net/iq/currency/usd/"
 
@@ -115,12 +115,14 @@ def parse_article_iso(body):
 
 def parse_common_baghdad_price(txt):
     pats=[
+        r"Al[- ]Kifah\s+and\s+Al[- ]Harithiya[^0-9]{0,220}([0-9]{3}[,،][0-9]{3})",
+        r"Al[- ]Kifah\s+and\s+Al[- ]Harithiya[^0-9]{0,220}([0-9]{6})",
         r"بورصتي\s+الكفاح\s+والحارثية[^0-9]{0,180}([0-9]{3}[,،][0-9]{3})",
         r"بورصتي\s+الكفاح\s+والحارثية[^0-9]{0,180}([0-9]{6})",
         r"بورصتي\s+الكفاح\s+والحارثية[^0-9]{0,180}([0-9]{3,4}(?:\.[0-9]{2})?)",
     ]
     for p in pats:
-        m=re.search(p,txt)
+        m=re.search(p,txt,re.I)
         if m:
             n=norm_price(m.group(1))
             if 120000<=n<=220000: return n
@@ -129,7 +131,7 @@ def parse_common_baghdad_price(txt):
 def latest_shafaq():
     try:
         listing=fetch(SHFAQ_ECON)
-        candidates=anchor_candidates(listing,"https://shafaq.com",["الدولار","بغداد"])
+        candidates=anchor_candidates(listing,"https://www.shafaq.com",["dollar","baghdad"])\n        if not candidates:\n            candidates=anchor_candidates(listing,"https://www.shafaq.com",["usd","baghdad"])
         for url in candidates[:12]:
             body=fetch(url)
             txt=strip(body)
