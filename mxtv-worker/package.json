@@ -1,0 +1,14 @@
+{
+  "name": "mx-tv-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {"deploy":"wrangler deploy"},
+  "devDependencies": {"wrangler":"^4.0.0"},
+  "cloudflare": {
+    "bindings": {
+      "COOKIE_SIGNING_KEY": {
+        "description": "Enter any long random secret (32+ characters). It signs MX TV login sessions."
+      }
+    }
+  }
+}
