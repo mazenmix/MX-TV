@@ -134,6 +134,7 @@ def latest_shafaq():
         candidates=anchor_candidates(listing,"https://www.shafaq.com",["dollar","baghdad"])
         if not candidates:
             candidates=anchor_candidates(listing,"https://www.shafaq.com",["usd","baghdad"])
+        print("DEBUG_SHFAQ_CANDIDATES", len(candidates), candidates[:5])
         for url in candidates[:12]:
             body=fetch(url)
             txt=strip(body)
@@ -148,8 +149,8 @@ def latest_shafaq():
                     "source_url":url,
                     "note":"سعر بورصتي الكفاح والحارثية المنشور من مراسل شفق",
                 }
-    except Exception:
-        pass
+    except Exception as e:
+        print("DEBUG_SHFAQ_ERROR", type(e).__name__, str(e)[:180])
     return None
 
 def latest_alsumaria():
@@ -193,7 +194,8 @@ def arabrates_daily():
             "source_url":ARABRATES_URL,
             "note":"تحديث يومي لسوق الكفاح والحارثية",
         }
-    except Exception:
+    except Exception as e:
+        print("DEBUG_ARABRATES_ERROR", type(e).__name__, str(e)[:180])
         return None
 
 def choose_usd():
