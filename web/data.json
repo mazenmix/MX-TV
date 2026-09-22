@@ -1,32 +1,32 @@
 {
   "kifah": {
-    "buy": 157700,
-    "sell": 157700
+    "buy": 157400,
+    "sell": 157450
   },
   "harithiya": {
-    "buy": 157700,
-    "sell": 157700
+    "buy": 157400,
+    "sell": 157450
   },
   "kukh": {
-    "buy": 157500,
-    "sell": 158250,
+    "buy": 157250,
+    "sell": 158000,
     "source": "https://t.me/s/Kukh_alomlat",
-    "published_at": "2026-09-22T05:49:01+00:00"
+    "published_at": "2026-09-22T08:14:45+00:00"
   },
   "gold": {
-    "k18": 824003,
-    "k21": 961337,
-    "k24": 1098671
+    "k18": 819977,
+    "k21": 956640,
+    "k24": 1093303
   },
-  "usd_source_time": "",
-  "updated_at": "2026-09-22T08:23:46.022Z",
-  "error": "",
   "usd_meta": {
-    "source": "Shafaq News",
-    "source_url": "https://shafaq.com/ar/%D8%A7%D9%82%D8%AA%D8%B5%D9%80%D8%A7%D8%AF/%D8%B3%D8%B9%D8%A7%D8%B1-%D8%A7%D9%84%D8%A8%D9%8A%D8%B9-%D9%81%D9%88%D9%82-158-%D9%84%D9%81%D8%A7-%D8%A7%D9%86%D8%AE%D9%81%D8%A7%D8%B6-%D8%AC%D8%AF%D9%8A%D8%AF-%D9%84%D9%84%D8%AF%D9%88%D9%84%D8%A7%D8%B1-%D9%81%D9%8A-%D8%A8%D8%BA%D8%AF%D8%A7%D8%AF-%D9%88-%D8%B1%D8%A8%D9%8A%D9%84",
-    "published_at": "2026-09-22T07:45:32+00:00",
-    "state": "backup",
-    "note": "Telegram غير حديث؛ تم استخدام شفق اليوم",
-    "source_time": ""
-  }
-}\n
+    "source": "Telegram @dollariraqi",
+    "source_url": "https://t.me/s/dollariraqi",
+    "published_at": "2026-09-21T08:44:06+00:00",
+    "state": "stale",
+    "note": "آخر سعر Telegram متوفر لكنه قديم",
+    "source_time": "11:40"
+  },
+  "usd_source_time": "11:40",
+  "updated_at": "2026-09-22T11:26:13.173301+03:00",
+  "error": ""
+}
