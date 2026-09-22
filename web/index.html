@@ -69,7 +69,6 @@ body{display:block;min-height:100dvh}
   <div class="header abs"></div>
   <div class="brandbox abs">$</div>
   <div class="brand abs">MX DOLLAR</div>
-  <div class="subtitle abs">IRAQ MARKET WATCH</div>
   <div class="live abs" id="marketState"><i></i><span id="marketStateText">LIVE</span></div>
 
   <section class="hero abs">
@@ -221,7 +220,7 @@ refresh(false);
 setInterval(()=>refresh(false),60000);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=17',{updateViaCache:'none'})
+  navigator.serviceWorker.register('./sw.js?v=18',{updateViaCache:'none'})
     .then(reg=>reg.update().catch(()=>{}))
     .catch(()=>{});
 }
