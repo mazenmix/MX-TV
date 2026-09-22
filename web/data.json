@@ -1,11 +1,11 @@
 {
   "kifah": {
-    "buy": 157400,
-    "sell": 157450
+    "buy": 157700,
+    "sell": 157700
   },
   "harithiya": {
-    "buy": 157400,
-    "sell": 157450
+    "buy": 157700,
+    "sell": 157700
   },
   "kukh": {
     "buy": 157500,
@@ -18,7 +18,15 @@
     "k21": 961337,
     "k24": 1098671
   },
-  "usd_source_time": "11:40",
-  "updated_at": "2026-09-22T09:21:33.779049+03:00",
-  "error": ""
-}
+  "usd_source_time": "",
+  "updated_at": "2026-09-22T08:23:46.022Z",
+  "error": "",
+  "usd_meta": {
+    "source": "Shafaq News",
+    "source_url": "https://shafaq.com/ar/%D8%A7%D9%82%D8%AA%D8%B5%D9%80%D8%A7%D8%AF/%D8%B3%D8%B9%D8%A7%D8%B1-%D8%A7%D9%84%D8%A8%D9%8A%D8%B9-%D9%81%D9%88%D9%82-158-%D9%84%D9%81%D8%A7-%D8%A7%D9%86%D8%AE%D9%81%D8%A7%D8%B6-%D8%AC%D8%AF%D9%8A%D8%AF-%D9%84%D9%84%D8%AF%D9%88%D9%84%D8%A7%D8%B1-%D9%81%D9%8A-%D8%A8%D8%BA%D8%AF%D8%A7%D8%AF-%D9%88-%D8%B1%D8%A8%D9%8A%D9%84",
+    "published_at": "2026-09-22T07:45:32+00:00",
+    "state": "backup",
+    "note": "Telegram غير حديث؛ تم استخدام شفق اليوم",
+    "source_time": ""
+  }
+}\n
