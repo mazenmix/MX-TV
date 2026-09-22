@@ -28,10 +28,6 @@ body{display:block;min-height:100dvh}
 .heroar{left:27px;top:48px;width:285px;height:29px;text-align:left;direction:rtl;font-size:16px;font-weight:600;line-height:29px;color:#acb5c1}
 .mainprice{left:27px;top:73px;width:355px;height:63px;direction:ltr;text-align:left;font-size:45px;line-height:63px;font-weight:700;color:#f8fafc;letter-spacing:-1px}
 .iqd{left:379px;top:87px;width:61px;height:41px;direction:rtl;text-align:left;font-size:16px;line-height:41px;font-weight:700;color:#8894a3}
-.trend{left:27px;top:140px;height:27px;min-width:88px;padding:0 12px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:6px;direction:ltr;font-size:12px;font-weight:800;letter-spacing:.1px;background:#171d26;color:#8793a2;border:1px solid #28313d}
-.trend.up{background:#11271f;color:#66dfa7;border-color:#214838}
-.trend.down{background:#2a181b;color:#ff858d;border-color:#522a30}
-.trend.flat{background:#171d26;color:#8793a2;border-color:#28313d}
 .chip{position:absolute;left:472px;width:197px;height:53px;border-radius:15px;display:flex;align-items:center}
 .buy{top:27px;background:#12251f}.sell{top:92px;background:#2a1f19}
 .chiplabel{width:85px;text-align:center;direction:rtl;font-weight:600;font-size:13px}
@@ -80,7 +76,6 @@ body{display:block;min-height:100dvh}
     <div class="heroar abs">السعر الأعلى الآن لكل 100$</div>
     <div class="mainprice abs" id="highSell">158,300</div>
     <div class="iqd abs">د.ع</div>
-    <div class="trend abs flat" id="priceTrend"><span id="trendArrow">—</span><span id="trendValue">0</span></div>
     <div class="chip buy"><div class="chiplabel">شراء</div><div class="chipval" id="highBuy">158,300</div></div>
     <div class="chip sell"><div class="chiplabel">بيع</div><div class="chipval" id="highSell2">158,300</div></div>
   </section>
@@ -171,41 +166,6 @@ function renderUsdMeta(m){
   $('err').textContent='';
 }
 
-function renderPriceTrend(current){
-  const el=$('priceTrend');
-  const arrow=$('trendArrow');
-  const val=$('trendValue');
-  const prevRaw=localStorage.getItem('mxDollarLastHighSell');
-  const savedDeltaRaw=localStorage.getItem('mxDollarLastHighSellDelta');
-  const prev=prevRaw===null ? null : Number(prevRaw);
-  let delta=savedDeltaRaw===null ? 0 : Number(savedDeltaRaw);
-
-  if(prev===null || !Number.isFinite(prev)){
-    localStorage.setItem('mxDollarLastHighSell',String(current));
-    localStorage.setItem('mxDollarLastHighSellDelta','0');
-    delta=0;
-  }else if(current!==prev){
-    delta=current-prev;
-    localStorage.setItem('mxDollarLastHighSell',String(current));
-    localStorage.setItem('mxDollarLastHighSellDelta',String(delta));
-  }
-
-  el.classList.remove('up','down','flat');
-  if(delta>0){
-    el.classList.add('up');
-    arrow.textContent='▲';
-    val.textContent='+'+fmt(delta);
-  }else if(delta<0){
-    el.classList.add('down');
-    arrow.textContent='▼';
-    val.textContent=fmt(delta);
-  }else{
-    el.classList.add('flat');
-    arrow.textContent='—';
-    val.textContent='0';
-  }
-}
-
 function render(d){
   if(!d || !d.kifah || !d.harithiya || !d.gold) return;
   lastData=d;
@@ -214,7 +174,6 @@ function render(d){
   $('highSell').textContent=fmt(hs);
   $('highSell2').textContent=fmt(hs);
   $('highBuy').textContent=fmt(hb);
-  renderPriceTrend(hs);
   $('kifahSell').textContent=fmt(d.kifah.sell);
   $('kifahBuy').textContent=fmt(d.kifah.buy);
   $('harSell').textContent=fmt(d.harithiya.sell);
@@ -260,7 +219,7 @@ refresh(false);
 setInterval(()=>refresh(false),60000);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=16',{updateViaCache:'none'})
+  navigator.serviceWorker.register('./sw.js?v=17',{updateViaCache:'none'})
     .then(reg=>reg.update().catch(()=>{}))
     .catch(()=>{});
 }
