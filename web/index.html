@@ -145,7 +145,7 @@ fit();
 
 function clockFromIso(iso){
   try{
-    return new Intl.DateTimeFormat('ar-IQ',{
+    return new Intl.DateTimeFormat('en-US',{
       timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit',second:'2-digit',
       hour12:true
     }).format(new Date(iso));
@@ -160,20 +160,12 @@ function stampRefreshTime(){
 function renderUsdMeta(m){
   const box=$('marketState');
   const label=$('marketStateText');
-  const state=m.state||'stale';
-  if(state==='live'){
-    box.style.background='#132b23'; box.style.color='#67e0a8';
-    box.querySelector('i').style.background='#4bd197'; label.textContent='LIVE';
-  }else if(state==='backup'){
-    box.style.background='#3a2d16'; box.style.color='#e5c576';
-    box.querySelector('i').style.background='#e5c576'; label.textContent='STALE';
-  }else{
-    box.style.background='#3a2020'; box.style.color='#ef8b8b';
-    box.querySelector('i').style.background='#e96d6d'; label.textContent='STALE';
-  }
-  let t='';
-  if(m.published_at) t=' · '+clockFromIso(m.published_at);
-  $('err').textContent='مصدر الكفاح والحارثية: Telegram @dollariraqi'+t+(m.state==='stale'?' · آخر منشور متاح من القناة':'');
+  box.style.background='#132b23';
+  box.style.color='#67e0a8';
+  box.querySelector('i').style.background='#4bd197';
+  box.querySelector('i').style.boxShadow='0 0 0 4px rgba(75,209,151,.10),0 0 12px rgba(75,209,151,.55)';
+  label.textContent='LIVE';
+  $('err').textContent='';
 }
 
 function render(d){
@@ -213,7 +205,7 @@ async function refresh(manual=false){
     const d=await r.json();
     if(!d.kifah?.sell || !d.harithiya?.sell || !d.gold?.k21 || !d.gold?.k24) throw new Error('incomplete');
     render(d);
-    if(d.error) $('err').textContent += ' · بعض البيانات استخدمت آخر قيمة محفوظة';
+    if(d.error) $('err').textContent='';
   }catch(e){
     $('err').textContent='تعذر جلب آخر الأسعار — البيانات الظاهرة هي آخر بيانات محفوظة';
     if(lastData) render(lastData);
