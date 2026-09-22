@@ -131,7 +131,9 @@ def parse_common_baghdad_price(txt):
 def latest_shafaq():
     try:
         listing=fetch(SHFAQ_ECON)
-        candidates=anchor_candidates(listing,"https://www.shafaq.com",["dollar","baghdad"])\n        if not candidates:\n            candidates=anchor_candidates(listing,"https://www.shafaq.com",["usd","baghdad"])
+        candidates=anchor_candidates(listing,"https://www.shafaq.com",["dollar","baghdad"])
+        if not candidates:
+            candidates=anchor_candidates(listing,"https://www.shafaq.com",["usd","baghdad"])
         for url in candidates[:12]:
             body=fetch(url)
             txt=strip(body)
