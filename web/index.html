@@ -112,7 +112,7 @@ body{display:block;min-height:100dvh}
 </div></div>
 
 <script>
-const DATA_URL='https://raw.githubusercontent.com/mazenmix/MX-TV/main/web/data.json';
+const DATA_URL='/api/market';
 const $=id=>document.getElementById(id);
 const fmt=n=>Number(n||0).toLocaleString('en-US');
 let lastData=null;
@@ -220,7 +220,7 @@ refresh(false);
 setInterval(()=>refresh(false),60000);
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js?v=18',{updateViaCache:'none'})
+  navigator.serviceWorker.register('./sw.js?v=19',{updateViaCache:'none'})
     .then(reg=>reg.update().catch(()=>{}))
     .catch(()=>{});
 }
