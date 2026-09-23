@@ -1,4 +1,4 @@
-const CACHE='mx-dollar-v18';
+const CACHE='mx-dollar-v19';
 const ASSETS=['./manifest.webmanifest','./icon.svg'];
 
 self.addEventListener('install',e=>{
