@@ -8,10 +8,10 @@
     "sell": 157150
   },
   "kukh": {
-    "buy": 156300,
-    "sell": 156750,
+    "buy": 155000,
+    "sell": 156000,
     "source": "https://t.me/s/Kukh_alomlat",
-    "published_at": "2026-09-26T09:53:39+00:00"
+    "published_at": "2026-09-26T13:18:59+00:00"
   },
   "gold": {
     "k18": 810032,
@@ -27,6 +27,6 @@
     "source_time": "15:35"
   },
   "usd_source_time": "15:35",
-  "updated_at": "2026-09-26T15:24:03.890083+03:00",
+  "updated_at": "2026-09-26T17:21:01.548203+03:00",
   "error": ""
 }
