@@ -17,6 +17,7 @@ a{color:inherit;text-decoration:none}
 .top{display:flex;align-items:center;justify-content:space-between;direction:ltr;gap:12px;min-height:52px}
 .brand{font-weight:850;font-size:clamp(23px,2.1vw,38px);letter-spacing:.15px;white-space:nowrap}.brand b{color:var(--gold)}
 .badges{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.badge{border:1px solid rgba(255,202,66,.75);color:var(--gold);padding:8px 14px;border-radius:12px;font-weight:800;background:rgba(255,202,66,.08);box-shadow:0 0 22px rgba(255,202,66,.08)}.live{border-color:rgba(23,231,160,.55);color:var(--green);background:rgba(23,231,160,.08)}.live:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:7px;box-shadow:0 0 12px var(--green)}
+.backLink{border-color:rgba(72,162,255,.62);color:#bfe1ff;background:rgba(72,162,255,.08);direction:rtl;white-space:nowrap}.backLink:hover{border-color:#70b9ff;background:rgba(72,162,255,.14)}
 .updatebar{text-align:center;color:var(--muted);font-size:clamp(11px,.85vw,14px);padding:7px 0 1px;min-height:24px}
 .section{margin-top:clamp(14px,1.4vw,24px)}
 .section-title{display:flex;align-items:center;gap:12px;font-size:clamp(18px,1.6vw,29px);font-weight:800;margin:0 4px 10px}.section-title:before,.section-title:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,#9e7b25,transparent)}
@@ -43,7 +44,7 @@ a{color:inherit;text-decoration:none}
 <div class="wrap">
   <header class="top">
     <div class="brand" aria-hidden="true"></div>
-    <div class="badges"><span class="badge live">LIVE</span></div>
+    <div class="badges"><a class="badge backLink" href="./index.html">الرجوع للنسخة المصغرة</a><span class="badge live">LIVE</span></div>
   </header>
   <div class="updatebar" id="heroUpdate">جاري تحميل الأسعار المحدثة…</div>
 
