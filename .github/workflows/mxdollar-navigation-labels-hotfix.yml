@@ -1,0 +1,69 @@
+name: MX Dollar navigation labels hotfix
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/mxdollar-navigation-labels-hotfix.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Update navigation labels
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          # Main compact page: rename Beta button and make room for Arabic text.
+          p = Path('web/index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace(
+              '.betaLink{right:128px;top:24px;width:76px;height:28px;border-radius:14px;border:1px solid #caa742;background:#2a2414;color:#f1cd67;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;direction:ltr;text-decoration:none;box-shadow:0 0 15px rgba(225,187,74,.08)}',
+              '.betaLink{right:128px;top:24px;width:132px;height:28px;border-radius:14px;border:1px solid #caa742;background:#2a2414;color:#f1cd67;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;direction:rtl;text-decoration:none;box-shadow:0 0 15px rgba(225,187,74,.08);white-space:nowrap}',
+              1
+          )
+          s = s.replace('<a class="betaLink abs" href="./beta.html">Beta</a>', '<a class="betaLink abs" href="./beta.html">النسخة الموسعة هنا</a>', 1)
+          p.write_text(s, encoding='utf-8')
+
+          # Expanded page: add return button to compact version in top badges.
+          p = Path('web/beta.html')
+          s = p.read_text(encoding='utf-8')
+          anchor_css = '.backLink{border-color:rgba(72,162,255,.62);color:#bfe1ff;background:rgba(72,162,255,.08);direction:rtl;white-space:nowrap}.backLink:hover{border-color:#70b9ff;background:rgba(72,162,255,.14)}\n'
+          marker = '.updatebar{text-align:center;color:var(--muted);font-size:clamp(11px,.85vw,14px);padding:7px 0 1px;min-height:24px}'
+          if '.backLink{' not in s:
+              s = s.replace(marker, anchor_css + marker, 1)
+          old = '<div class="badges"><span class="badge live">LIVE</span></div>'
+          new = '<div class="badges"><a class="badge backLink" href="./index.html">الرجوع للنسخة المصغرة</a><span class="badge live">LIVE</span></div>'
+          s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Verify requested changes
+        shell: bash
+        run: |
+          grep -q 'النسخة الموسعة هنا' web/index.html
+          grep -q 'الرجوع للنسخة المصغرة' web/beta.html
+          grep -q 'href="./index.html"' web/beta.html
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/index.html web/beta.html
+          if git diff --cached --quiet; then
+            echo "No changes needed."
+          else
+            git commit -m "Update compact and expanded navigation labels"
+            git push origin HEAD:main
+          fi
