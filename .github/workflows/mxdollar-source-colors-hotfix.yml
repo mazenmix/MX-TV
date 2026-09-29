@@ -1,0 +1,46 @@
+name: MX Dollar source color styling
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/mxdollar-source-colors-hotfix.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Style source buy and sell values
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('web/index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='''
+/* MX source value colors */
+.source .arname{font-size:16px!important;font-weight:800!important;color:#d7dee7!important}
+.source .selllab{color:#d8a65f!important;font-weight:800!important}
+.source .buylab{color:#62c997!important;font-weight:800!important}
+.source .sellvalue{color:#f2bd68!important;font-size:18px!important;font-weight:850!important;letter-spacing:.1px!important}
+.source .buyvalue{color:#69dda8!important;font-size:18px!important;font-weight:850!important;letter-spacing:.1px!important}
+'''
+          if 'MX source value colors' not in s:
+              s=s.replace('</style>', '\n'+marker+'\n</style>', 1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Verify
+        run: |
+          grep -q 'MX source value colors' web/index.html
+          grep -q 'sellvalue{color:#f2bd68' web/index.html
+          grep -q 'buyvalue{color:#69dda8' web/index.html
+      - name: Commit and push
+        run: |
+          git config user.name "Mazen"
+          git config user.email "mazenmix@gmail.com"
+          git add web/index.html
+          git commit -m "Color sell yellow and buy green in MX Dollar main"
+          git push origin main
