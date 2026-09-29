@@ -20,16 +20,9 @@ jobs:
           from pathlib import Path
           p=Path('web/index.html')
           s=p.read_text(encoding='utf-8')
-          marker='''
-/* MX source value colors */
-.source .arname{font-size:16px!important;font-weight:800!important;color:#d7dee7!important}
-.source .selllab{color:#d8a65f!important;font-weight:800!important}
-.source .buylab{color:#62c997!important;font-weight:800!important}
-.source .sellvalue{color:#f2bd68!important;font-size:18px!important;font-weight:850!important;letter-spacing:.1px!important}
-.source .buyvalue{color:#69dda8!important;font-size:18px!important;font-weight:850!important;letter-spacing:.1px!important}
-'''
+          marker="\n/* MX source value colors */\n.source .arname{font-size:16px!important;font-weight:800!important;color:#d7dee7!important}\n.source .selllab{color:#d8a65f!important;font-weight:800!important}\n.source .buylab{color:#62c997!important;font-weight:800!important}\n.source .sellvalue{color:#f2bd68!important;font-size:18px!important;font-weight:850!important;letter-spacing:.1px!important}\n.source .buyvalue{color:#69dda8!important;font-size:18px!important;font-weight:850!important;letter-spacing:.1px!important}\n"
           if 'MX source value colors' not in s:
-              s=s.replace('</style>', '\n'+marker+'\n</style>', 1)
+              s=s.replace('</style>', marker+'\n</style>', 1)
           p.write_text(s,encoding='utf-8')
           PY
       - name: Verify
