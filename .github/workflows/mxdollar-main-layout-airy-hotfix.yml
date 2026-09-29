@@ -1,0 +1,80 @@
+name: MX Dollar main airy layout hotfix
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/mxdollar-main-layout-airy-hotfix.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make layout wider and airier
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('web/index.html')
+          s=p.read_text(encoding='utf-8')
+          marker="""
+/* MX main layout airy upgrade */
+#viewport{height:925px!important}
+#app{height:925px!important}
+.header{height:90px!important}
+.brand{top:24px!important}
+.betaLink{top:29px!important;height:34px!important;width:154px!important;border-radius:17px!important;padding:0 14px!important}
+.live{top:29px!important;height:34px!important;width:96px!important;border-radius:17px!important}
+.hero{left:18px!important;top:112px!important;width:724px!important;height:232px!important;border-radius:28px!important;padding:0!important}
+.accent{height:232px!important;width:12px!important}
+.usdlabel{left:34px!important;top:26px!important;width:220px!important;height:30px!important;line-height:30px!important}
+.heroar{left:34px!important;top:62px!important;width:360px!important;height:30px!important;line-height:30px!important}
+.mainprice{left:34px!important;top:100px!important;width:400px!important;height:66px!important;line-height:66px!important}
+.iqd{left:420px!important;top:116px!important;width:68px!important;height:42px!important;line-height:42px!important}
+.chip{left:480px!important;width:216px!important;height:66px!important;border-radius:19px!important;padding:0 12px!important}
+.buy{top:34px!important}.sell{top:124px!important}
+.chiplabel{width:92px!important}.chipval{width:104px!important}
+.source{top:372px!important;width:232px!important;height:148px!important;border-radius:22px!important;padding:17px 16px 15px!important;display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:34px 22px 38px!important;column-gap:16px!important;row-gap:7px!important;align-items:center!important}
+.s1{left:18px!important}.s2{left:264px!important}.s3{left:510px!important}
+.source .code,.source .arname,.source .selllab,.source .sellvalue,.source .buylab,.source .buyvalue{position:static!important;left:auto!important;right:auto!important;top:auto!important;width:auto!important;height:auto!important;line-height:normal!important;margin:0!important;overflow:visible!important;text-overflow:clip!important;white-space:nowrap!important}
+.source .code{grid-column:1!important;grid-row:1!important;text-align:left!important;align-self:center!important}
+.source .arname{grid-column:2!important;grid-row:1!important;text-align:right!important;align-self:center!important}
+.source .selllab{grid-column:1!important;grid-row:2!important;text-align:left!important;align-self:end!important}
+.source .buylab{grid-column:2!important;grid-row:2!important;text-align:right!important;align-self:end!important}
+.source .sellvalue{grid-column:1!important;grid-row:3!important;text-align:left!important;align-self:start!important;font-size:17px!important}
+.source .buyvalue{grid-column:2!important;grid-row:3!important;text-align:right!important;align-self:start!important;font-size:17px!important}
+.goldtitle{left:18px!important;top:550px!important;width:340px!important;height:36px!important;line-height:36px!important}
+.goldsub{left:402px!important;top:550px!important;width:340px!important;height:36px!important;line-height:36px!important}
+.goldcard{top:600px!important;width:232px!important;height:164px!important;border-radius:22px!important;padding:16px!important;display:grid!important;grid-template-columns:66px 1fr!important;grid-template-rows:34px 58px 24px!important;column-gap:10px!important;row-gap:7px!important;align-items:center!important}
+.g18{left:18px!important}.g21{left:264px!important}.g24{left:510px!important}
+.goldcard .kbadge,.goldcard .kar,.goldcard .gprice,.goldcard .giqd{position:static!important;left:auto!important;right:auto!important;top:auto!important;width:auto!important;height:auto!important;line-height:normal!important;margin:0!important}
+.goldcard .kbadge{grid-column:1!important;grid-row:1!important;width:60px!important;height:32px!important;border-radius:16px!important}
+.goldcard .kar{grid-column:2!important;grid-row:1!important;justify-content:flex-end!important;align-self:center!important}
+.goldcard .gprice{grid-column:1 / 3!important;grid-row:2!important;justify-content:center!important;align-self:center!important;font-size:31px!important}
+.goldcard .giqd{grid-column:1 / 3!important;grid-row:3!important;justify-content:center!important;align-self:center!important}
+.footer{left:18px!important;top:794px!important;width:724px!important;height:106px!important;border-radius:24px!important}
+.updated{left:18px!important;top:16px!important;width:500px!important;height:32px!important}
+.sig{left:18px!important;top:56px!important;width:500px!important;height:28px!important}
+.refresh{left:530px!important;top:23px!important;width:176px!important;height:60px!important;border-radius:18px!important}
+.err{left:18px!important;top:904px!important;width:724px!important;height:18px!important;line-height:18px!important}
+"""
+          if 'MX main layout airy upgrade' not in s:
+              s=s.replace('</style>', '\n'+marker+'\n</style>', 1)
+          s=s.replace('const DESIGN_W=760,DESIGN_H=812;', 'const DESIGN_W=760,DESIGN_H=925;')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Verify
+        run: |
+          grep -q 'MX main layout airy upgrade' web/index.html
+          grep -q 'DESIGN_H=925' web/index.html
+          grep -q 'display:grid!important;grid-template-columns:1fr 1fr' web/index.html
+      - name: Commit and push
+        run: |
+          git config user.name "Mazen"
+          git config user.email "mazenmix@gmail.com"
+          git add web/index.html
+          git commit -m "Make MX Dollar main layout roomier and cleaner"
+          git push origin main
