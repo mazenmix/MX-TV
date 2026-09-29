@@ -1,0 +1,36 @@
+name: MX Dollar remove GOLD label
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/mxdollar-remove-gold-english-label.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove GOLD text and dot
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('web/index.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('GOLD · الذهب','الذهب')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Verify
+        run: |
+          ! grep -q 'GOLD · الذهب' web/index.html
+          grep -q '>الذهب<' web/index.html
+      - name: Commit and push
+        run: |
+          git config user.name "Mazen"
+          git config user.email "mazenmix@gmail.com"
+          git add web/index.html
+          git commit -m "Remove GOLD English label from MX Dollar main"
+          git push origin main
