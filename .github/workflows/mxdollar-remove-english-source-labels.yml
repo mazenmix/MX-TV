@@ -1,0 +1,42 @@
+name: MX Dollar remove English source labels
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/mxdollar-remove-english-source-labels.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove English labels and re-center Arabic names
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('web/index.html')
+          s=p.read_text(encoding='utf-8')
+          for label in ('KIFAH','HARITHIYA','KUKH'):
+              s=s.replace(f'<div class="code abs">{label}</div>','')
+          marker='''\n/* MX source labels Arabic-only */\n.source .arname{grid-column:1 / 3!important;text-align:center!important;justify-self:stretch!important;font-size:15px!important}\n'''
+          if 'MX source labels Arabic-only' not in s:
+              s=s.replace('</style>', marker+'\n</style>', 1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Verify
+        run: |
+          ! grep -q '>KIFAH<' web/index.html
+          ! grep -q '>HARITHIYA<' web/index.html
+          ! grep -q '>KUKH<' web/index.html
+          grep -q 'MX source labels Arabic-only' web/index.html
+      - name: Commit and push
+        run: |
+          git config user.name "Mazen"
+          git config user.email "mazenmix@gmail.com"
+          git add web/index.html
+          git commit -m "Remove English exchange labels from MX Dollar main"
+          git push origin main
