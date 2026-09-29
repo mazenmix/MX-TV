@@ -4,33 +4,55 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07111f">
-<title>MX Exchanger · Beta</title>
+<title>MX Dollar Beta</title>
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <style>
 :root{--bg:#06101d;--panel:#0b1b2d;--panel2:#0e2238;--line:#214765;--gold:#ffca42;--green:#17e7a0;--red:#ff4f67;--text:#f5f8fc;--muted:#91a7bc}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 50% -10%,#103253 0,#071524 38%,#040b14 100%);color:var(--text);font-family:"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;min-width:280px;min-height:100vh;overflow-x:hidden;background:radial-gradient(circle at 50% -10%,#103253 0,#071524 38%,#040b14 100%);color:var(--text);font-family:"Segoe UI",Tahoma,Arial,sans-serif}
 body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(10,33,55,.15),rgba(0,0,0,.15)),radial-gradient(circle at 14% 0,rgba(255,194,50,.07),transparent 25%)}
-a{color:inherit;text-decoration:none}.wrap{width:min(1600px,96vw);margin:auto;padding:18px 0 30px}.top{display:flex;align-items:center;justify-content:space-between;direction:ltr;gap:12px}.brand{font-weight:800;font-size:clamp(22px,2.1vw,34px);letter-spacing:.2px}.brand b{color:var(--gold)}.badges{display:flex;align-items:center;gap:10px}.badge{border:1px solid rgba(255,202,66,.75);color:var(--gold);padding:8px 14px;border-radius:12px;font-weight:800;background:rgba(255,202,66,.08);box-shadow:0 0 22px rgba(255,202,66,.08)}.live{border-color:rgba(23,231,160,.55);color:var(--green);background:rgba(23,231,160,.08)}.live:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:7px;box-shadow:0 0 12px var(--green)}
-.updatebar{text-align:center;color:var(--muted);font-size:12px;padding:8px 0 2px;min-height:26px}.section{margin-top:16px}.section-title{display:flex;align-items:center;gap:12px;font-size:clamp(19px,2vw,28px);font-weight:800;margin:0 4px 10px}.section-title:before,.section-title:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,#9e7b25,transparent)}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.metric,.card,.gold,.converter,.tablebox{border:1px solid rgba(70,139,186,.45);background:linear-gradient(180deg,rgba(13,34,55,.95),rgba(7,22,37,.96));border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.2)}.metric{padding:18px;min-height:112px;display:flex;flex-direction:column;justify-content:center}.metric .label{color:#d9e4ed;font-weight:700;font-size:14px}.metric .value{font-size:clamp(25px,3vw,39px);font-weight:900;direction:ltr;margin:5px 0}.metric .note{color:var(--muted);font-size:12px}.green{color:var(--green)!important}.red{color:var(--red)!important}.goldc{color:var(--gold)!important}.sources{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.card{padding:14px;min-width:0}.card-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.card-head strong{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.status{font-size:11px;color:var(--green);white-space:nowrap}.status:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-left:5px;box-shadow:0 0 9px var(--green)}.pair{display:grid;grid-template-columns:1fr 1px 1fr;gap:9px;align-items:end;margin-top:13px;direction:rtl}.sep{height:43px;background:#31536d}.p small{display:block;color:#a8bac9;font-size:11px}.p b{display:block;font-size:20px;direction:ltr;margin-top:4px}.update{border-top:1px solid rgba(98,145,177,.18);margin-top:11px;padding-top:8px;color:#8499aa;font-size:10px}.official{margin-top:13px;text-align:center}.official small{display:block;color:#9eb0bd}.official b{display:block;font-size:25px;color:var(--gold);direction:ltr;margin-top:5px}.currencies{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}.curr-code{font-size:18px;font-weight:900;direction:ltr}.curr-name{color:#c8d5df;font-size:12px;margin-top:2px}.unit{color:#8298ab;font-size:10px;margin-top:8px;min-height:26px}.source-note{color:#aab9c6;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:8px}.goldrow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.gold{border-color:#8a6b18;background:linear-gradient(135deg,rgba(73,53,8,.48),rgba(20,19,14,.95));padding:18px 22px;box-shadow:inset 0 0 24px rgba(255,199,45,.08),0 0 24px rgba(255,190,0,.05)}.gold .karat{font-weight:800;color:var(--gold);font-size:18px}.gold .gprice{font-weight:900;font-size:clamp(27px,3vw,42px);color:#ffd252;direction:ltr;margin-top:6px}.gold .gsub{color:#c7a94e;font-size:11px}.bottom{display:grid;grid-template-columns:1fr 1.05fr;gap:12px}.converter,.tablebox{padding:16px}.boxtitle{font-weight:850;font-size:20px;margin-bottom:12px}.convert-grid{display:grid;grid-template-columns:1fr 52px 1fr;gap:10px;align-items:center;direction:ltr}.inputbox{border:1px solid rgba(62,124,165,.55);border-radius:14px;padding:12px;background:#081a2a}.inputbox.active{border-color:rgba(23,231,160,.62);box-shadow:inset 0 0 22px rgba(23,231,160,.04)}.inputbox.output{border-color:rgba(255,202,66,.52);box-shadow:inset 0 0 22px rgba(255,202,66,.035)}.inputbox label{display:flex;justify-content:space-between;color:#aab9c8;font-size:11px;direction:rtl}.inputbox input{width:100%;border:0;outline:0;background:transparent;color:#fff;font-size:27px;font-weight:800;direction:ltr;margin-top:8px}.inputbox input[readonly]{color:#ffd252}.swap{display:grid;place-items:center;font-size:26px;color:var(--green)}.ratehint{margin-top:10px;color:#8ea4b6;font-size:11px;text-align:center}.tablewrap{overflow:auto;border-radius:12px}table{width:100%;border-collapse:collapse;font-size:12px;min-width:620px}th,td{padding:9px;border-bottom:1px solid rgba(81,129,161,.15);text-align:right}th{color:#91a9bb;font-weight:700;background:#0a1b2b}td.num{direction:ltr;font-weight:800}.foot{text-align:center;color:#687f92;font-size:11px;margin-top:17px}.error{display:none;margin-top:10px;padding:10px;border:1px solid rgba(255,79,103,.35);border-radius:12px;color:#ff9aaa;background:rgba(255,79,103,.06);font-size:12px;text-align:center}
-@media(max-width:1180px){.sources{grid-template-columns:repeat(3,1fr)}.currencies{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:760px){.wrap{width:94vw}.top{align-items:flex-start}.brand{font-size:24px}.grid4{grid-template-columns:repeat(2,1fr)}.sources{grid-template-columns:repeat(2,1fr)}.currencies{grid-template-columns:repeat(2,1fr)}.goldrow{grid-template-columns:1fr}.bottom{grid-template-columns:1fr}.metric{min-height:100px;padding:14px}.convert-grid{grid-template-columns:1fr}.swap{transform:rotate(90deg)}}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(1800px,96vw);margin:auto;padding:clamp(12px,1.2vw,24px) 0 clamp(24px,2vw,42px)}
+.top{display:flex;align-items:center;justify-content:space-between;direction:ltr;gap:12px;min-height:52px}
+.brand{font-weight:850;font-size:clamp(23px,2.1vw,38px);letter-spacing:.15px;white-space:nowrap}.brand b{color:var(--gold)}
+.badges{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.badge{border:1px solid rgba(255,202,66,.75);color:var(--gold);padding:8px 14px;border-radius:12px;font-weight:800;background:rgba(255,202,66,.08);box-shadow:0 0 22px rgba(255,202,66,.08)}.live{border-color:rgba(23,231,160,.55);color:var(--green);background:rgba(23,231,160,.08)}.live:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:7px;box-shadow:0 0 12px var(--green)}
+.updatebar{text-align:center;color:var(--muted);font-size:clamp(11px,.85vw,14px);padding:7px 0 1px;min-height:24px}
+.section{margin-top:clamp(14px,1.4vw,24px)}
+.section-title{display:flex;align-items:center;gap:12px;font-size:clamp(18px,1.6vw,29px);font-weight:800;margin:0 4px 10px}.section-title:before,.section-title:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,#9e7b25,transparent)}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(9px,1vw,16px)}
+.metric,.card,.gold,.converter,.tablebox{border:1px solid rgba(70,139,186,.45);background:linear-gradient(180deg,rgba(13,34,55,.95),rgba(7,22,37,.96));border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.2);min-width:0}
+.metric{padding:clamp(14px,1.2vw,22px);min-height:108px;display:flex;flex-direction:column;justify-content:center}.metric .label{color:#d9e4ed;font-weight:700;font-size:clamp(12px,.9vw,15px)}.metric .value{font-size:clamp(25px,2.5vw,44px);font-weight:900;direction:ltr;margin:5px 0}.metric .note{color:var(--muted);font-size:clamp(10px,.75vw,13px)}
+.green{color:var(--green)!important}.red{color:var(--red)!important}.goldc{color:var(--gold)!important}
+.sources{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:clamp(8px,.8vw,13px)}
+.card{padding:clamp(12px,1vw,17px)}.card-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.card-head strong{font-size:clamp(13px,.9vw,16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.status{font-size:10px;color:var(--green);white-space:nowrap}.status:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-left:5px;box-shadow:0 0 9px var(--green)}
+.pair{display:grid;grid-template-columns:1fr 1px 1fr;gap:9px;align-items:end;margin-top:13px;direction:rtl}.sep{height:43px;background:#31536d}.p small{display:block;color:#a8bac9;font-size:10px}.p b{display:block;font-size:clamp(17px,1.2vw,22px);direction:ltr;margin-top:4px}.update{border-top:1px solid rgba(98,145,177,.18);margin-top:11px;padding-top:8px;color:#8499aa;font-size:10px}.official{margin-top:13px;text-align:center}.official small{display:block;color:#9eb0bd}.official b{display:block;font-size:clamp(22px,1.5vw,28px);color:var(--gold);direction:ltr;margin-top:5px}
+.currencies{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:clamp(8px,.8vw,13px)}.curr-code{font-size:clamp(16px,1.1vw,20px);font-weight:900;direction:ltr}.curr-name{color:#c8d5df;font-size:12px;margin-top:2px}.unit{color:#8298ab;font-size:10px;margin-top:8px;min-height:26px}.source-note{color:#aab9c6;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:8px}
+.goldrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(9px,1vw,16px)}.gold{border-color:#8a6b18;background:linear-gradient(135deg,rgba(73,53,8,.48),rgba(20,19,14,.95));padding:clamp(16px,1.3vw,24px);box-shadow:inset 0 0 24px rgba(255,199,45,.08),0 0 24px rgba(255,190,0,.05)}.gold .karat{font-weight:800;color:var(--gold);font-size:clamp(16px,1.2vw,20px)}.gold .gprice{font-weight:900;font-size:clamp(27px,2.5vw,46px);color:#ffd252;direction:ltr;margin-top:6px}.gold .gsub{color:#c7a94e;font-size:11px}
+.bottom{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:clamp(10px,1vw,16px)}.converter,.tablebox{padding:clamp(14px,1.2vw,20px)}.boxtitle{font-weight:850;font-size:clamp(18px,1.3vw,23px);margin-bottom:12px}
+.convert-grid{display:grid;grid-template-columns:minmax(0,1fr) 52px minmax(0,1fr);gap:10px;align-items:center;direction:ltr}.inputbox{border:1px solid rgba(62,124,165,.55);border-radius:14px;padding:12px;background:#081a2a;min-width:0}.inputbox:focus-within{border-color:rgba(23,231,160,.7);box-shadow:inset 0 0 22px rgba(23,231,160,.045)}.inputbox label{display:flex;justify-content:space-between;gap:8px;color:#aab9c8;font-size:11px;direction:rtl}.inputbox input{width:100%;border:0;outline:0;background:transparent;color:#fff;font-size:clamp(22px,2vw,32px);font-weight:800;direction:ltr;margin-top:8px;min-width:0}.swap{display:grid;place-items:center;font-size:28px;color:var(--green)}.ratehint{margin-top:10px;color:#8ea4b6;font-size:11px;text-align:center}
+.tablewrap{overflow:auto;border-radius:12px;-webkit-overflow-scrolling:touch}table{width:100%;border-collapse:collapse;font-size:12px;min-width:560px}th,td{padding:9px;border-bottom:1px solid rgba(81,129,161,.15);text-align:right}th{color:#91a9bb;font-weight:700;background:#0a1b2b}td.num{direction:ltr;font-weight:800}
+.foot{text-align:center;color:#8d9dac;font-size:12px;margin-top:clamp(16px,1.6vw,26px);font-weight:700}.error{display:none;margin-top:10px;padding:10px;border:1px solid rgba(255,79,103,.35);border-radius:12px;color:#ff9aaa;background:rgba(255,79,103,.06);font-size:12px;text-align:center}
+@media (min-width:1900px){.wrap{width:min(2100px,94vw)}.sources{grid-template-columns:repeat(6,minmax(0,1fr))}.currencies{grid-template-columns:repeat(6,minmax(0,1fr))}.card{min-height:128px}.metric{min-height:130px}.updatebar{padding-top:10px}}
+@media (max-width:1100px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.bottom{grid-template-columns:1fr}.goldrow{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){.wrap{width:94vw}.top{align-items:center}.brand{font-size:23px}.metrics{grid-template-columns:1fr}.sources,.currencies{grid-template-columns:repeat(2,minmax(0,1fr))}.goldrow{grid-template-columns:1fr}.convert-grid{grid-template-columns:1fr}.swap{transform:rotate(90deg);height:34px}.metric{min-height:94px}.section-title{font-size:19px}.card{padding:12px}.p b{font-size:17px}}
+@media (max-width:480px){.wrap{width:93vw}.sources,.currencies{grid-template-columns:1fr}.badges{gap:6px}.badge{padding:7px 10px}.brand{font-size:21px}.section{margin-top:15px}.tablebox{padding:12px}.converter{padding:12px}.inputbox input{font-size:24px}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
-    <div class="brand"><b>MX</b> Exchanger</div>
-    <div class="badges"><span class="badge live">LIVE</span><span class="badge">Beta</span></div>
+    <div class="brand"><b>MX</b> Dollar Beta</div>
+    <div class="badges"><span class="badge live">LIVE</span></div>
   </header>
   <div class="updatebar" id="heroUpdate">جاري تحميل الأسعار المحدثة…</div>
 
   <section class="section">
     <h2 class="section-title">مؤشرات اليوم</h2>
-    <div class="grid4">
+    <div class="metrics">
       <div class="metric"><span class="label">متوسط دولار بغداد</span><b class="value goldc" id="avgBaghdad">—</b><span class="note">الحارثية + الكفاح · لكل 100$</span></div>
       <div class="metric"><span class="label">أعلى شراء للدولار</span><b class="value green" id="bestSellUsd">—</b><span class="note" id="bestSellSource">—</span></div>
       <div class="metric"><span class="label">أقل بيع للدولار</span><b class="value green" id="bestBuyUsd">—</b><span class="note" id="bestBuySource">—</span></div>
-      <div class="metric"><span class="label">المصادر المحدثة</span><b class="value" id="sourceCount">—</b><span class="note">مصادر فعلية متاحة الآن</span></div>
     </div>
   </section>
 
@@ -55,7 +77,6 @@ a{color:inherit;text-decoration:none}.wrap{width:min(1600px,96vw);margin:auto;pa
       <article class="card"><div class="curr-code">TRY 🇹🇷</div><div class="curr-name">الليرة التركية</div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="tryBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="trySell">—</b></div></div><div class="unit">ليرة تركية لكل 100$</div><div class="source-note">المصدر: كوخ العملات</div></article>
       <article class="card"><div class="curr-code">AED 🇦🇪</div><div class="curr-name">الدرهم الإماراتي</div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="aedBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="aedSell">—</b></div></div><div class="unit">درهم لكل 100$</div><div class="source-note">المصدر: كوخ العملات</div></article>
       <article class="card"><div class="curr-code">SAR 🇸🇦</div><div class="curr-name">الريال السعودي</div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="sarBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="sarSell">—</b></div></div><div class="unit">ريال سعودي لكل 100$</div><div class="source-note">المصدر: كوخ العملات</div></article>
-      <article class="card"><div class="curr-code">TOMAN 🇮🇷</div><div class="curr-name">التومان الإيراني</div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="tomanBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="tomanSell">—</b></div></div><div class="unit">سعر صيرفة فعلي · غير رسمي</div><div class="source-note" id="tomanSource">المصدر: Hatwan Exchange</div></article>
     </div>
   </section>
 
@@ -69,36 +90,36 @@ a{color:inherit;text-decoration:none}.wrap{width:min(1600px,96vw);margin:auto;pa
   </section>
 
   <section class="section bottom">
-    <div class="converter"><div class="boxtitle">محول سريع · دولار إلى دينار</div><div class="convert-grid"><div class="inputbox active"><label><span>USD</span><span>دولار أمريكي</span></label><input id="usdInput" inputmode="decimal" type="number" min="0" step="1" value="100"></div><div class="swap">→</div><div class="inputbox output"><label><span>IQD</span><span>دينار عراقي</span></label><input id="iqdOutput" readonly value="—"></div></div><div class="ratehint" id="rateHint">يُستخدم متوسط سعر شراء الدولار في الحارثية والكفاح</div></div>
+    <div class="converter"><div class="boxtitle">محول سريع · دولار ↔ دينار</div><div class="convert-grid"><div class="inputbox"><label><span>USD</span><span>دولار أمريكي</span></label><input id="usdInput" inputmode="decimal" type="number" min="0" step="any" value="100"></div><div class="swap">↔</div><div class="inputbox"><label><span>IQD</span><span>دينار عراقي</span></label><input id="iqdInput" inputmode="decimal" type="number" min="0" step="any" value=""></div></div><div class="ratehint" id="rateHint">يُستخدم متوسط سعر شراء الدولار في الحارثية والكفاح</div></div>
     <div class="tablebox"><div class="boxtitle">مقارنة سريعة</div><div class="tablewrap"><table><thead><tr><th>المصدر</th><th>شراء</th><th>بيع</th><th>آخر تحديث</th></tr></thead><tbody id="compareBody"></tbody></table></div></div>
   </section>
 
-  <div class="error" id="error"></div><div class="foot">MazenmiX · MX Exchanger Beta</div>
+  <div class="error" id="error"></div><div class="foot">MazenmiX</div>
 </div>
 <script>
-const $=id=>document.getElementById(id);let market=null;
+const $=id=>document.getElementById(id);let market=null;let lastEdited='usd';
 const fmt=(n,d=0)=>{const x=Number(n);return Number.isFinite(x)&&x?x.toLocaleString('en-US',{maximumFractionDigits:d}):'—'};
 const timeBaghdad=(iso)=>{if(!iso)return 'الآن';try{return new Intl.DateTimeFormat('ar-IQ',{timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit'}).format(new Date(iso))}catch(e){return 'الآن'}};
 function setPair(prefix,obj){if(!obj)return;$(prefix+'Buy').textContent=fmt(obj.buy,obj.buy%1?2:0);$(prefix+'Sell').textContent=fmt(obj.sell,obj.sell%1?2:0)}
 function validUsd(name,obj){return obj&&Number(obj.buy)>100000&&Number(obj.sell)>100000?{name,buy:Number(obj.buy),sell:Number(obj.sell)}:null}
+function livePer100(){if(!market)return 0;const h=Number(market.harithiya?.buy||0),k=Number(market.kifah?.buy||0);return h&&k?(h+k)/2:0}
 function render(d){market=d;const now=timeBaghdad(d.updated_at);$('heroUpdate').textContent='آخر تحديث '+now+' بتوقيت بغداد';
   setPair('har',d.harithiya);setPair('kif',d.kifah);setPair('kukh',d.kukh);$('harTime').textContent=timeBaghdad(d.usd_meta?.published_at);$('kifTime').textContent=$('harTime').textContent;$('kukhTime').textContent=timeBaghdad(d.kukh?.published_at);
   const hat=d.hatwan?.rates?.USD,gai=d.gailany?.rates?.USD;if(hat)setPair('hat',hat);if(gai)setPair('gai',gai);if(d.cbi?.rates?.USD)$('cbiUsd').textContent=fmt(d.cbi.rates.USD,3);
   setPair('usd',d.harithiya);const kr=d.kukh_rates||{};setPair('eur',kr.EUR);setPair('gbp',kr.GBP);setPair('try',kr.TRY);setPair('aed',kr.AED);setPair('sar',kr.SAR);
-  const toman=d.hatwan?.rates?.TOMAN;if(toman){setPair('toman',toman);$('tomanSource').textContent='المصدر: Hatwan Exchange · سوق صيرفة'}
   $('g18').textContent=fmt(d.gold?.k18);$('g21').textContent=fmt(d.gold?.k21);$('g24').textContent=fmt(d.gold?.k24);
   const sources=[validUsd('بورصة الحارثية',d.harithiya),validUsd('بورصة الكفاح',d.kifah),validUsd('كوخ العملات',d.kukh),validUsd('Hatwan Exchange',hat),validUsd('Gailany Exchange',gai)].filter(Boolean);
-  $('sourceCount').textContent=String(sources.length+(d.cbi?.rates?.USD?1:0));
   if(d.harithiya?.sell&&d.kifah?.sell)$('avgBaghdad').textContent=fmt(Math.round((Number(d.harithiya.sell)+Number(d.kifah.sell))/2));
   if(sources.length){const sellBest=[...sources].sort((a,b)=>b.buy-a.buy)[0];const buyBest=[...sources].sort((a,b)=>a.sell-b.sell)[0];$('bestSellUsd').textContent=fmt(sellBest.buy);$('bestSellSource').textContent=sellBest.name;$('bestBuyUsd').textContent=fmt(buyBest.sell);$('bestBuySource').textContent=buyBest.name}
-  buildTable(sources);convertUsdToIqd();$('error').style.display='none';
+  buildTable(sources);recalculate();$('error').style.display='none';
 }
 function buildTable(sources){const body=$('compareBody');body.innerHTML='';sources.forEach(s=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${s.name}</td><td class="num green">${fmt(s.buy)}</td><td class="num red">${fmt(s.sell)}</td><td>${timeBaghdad(market.updated_at)}</td>`;body.appendChild(tr)});if(market.cbi?.rates?.USD){const tr=document.createElement('tr');tr.innerHTML=`<td>البنك المركزي العراقي</td><td class="num goldc" colspan="2">${fmt(market.cbi.rates.USD,3)} رسمي</td><td>${timeBaghdad(market.updated_at)}</td>`;body.appendChild(tr)}}
-function convertUsdToIqd(){if(!market)return;const h=Number(market.harithiya?.buy||0),k=Number(market.kifah?.buy||0);if(!h||!k){$('iqdOutput').value='—';return}const per100=(h+k)/2;const usd=Math.max(0,Number($('usdInput').value||0));const iqd=(usd/100)*per100;$('iqdOutput').value=iqd.toLocaleString('en-US',{maximumFractionDigits:0});$('rateHint').textContent=`100 USD ≈ ${fmt(per100)} IQD · متوسط شراء الحارثية والكفاح الحي`}
-$('usdInput').addEventListener('input',convertUsdToIqd);
+function recalculate(){const per100=livePer100();if(!per100)return;const perUsd=per100/100;if(lastEdited==='iqd'){const iqd=Math.max(0,Number($('iqdInput').value||0));$('usdInput').value=iqd?String(Math.round((iqd/perUsd)*100)/100):''}else{const usd=Math.max(0,Number($('usdInput').value||0));$('iqdInput').value=usd?String(Math.round(usd*perUsd)):''}$('rateHint').textContent=`100 USD ≈ ${fmt(per100)} IQD · متوسط شراء الحارثية والكفاح الحي`}
+$('usdInput').addEventListener('input',()=>{lastEdited='usd';recalculate()});
+$('iqdInput').addEventListener('input',()=>{lastEdited='iqd';recalculate()});
 async function refresh(){try{const r=await fetch('/api/market?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(!d.harithiya?.sell||!d.kifah?.sell)throw new Error('بيانات ناقصة');render(d)}catch(e){$('error').textContent='تعذر جلب آخر الأسعار حالياً. أعد المحاولة بعد قليل.';$('error').style.display='block'}}
 refresh();setInterval(refresh,60000);
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=21',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{})}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=22',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{})}
 </script>
 </body>
 </html>
