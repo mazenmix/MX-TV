@@ -5,6 +5,7 @@ const HATWAN_URL='https://hatwan.co/en';
 const CBI_URL='https://cbi.iq/';
 const GOLD_URL='https://mithqaly.com/%D8%A7%D8%B3%D8%B9%D8%A7%D8%B1-%D8%A7%D9%84%D8%B0%D9%87%D8%A8/';
 const FALLBACK_URL='https://raw.githubusercontent.com/mazenmix/MX-TV/main/web/data.json';
+const BETA_RAW_URL='https://raw.githubusercontent.com/mazenmix/MX-TV/main/web/beta.html';
 
 const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/153 Safari/537.36';
 
@@ -88,9 +89,7 @@ function parseKukhLatest(body){
     const dm=raw.match(/datetime=["']([^"']+)["']/i);
     return {
       buy:p[0].buy,sell:p[0].sell,source:'كوخ العملات',source_url:KUKH_URL,published_at:dm?dm[1]:'',
-      rates:{
-        USD:p[0]||null,EUR:p[1]||null,TRY:p[2]||null,GBP:p[3]||null,JOD:p[4]||null,AED:p[5]||null,SAR:p[6]||null
-      }
+      rates:{USD:p[0]||null,EUR:p[1]||null,TRY:p[2]||null,GBP:p[3]||null,JOD:p[4]||null,AED:p[5]||null,SAR:p[6]||null}
     };
   }
   return null;
@@ -163,6 +162,21 @@ function ageMinutes(iso){
   return Number.isFinite(t)?(Date.now()-t)/60000:1e9;
 }
 
+async function betaPageResponse(request,env){
+  try{
+    const r=await fetch(BETA_RAW_URL+'?t='+Date.now(),{cache:'no-store',headers:{'User-Agent':UA,'Cache-Control':'no-cache'}});
+    if(r.ok){
+      const html=await r.text();
+      return new Response(html,{status:200,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache'}});
+    }
+  }catch(_){}
+  try{
+    const u=new URL(request.url);u.pathname='/beta.html';u.search='';
+    return await env.ASSETS.fetch(new Request(u.toString(),request));
+  }catch(_){}
+  return new Response('MX Exchanger Beta temporarily unavailable',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});
+}
+
 async function marketResponse(){
   const old=await fallbackData();
   const data={
@@ -170,7 +184,6 @@ async function marketResponse(){
     kukh_rates:old.kukh_rates||{},gailany:old.gailany||{},hatwan:old.hatwan||{},cbi:old.cbi||{},updated_at:new Date().toISOString(),error:''
   };
   const errors=[];
-
   const jobs=await Promise.allSettled([fetchText(TELEGRAM_URL),fetchText(KUKH_URL),fetchText(GAILANY_TG_URL),fetchText(HATWAN_URL),fetchText(CBI_URL),fetchText(GOLD_URL)]);
 
   if(jobs[0].status==='fulfilled'){
@@ -219,6 +232,12 @@ async function marketResponse(){
 export default {
   async fetch(request,env,ctx){
     const url=new URL(request.url);
+
+    if(url.pathname==='/beta' || url.pathname==='/beta/' || url.pathname==='/beta.html'){
+      if(request.method!=='GET' && request.method!=='HEAD') return new Response('Method Not Allowed',{status:405});
+      return betaPageResponse(request,env);
+    }
+
     if(url.pathname==='/api/market'){
       if(request.method==='OPTIONS') return new Response(null,{status:204,headers:{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET, OPTIONS','Access-Control-Allow-Headers':'Content-Type'}});
       if(request.method!=='GET') return new Response('Method Not Allowed',{status:405});
