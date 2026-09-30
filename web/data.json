@@ -14,19 +14,19 @@
     "published_at": "2026-09-30T11:44:35+00:00"
   },
   "gold": {
-    "k18": 793979,
-    "k21": 926309,
-    "k24": 1058639
+    "k18": 786270,
+    "k21": 917315,
+    "k24": 1048360
   },
   "usd_meta": {
     "source": "Telegram @dollariraqi",
     "source_url": "https://t.me/s/dollariraqi",
     "published_at": "2026-09-30T12:23:33+00:00",
-    "state": "live",
-    "note": "المصدر الوحيد: Telegram @dollariraqi",
+    "state": "stale",
+    "note": "المصدر الوحيد: Telegram @dollariraqi · آخر منشور متاح من القناة",
     "source_time": "15:20"
   },
   "usd_source_time": "15:20",
-  "updated_at": "2026-09-30T15:26:07.690962+03:00",
+  "updated_at": "2026-09-30T21:06:06.392747+03:00",
   "error": ""
 }
