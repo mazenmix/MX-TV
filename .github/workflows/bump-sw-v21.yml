@@ -1,0 +1,38 @@
+name: Refresh Safari service worker
+
+on:
+  push:
+    paths:
+      - '.github/workflows/bump-sw-v21.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump service worker URL
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('web/index.html')
+          s=p.read_text(encoding='utf-8')
+          old="serviceWorker.register('./sw.js?v=20',{updateViaCache:'none'})"
+          new="serviceWorker.register('./sw.js?v=21',{updateViaCache:'none'})"
+          if old not in s:
+              raise SystemExit('Expected service worker registration not found; no change made.')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add web/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Refresh Safari service worker registration'
+          git push
