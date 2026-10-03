@@ -55,18 +55,23 @@
   <footer class="foot">MazenmiX</footer>
 </main>
 <script>
-const API='https://open.er-api.com/v6/latest/USD';
+const FX_API='https://open.er-api.com/v6/latest/USD';
+const MARKET_API='/api/market';
 const el={fromAmount:document.getElementById('fromAmount'),toAmount:document.getElementById('toAmount'),fromCurrency:document.getElementById('fromCurrency'),toCurrency:document.getElementById('toCurrency'),fromCode:document.getElementById('fromCode'),toCode:document.getElementById('toCode'),rateText:document.getElementById('rateText'),updatedText:document.getElementById('updatedText'),status:document.getElementById('status'),swap:document.getElementById('swap')};
-let rates={},lastEdited='from',timer=null;
+let rates={},parallelIqd=NaN,parallelUpdated=null,lastEdited='from',timer=null;
 const currencyNames=new Intl.DisplayNames(['en'],{type:'currency'});
 function num(v){const n=Number(String(v).replace(/,/g,'').trim());return Number.isFinite(n)?n:0}
 function fmt(n){if(!Number.isFinite(n))return '—';return new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n)}
 function fmtRate(n){if(!Number.isFinite(n))return '—';return new Intl.NumberFormat('en-US',{maximumFractionDigits:n>=100?2:n>=1?4:6}).format(n)}
 function syncCodes(){el.fromCode.textContent=el.fromCurrency.value||'USD';el.toCode.textContent=el.toCurrency.value||'IQD'}
-function makeOptions(){const codes=Object.keys(rates).sort();for(const s of [el.fromCurrency,el.toCurrency]){s.innerHTML='';codes.forEach(code=>{const o=document.createElement('option');o.value=code;let name=code;try{name=currencyNames.of(code)||code}catch{}o.textContent=`${code} — ${name}`;s.appendChild(o)})}el.fromCurrency.value=rates.USD?'USD':codes[0];el.toCurrency.value=rates.IQD?'IQD':(rates.EUR?'EUR':codes[1]||codes[0]);syncCodes()}
-function crossRate(from,to){const a=rates[from],b=rates[to];if(!a||!b)return NaN;return b/a}
+function makeOptions(){const codes=Object.keys(rates).sort();if(!codes.includes('IQD'))codes.push('IQD');codes.sort();for(const s of [el.fromCurrency,el.toCurrency]){s.innerHTML='';codes.forEach(code=>{const o=document.createElement('option');o.value=code;let name=code;try{name=currencyNames.of(code)||code}catch{}o.textContent=`${code} — ${name}`;s.appendChild(o)})}el.fromCurrency.value=rates.USD?'USD':codes[0];el.toCurrency.value='IQD';syncCodes()}
+function effectiveUsdRate(code){if(code==='IQD')return parallelIqd;return rates[code]}
+function crossRate(from,to){const a=effectiveUsdRate(from),b=effectiveUsdRate(to);if(!a||!b)return NaN;return b/a}
+function usesIqd(){return el.fromCurrency.value==='IQD'||el.toCurrency.value==='IQD'}
+function setUpdated(fxStamp){const stamp=usesIqd()&&parallelUpdated?parallelUpdated:fxStamp;el.updatedText.textContent='آخر تحديث: '+new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(stamp)}
 function render(direction='from'){
   const from=el.fromCurrency.value,to=el.toCurrency.value,r=crossRate(from,to);syncCodes();
+  if((from==='IQD'||to==='IQD')&&!Number.isFinite(parallelIqd)){el.status.className='status error';el.status.textContent='سعر السوق الموازي العراقي غير متوفر حالياً';return}
   if(!Number.isFinite(r)){el.status.className='status error';el.status.textContent='السعر غير متوفر حالياً';return}
   if(direction==='from'){el.toAmount.value=fmt(num(el.fromAmount.value)*r);el.rateText.innerHTML=`1 ${from} = <span>${fmtRate(r)}</span> ${to}`}
   else{const inv=1/r;el.fromAmount.value=fmt(num(el.toAmount.value)*inv);el.rateText.innerHTML=`1 ${to} = <span>${fmtRate(inv)}</span> ${from}`}
@@ -74,11 +79,27 @@ function render(direction='from'){
 }
 async function load(){
   el.status.className='status';el.status.textContent='جاري تحديث الأسعار…';
-  try{const res=await fetch(API+'?t='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);const d=await res.json();if(d.result!=='success'||!d.rates)throw new Error('bad data');rates=d.rates;if(!el.fromCurrency.options.length)makeOptions();render(lastEdited);const stamp=d.time_last_update_unix?new Date(d.time_last_update_unix*1000):new Date();el.updatedText.textContent='آخر تحديث: '+new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(stamp)}catch(e){el.status.className='status error';el.status.textContent='تعذر جلب آخر سعر حالياً'}
+  try{
+    const [fxRes,marketRes]=await Promise.all([
+      fetch(FX_API+'?t='+Date.now(),{cache:'no-store'}),
+      fetch(MARKET_API+'?t='+Date.now(),{cache:'no-store'})
+    ]);
+    if(!fxRes.ok)throw new Error('FX HTTP '+fxRes.status);
+    const d=await fxRes.json();if(d.result!=='success'||!d.rates)throw new Error('bad fx data');rates=d.rates;
+    if(marketRes.ok){
+      const m=await marketRes.json();
+      const sells=[m.kifah?.sell,m.harithiya?.sell,m.kukh?.sell].map(Number).filter(v=>Number.isFinite(v)&&v>0);
+      if(sells.length){parallelIqd=Math.max(...sells)/100;parallelUpdated=m.updated_at?new Date(m.updated_at):new Date()}
+    }
+    if(!el.fromCurrency.options.length)makeOptions();
+    render(lastEdited);
+    const fxStamp=d.time_last_update_unix?new Date(d.time_last_update_unix*1000):new Date();
+    setUpdated(fxStamp);
+  }catch(e){el.status.className='status error';el.status.textContent='تعذر جلب آخر سعر حالياً'}
 }
 function schedule(side){lastEdited=side;clearTimeout(timer);timer=setTimeout(()=>render(side),120)}
-el.fromAmount.addEventListener('input',()=>schedule('from'));el.toAmount.addEventListener('input',()=>schedule('to'));el.fromAmount.addEventListener('focus',()=>lastEdited='from');el.toAmount.addEventListener('focus',()=>lastEdited='to');el.fromCurrency.addEventListener('change',()=>render(lastEdited));el.toCurrency.addEventListener('change',()=>render(lastEdited));
-el.swap.addEventListener('click',()=>{const fc=el.fromCurrency.value,tc=el.toCurrency.value,fv=el.fromAmount.value,tv=el.toAmount.value;el.fromCurrency.value=tc;el.toCurrency.value=fc;el.fromAmount.value=tv==='—'?'100.00':tv;el.toAmount.value=fv;lastEdited='from';render('from')});
+el.fromAmount.addEventListener('input',()=>schedule('from'));el.toAmount.addEventListener('input',()=>schedule('to'));el.fromAmount.addEventListener('focus',()=>lastEdited='from');el.toAmount.addEventListener('focus',()=>lastEdited='to');el.fromCurrency.addEventListener('change',()=>{render(lastEdited);setUpdated(new Date())});el.toCurrency.addEventListener('change',()=>{render(lastEdited);setUpdated(new Date())});
+el.swap.addEventListener('click',()=>{const fc=el.fromCurrency.value,tc=el.toCurrency.value,fv=el.fromAmount.value,tv=el.toAmount.value;el.fromCurrency.value=tc;el.toCurrency.value=fc;el.fromAmount.value=tv==='—'?'100.00':tv;el.toAmount.value=fv;lastEdited='from';render('from');setUpdated(new Date())});
 load();setInterval(load,60000);
 </script>
 </body>
