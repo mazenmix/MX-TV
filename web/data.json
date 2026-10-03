@@ -1,32 +1,32 @@
 {
   "kifah": {
-    "buy": 157250,
-    "sell": 157300
+    "buy": 157400,
+    "sell": 157450
   },
   "harithiya": {
-    "buy": 157200,
-    "sell": 157250
+    "buy": 157350,
+    "sell": 157400
   },
   "kukh": {
-    "buy": 157100,
-    "sell": 157500,
+    "buy": 157150,
+    "sell": 157700,
     "source": "https://t.me/s/Kukh_alomlat",
-    "published_at": "2026-10-03T11:06:29+00:00"
+    "published_at": "2026-10-03T12:55:18+00:00"
   },
   "gold": {
-    "k18": 785239,
-    "k21": 916112,
-    "k24": 1046985
+    "k18": 787486,
+    "k21": 918734,
+    "k24": 1049981
   },
   "usd_meta": {
     "source": "Telegram @dollariraqi",
     "source_url": "https://t.me/s/dollariraqi",
-    "published_at": "2026-10-03T10:20:52+00:00",
-    "state": "stale",
-    "note": "المصدر الوحيد: Telegram @dollariraqi · آخر منشور متاح من القناة",
-    "source_time": "13:10"
+    "published_at": "2026-10-03T12:44:36+00:00",
+    "state": "live",
+    "note": "المصدر الوحيد: Telegram @dollariraqi",
+    "source_time": "15:30"
   },
-  "usd_source_time": "13:10",
-  "updated_at": "2026-10-03T15:04:41.840370+03:00",
+  "usd_source_time": "15:30",
+  "updated_at": "2026-10-03T16:30:38.935758+03:00",
   "error": ""
 }
