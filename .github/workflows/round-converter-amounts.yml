@@ -1,0 +1,43 @@
+name: Round converter amounts
+
+on:
+  push:
+    paths:
+      - '.github/workflows/round-converter-amounts.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove decimals from main amount fields
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('web/converter.html')
+          s=p.read_text(encoding='utf-8')
+          changes = [
+              ('value="100.00" aria-label="المبلغ من"','value="100" aria-label="المبلغ من"'),
+              ("new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n)","new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(n)"),
+              ("tv==='—'?'100.00':tv","tv==='—'?'100':tv")
+          ]
+          for old,new in changes:
+              if old not in s:
+                  raise SystemExit(f'Missing target: {old}')
+              s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add web/converter.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Show whole numbers in converter amounts'
+          git push
