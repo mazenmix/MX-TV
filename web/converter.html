@@ -8,40 +8,60 @@
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <style>
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#070a0f;color:#f5f7fa;font-family:"Segoe UI",Tahoma,Arial,sans-serif}body{min-height:100dvh;background:linear-gradient(180deg,#0a0e14 0%,#070a0f 100%)}
-.wrap{width:min(1040px,calc(100% - 28px));margin:0 auto;padding:20px 0 34px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:8px 0 18px;border-bottom:1px solid #232a34}.brand{direction:ltr;font-size:24px;font-weight:850;letter-spacing:-.4px}.brand b{color:#65bcf7}.home{color:#c8d3df;text-decoration:none;background:#0d121a;border:1px solid #27313d;border-radius:14px;padding:10px 15px;font-weight:800}.hero{text-align:center;padding:44px 0 26px}.hero h1{margin:0;font-size:clamp(30px,5vw,50px);font-weight:900;letter-spacing:-1px}.hero p{margin:10px 0 0;color:#8592a2;font-size:15px}.card{background:#0d121a;border:1px solid #293341;border-radius:26px;padding:26px;box-shadow:0 24px 70px rgba(0,0,0,.3)}.grid{display:grid;grid-template-columns:1fr 74px 1fr;gap:18px;align-items:end;direction:ltr}.side{direction:rtl}.lab{display:block;color:#98a5b4;font-weight:800;margin:0 0 9px}.box{background:#10161f;border:1px solid #2b3441;border-radius:20px;overflow:hidden}.amount{width:100%;border:0;outline:0;background:transparent;color:#fff;padding:22px 20px 15px;font-size:clamp(30px,5vw,48px);font-weight:900;text-align:left;direction:ltr;font-variant-numeric:tabular-nums}.currency{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;border-top:1px solid #25303c;background:#0f151e;padding:14px 16px;direction:ltr}.currency select{width:100%;border:0;outline:0;background:#0f151e;color:#eef4fa;font-size:17px;font-weight:800;direction:ltr;appearance:auto}.currency option{color:#111;background:#fff}.code{color:#75c5f8;font-weight:900;min-width:46px;text-align:right}.swap{width:62px;height:62px;border-radius:50%;border:1px solid #336c96;background:#102032;color:#dcefff;font-size:28px;font-weight:900;margin-bottom:17px}.ratebar{margin-top:20px;background:#0b1119;border:1px solid #252f3a;border-radius:18px;padding:17px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.rate{direction:ltr;font-size:clamp(18px,2.6vw,25px);font-weight:900;font-variant-numeric:tabular-nums}.rate span{color:#6fc6ff}.updated{color:#7f8b99;font-size:13px}.status{min-height:20px;margin-top:12px;text-align:center;color:#788696;font-size:13px}.status.error{color:#ef9b9b}.foot{text-align:center;color:#5e6977;padding-top:24px;font-weight:700;font-size:12px;letter-spacing:.2px}
-@media(max-width:760px){.wrap{width:min(100% - 18px,1040px);padding-top:10px}.brand{font-size:19px}.home{padding:9px 12px;font-size:13px}.hero{padding:32px 0 20px}.card{padding:15px;border-radius:21px}.grid{grid-template-columns:1fr;gap:12px}.swap{margin:0 auto;transform:rotate(90deg);width:54px;height:54px}.amount{padding:18px 15px 12px}.ratebar{padding:15px}}
+.wrap{width:min(1040px,calc(100% - 28px));margin:0 auto;padding:20px 0 34px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:8px 0 18px;border-bottom:1px solid #232a34}.langSwitch{display:flex;gap:5px;padding:4px;background:#0d121a;border:1px solid #27313d;border-radius:14px;direction:ltr}.langBtn{border:0;background:transparent;color:#7f8b99;padding:8px 11px;border-radius:10px;font-weight:800;cursor:pointer}.langBtn.active{background:#182433;color:#f4f8fc}.home{color:#c8d3df;text-decoration:none;background:#0d121a;border:1px solid #27313d;border-radius:14px;padding:10px 15px;font-weight:800}.hero{text-align:center;padding:44px 0 26px}.hero h1{margin:0;font-size:clamp(30px,5vw,50px);font-weight:900;letter-spacing:-1px}.hero p{margin:10px 0 0;color:#8592a2;font-size:15px}.card{background:#0d121a;border:1px solid #293341;border-radius:26px;padding:26px;box-shadow:0 24px 70px rgba(0,0,0,.3)}.grid{display:grid;grid-template-columns:1fr 74px 1fr;gap:18px;align-items:end;direction:ltr}.side{direction:rtl}.lab{display:block;color:#98a5b4;font-weight:800;margin:0 0 9px}.box{background:#10161f;border:1px solid #2b3441;border-radius:20px;overflow:visible;position:relative}.amount{width:100%;border:0;outline:0;background:transparent;color:#fff;padding:22px 20px 15px;font-size:clamp(30px,5vw,48px);font-weight:900;text-align:left;direction:ltr;font-variant-numeric:tabular-nums}.currency{border-top:1px solid #25303c;background:#0f151e;padding:0;border-radius:0 0 19px 19px;direction:ltr;position:relative}.pickerBtn{width:100%;min-height:52px;border:0;background:transparent;color:#eef4fa;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px;cursor:pointer;text-align:left}.pickerMain{min-width:0;display:flex;align-items:center;gap:10px}.pickerCode{color:#75c5f8;font-weight:900;font-size:17px;min-width:42px}.pickerName{color:#eef4fa;font-weight:800;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chev{color:#7e8a98;font-size:12px}.pickerPanel{display:none;position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:30;background:#0d141e;border:1px solid #303b48;border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.45);padding:10px}.pickerPanel.open{display:block}.search{width:100%;height:42px;border:1px solid #2b3948;border-radius:11px;outline:0;background:#0a1119;color:#fff;padding:0 12px;font-size:14px;direction:ltr}.search::placeholder{color:#667483}.options{margin-top:8px;max-height:245px;overflow:auto;border-top:1px solid #202a35;padding-top:6px}.option{width:100%;border:0;background:transparent;color:#e8eef5;display:grid;grid-template-columns:58px 1fr;gap:8px;align-items:center;padding:10px 9px;border-radius:9px;cursor:pointer;text-align:left;direction:ltr}.option:hover,.option:focus{background:#151f2b;outline:0}.optionCode{color:#77c7fa;font-weight:900}.optionName{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.empty{padding:16px 8px;text-align:center;color:#758394;font-size:13px}.swap{width:62px;height:62px;border-radius:50%;border:1px solid #336c96;background:#102032;color:#dcefff;font-size:28px;font-weight:900;margin-bottom:17px;cursor:pointer}.ratebar{margin-top:20px;background:#0b1119;border:1px solid #252f3a;border-radius:18px;padding:17px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.rate{direction:ltr;font-size:clamp(18px,2.6vw,25px);font-weight:900;font-variant-numeric:tabular-nums}.rate span{color:#6fc6ff}.updated{color:#7f8b99;font-size:13px}.status{min-height:20px;margin-top:12px;text-align:center;color:#788696;font-size:13px}.status.error{color:#ef9b9b}.foot{text-align:center;color:#5e6977;padding-top:24px;font-weight:700;font-size:12px;letter-spacing:.2px}
+html[dir="ltr"] .side{direction:ltr}html[dir="ltr"] .top{direction:ltr}
+@media(max-width:760px){.wrap{width:min(100% - 18px,1040px);padding-top:10px}.langBtn{padding:7px 9px;font-size:12px}.home{padding:9px 12px;font-size:13px}.hero{padding:32px 0 20px}.card{padding:15px;border-radius:21px}.grid{grid-template-columns:1fr;gap:12px}.swap{margin:0 auto;transform:rotate(90deg);width:54px;height:54px}.amount{padding:18px 15px 12px}.ratebar{padding:15px}.pickerPanel{position:absolute}.options{max-height:210px}}
 @media(min-width:1500px){.wrap{width:min(1180px,calc(100% - 48px))}.card{padding:34px}}
 </style>
 </head>
 <body>
 <main class="wrap">
   <header class="top">
-    <div class="brand"><b>MX</b> EXCHANGER</div>
-    <a class="home" href="./">الرئيسية</a>
+    <div class="langSwitch" aria-label="Language">
+      <button class="langBtn active" id="langAr" type="button">عربي</button>
+      <button class="langBtn" id="langEn" type="button">English</button>
+    </div>
+    <a class="home" id="homeLink" href="./">الرئيسية</a>
   </header>
 
   <section class="hero">
-    <h1>محول العملة السريع</h1>
-    <p>تحويل قياسي مباشر بين العملات</p>
+    <h1 id="titleText">محول العملة السريع</h1>
+    <p id="subText">تحويل قياسي مباشر بين العملات</p>
   </section>
 
   <section class="card">
     <div class="grid">
       <div class="side">
-        <label class="lab" for="fromAmount">من</label>
+        <label class="lab" id="fromLabel" for="fromAmount">من</label>
         <div class="box">
           <input class="amount" id="fromAmount" inputmode="decimal" autocomplete="off" value="100.00" aria-label="المبلغ من">
-          <div class="currency"><select id="fromCurrency" aria-label="عملة من"></select><span class="code" id="fromCode">USD</span></div>
+          <div class="currency" id="fromPicker">
+            <button class="pickerBtn" id="fromPickerBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
+              <span class="pickerMain"><span class="pickerCode" id="fromCode">USD</span><span class="pickerName" id="fromName">US Dollar</span></span><span class="chev">▼</span>
+            </button>
+            <div class="pickerPanel" id="fromPanel">
+              <input class="search" id="fromSearch" autocomplete="off" placeholder="Search USD, Dollar, Peso...">
+              <div class="options" id="fromOptions" role="listbox"></div>
+            </div>
+          </div>
         </div>
       </div>
 
       <button class="swap" id="swap" type="button" aria-label="عكس العملات">⇄</button>
 
       <div class="side">
-        <label class="lab" for="toAmount">إلى</label>
+        <label class="lab" id="toLabel" for="toAmount">إلى</label>
         <div class="box">
           <input class="amount" id="toAmount" inputmode="decimal" autocomplete="off" value="—" aria-label="المبلغ إلى">
-          <div class="currency"><select id="toCurrency" aria-label="عملة إلى"></select><span class="code" id="toCode">IQD</span></div>
+          <div class="currency" id="toPicker">
+            <button class="pickerBtn" id="toPickerBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
+              <span class="pickerMain"><span class="pickerCode" id="toCode">IQD</span><span class="pickerName" id="toName">Iraqi Dinar</span></span><span class="chev">▼</span>
+            </button>
+            <div class="pickerPanel" id="toPanel">
+              <input class="search" id="toSearch" autocomplete="off" placeholder="Search USD, Dollar, Peso...">
+              <div class="options" id="toOptions" role="listbox"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -57,50 +77,90 @@
 <script>
 const FX_API='https://open.er-api.com/v6/latest/USD';
 const MARKET_API='/api/market';
-const el={fromAmount:document.getElementById('fromAmount'),toAmount:document.getElementById('toAmount'),fromCurrency:document.getElementById('fromCurrency'),toCurrency:document.getElementById('toCurrency'),fromCode:document.getElementById('fromCode'),toCode:document.getElementById('toCode'),rateText:document.getElementById('rateText'),updatedText:document.getElementById('updatedText'),status:document.getElementById('status'),swap:document.getElementById('swap')};
-let rates={},parallelIqd=NaN,parallelUpdated=null,lastEdited='from',timer=null;
-const currencyNames=new Intl.DisplayNames(['en'],{type:'currency'});
+const el={
+  fromAmount:document.getElementById('fromAmount'),toAmount:document.getElementById('toAmount'),
+  fromCode:document.getElementById('fromCode'),toCode:document.getElementById('toCode'),
+  fromName:document.getElementById('fromName'),toName:document.getElementById('toName'),
+  fromPickerBtn:document.getElementById('fromPickerBtn'),toPickerBtn:document.getElementById('toPickerBtn'),
+  fromPanel:document.getElementById('fromPanel'),toPanel:document.getElementById('toPanel'),
+  fromSearch:document.getElementById('fromSearch'),toSearch:document.getElementById('toSearch'),
+  fromOptions:document.getElementById('fromOptions'),toOptions:document.getElementById('toOptions'),
+  rateText:document.getElementById('rateText'),updatedText:document.getElementById('updatedText'),status:document.getElementById('status'),swap:document.getElementById('swap'),
+  langAr:document.getElementById('langAr'),langEn:document.getElementById('langEn'),homeLink:document.getElementById('homeLink'),titleText:document.getElementById('titleText'),subText:document.getElementById('subText'),fromLabel:document.getElementById('fromLabel'),toLabel:document.getElementById('toLabel')
+};
+let rates={},parallelIqd=NaN,parallelUpdated=null,lastEdited='from',timer=null,lang=localStorage.getItem('mx_converter_lang')||'ar',fromCurrency='USD',toCurrency='IQD';
+let codes=[];
+const namesEn=new Intl.DisplayNames(['en'],{type:'currency'});
+const namesAr=new Intl.DisplayNames(['ar'],{type:'currency'});
+const T={
+  ar:{home:'الرئيسية',title:'محول العملة السريع',sub:'تحويل قياسي مباشر بين العملات',from:'من',to:'إلى',updated:'آخر تحديث',loading:'جاري تحديث الأسعار…',unavailable:'السعر غير متوفر حالياً',iqdUnavailable:'سعر السوق الموازي العراقي غير متوفر حالياً',fetchError:'تعذر جلب آخر سعر حالياً',search:'ابحث USD أو Dollar أو Peso...',empty:'ماكو عملة مطابقة'},
+  en:{home:'Home',title:'Quick Currency Converter',sub:'Direct standard currency conversion',from:'From',to:'To',updated:'Last updated',loading:'Updating rates…',unavailable:'Rate is currently unavailable',iqdUnavailable:'Iraqi parallel-market rate is currently unavailable',fetchError:'Unable to fetch the latest rate',search:'Search USD, Dollar, Peso...',empty:'No matching currency'}
+};
 function num(v){const n=Number(String(v).replace(/,/g,'').trim());return Number.isFinite(n)?n:0}
 function fmt(n){if(!Number.isFinite(n))return '—';return new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n)}
 function fmtRate(n){if(!Number.isFinite(n))return '—';return new Intl.NumberFormat('en-US',{maximumFractionDigits:n>=100?2:n>=1?4:6}).format(n)}
-function syncCodes(){el.fromCode.textContent=el.fromCurrency.value||'USD';el.toCode.textContent=el.toCurrency.value||'IQD'}
-function makeOptions(){const codes=Object.keys(rates).sort();if(!codes.includes('IQD'))codes.push('IQD');codes.sort();for(const s of [el.fromCurrency,el.toCurrency]){s.innerHTML='';codes.forEach(code=>{const o=document.createElement('option');o.value=code;let name=code;try{name=currencyNames.of(code)||code}catch{}o.textContent=`${code} — ${name}`;s.appendChild(o)})}el.fromCurrency.value=rates.USD?'USD':codes[0];el.toCurrency.value='IQD';syncCodes()}
+function currencyName(code,language=lang){try{return (language==='ar'?namesAr:namesEn).of(code)||code}catch{return code}}
+function searchText(code){return `${code} ${currencyName(code,'en')} ${currencyName(code,'ar')}`.toLowerCase()}
 function effectiveUsdRate(code){if(code==='IQD')return parallelIqd;return rates[code]}
 function crossRate(from,to){const a=effectiveUsdRate(from),b=effectiveUsdRate(to);if(!a||!b)return NaN;return b/a}
-function usesIqd(){return el.fromCurrency.value==='IQD'||el.toCurrency.value==='IQD'}
-function setUpdated(fxStamp){const stamp=usesIqd()&&parallelUpdated?parallelUpdated:fxStamp;el.updatedText.textContent='آخر تحديث: '+new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(stamp)}
+function usesIqd(){return fromCurrency==='IQD'||toCurrency==='IQD'}
+function syncSelected(){el.fromCode.textContent=fromCurrency;el.toCode.textContent=toCurrency;el.fromName.textContent=currencyName(fromCurrency);el.toName.textContent=currencyName(toCurrency)}
+function closePickers(){for(const [panel,btn] of [[el.fromPanel,el.fromPickerBtn],[el.toPanel,el.toPickerBtn]]){panel.classList.remove('open');btn.setAttribute('aria-expanded','false')}}
+function renderOptions(side,query=''){
+  const box=side==='from'?el.fromOptions:el.toOptions;
+  const q=query.trim().toLowerCase();
+  const filtered=codes.filter(code=>!q||searchText(code).includes(q));
+  box.innerHTML='';
+  if(!filtered.length){const d=document.createElement('div');d.className='empty';d.textContent=T[lang].empty;box.appendChild(d);return}
+  filtered.forEach(code=>{
+    const b=document.createElement('button');b.type='button';b.className='option';b.setAttribute('role','option');
+    b.innerHTML=`<span class="optionCode">${code}</span><span class="optionName"></span>`;
+    b.querySelector('.optionName').textContent=currencyName(code);
+    b.addEventListener('click',()=>{if(side==='from')fromCurrency=code;else toCurrency=code;syncSelected();closePickers();render(lastEdited);setUpdated(new Date())});
+    box.appendChild(b);
+  });
+}
+function openPicker(side){
+  const panel=side==='from'?el.fromPanel:el.toPanel,btn=side==='from'?el.fromPickerBtn:el.toPickerBtn,search=side==='from'?el.fromSearch:el.toSearch;
+  const wasOpen=panel.classList.contains('open');closePickers();if(wasOpen)return;
+  panel.classList.add('open');btn.setAttribute('aria-expanded','true');search.value='';renderOptions(side,'');setTimeout(()=>search.focus(),0);
+}
+function setLanguage(next){
+  lang=next;localStorage.setItem('mx_converter_lang',lang);document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+  el.langAr.classList.toggle('active',lang==='ar');el.langEn.classList.toggle('active',lang==='en');
+  el.homeLink.textContent=T[lang].home;el.titleText.textContent=T[lang].title;el.subText.textContent=T[lang].sub;el.fromLabel.textContent=T[lang].from;el.toLabel.textContent=T[lang].to;
+  el.fromSearch.placeholder=T[lang].search;el.toSearch.placeholder=T[lang].search;el.swap.setAttribute('aria-label',lang==='ar'?'عكس العملات':'Swap currencies');
+  document.title=(lang==='ar'?'محول العملة السريع':'Quick Currency Converter')+' | MX Exchanger';
+  syncSelected();renderOptions('from',el.fromSearch.value);renderOptions('to',el.toSearch.value);setUpdated(new Date());
+}
+function setUpdated(fxStamp){const stamp=usesIqd()&&parallelUpdated?parallelUpdated:fxStamp;el.updatedText.textContent=T[lang].updated+': '+new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(stamp)}
 function render(direction='from'){
-  const from=el.fromCurrency.value,to=el.toCurrency.value,r=crossRate(from,to);syncCodes();
-  if((from==='IQD'||to==='IQD')&&!Number.isFinite(parallelIqd)){el.status.className='status error';el.status.textContent='سعر السوق الموازي العراقي غير متوفر حالياً';return}
-  if(!Number.isFinite(r)){el.status.className='status error';el.status.textContent='السعر غير متوفر حالياً';return}
-  if(direction==='from'){el.toAmount.value=fmt(num(el.fromAmount.value)*r);el.rateText.innerHTML=`1 ${from} = <span>${fmtRate(r)}</span> ${to}`}
-  else{const inv=1/r;el.fromAmount.value=fmt(num(el.toAmount.value)*inv);el.rateText.innerHTML=`1 ${to} = <span>${fmtRate(inv)}</span> ${from}`}
+  const r=crossRate(fromCurrency,toCurrency);syncSelected();
+  if((fromCurrency==='IQD'||toCurrency==='IQD')&&!Number.isFinite(parallelIqd)){el.status.className='status error';el.status.textContent=T[lang].iqdUnavailable;return}
+  if(!Number.isFinite(r)){el.status.className='status error';el.status.textContent=T[lang].unavailable;return}
+  if(direction==='from'){el.toAmount.value=fmt(num(el.fromAmount.value)*r);el.rateText.innerHTML=`1 ${fromCurrency} = <span>${fmtRate(r)}</span> ${toCurrency}`}
+  else{const inv=1/r;el.fromAmount.value=fmt(num(el.toAmount.value)*inv);el.rateText.innerHTML=`1 ${toCurrency} = <span>${fmtRate(inv)}</span> ${fromCurrency}`}
   el.status.className='status';el.status.textContent='';
 }
 async function load(){
-  el.status.className='status';el.status.textContent='جاري تحديث الأسعار…';
+  el.status.className='status';el.status.textContent=T[lang].loading;
   try{
-    const [fxRes,marketRes]=await Promise.all([
-      fetch(FX_API+'?t='+Date.now(),{cache:'no-store'}),
-      fetch(MARKET_API+'?t='+Date.now(),{cache:'no-store'})
-    ]);
+    const [fxRes,marketRes]=await Promise.all([fetch(FX_API+'?t='+Date.now(),{cache:'no-store'}),fetch(MARKET_API+'?t='+Date.now(),{cache:'no-store'})]);
     if(!fxRes.ok)throw new Error('FX HTTP '+fxRes.status);
     const d=await fxRes.json();if(d.result!=='success'||!d.rates)throw new Error('bad fx data');rates=d.rates;
-    if(marketRes.ok){
-      const m=await marketRes.json();
-      const sells=[m.kifah?.sell,m.harithiya?.sell,m.kukh?.sell].map(Number).filter(v=>Number.isFinite(v)&&v>0);
-      if(sells.length){parallelIqd=Math.max(...sells)/100;parallelUpdated=m.updated_at?new Date(m.updated_at):new Date()}
-    }
-    if(!el.fromCurrency.options.length)makeOptions();
-    render(lastEdited);
-    const fxStamp=d.time_last_update_unix?new Date(d.time_last_update_unix*1000):new Date();
-    setUpdated(fxStamp);
-  }catch(e){el.status.className='status error';el.status.textContent='تعذر جلب آخر سعر حالياً'}
+    if(marketRes.ok){const m=await marketRes.json();const sells=[m.kifah?.sell,m.harithiya?.sell,m.kukh?.sell].map(Number).filter(v=>Number.isFinite(v)&&v>0);if(sells.length){parallelIqd=Math.max(...sells)/100;parallelUpdated=m.updated_at?new Date(m.updated_at):new Date()}}
+    codes=Object.keys(rates);if(!codes.includes('IQD'))codes.push('IQD');codes.sort();
+    renderOptions('from');renderOptions('to');render(lastEdited);
+    const fxStamp=d.time_last_update_unix?new Date(d.time_last_update_unix*1000):new Date();setUpdated(fxStamp);
+  }catch(e){el.status.className='status error';el.status.textContent=T[lang].fetchError}
 }
 function schedule(side){lastEdited=side;clearTimeout(timer);timer=setTimeout(()=>render(side),120)}
-el.fromAmount.addEventListener('input',()=>schedule('from'));el.toAmount.addEventListener('input',()=>schedule('to'));el.fromAmount.addEventListener('focus',()=>lastEdited='from');el.toAmount.addEventListener('focus',()=>lastEdited='to');el.fromCurrency.addEventListener('change',()=>{render(lastEdited);setUpdated(new Date())});el.toCurrency.addEventListener('change',()=>{render(lastEdited);setUpdated(new Date())});
-el.swap.addEventListener('click',()=>{const fc=el.fromCurrency.value,tc=el.toCurrency.value,fv=el.fromAmount.value,tv=el.toAmount.value;el.fromCurrency.value=tc;el.toCurrency.value=fc;el.fromAmount.value=tv==='—'?'100.00':tv;el.toAmount.value=fv;lastEdited='from';render('from');setUpdated(new Date())});
-load();setInterval(load,60000);
+el.fromAmount.addEventListener('input',()=>schedule('from'));el.toAmount.addEventListener('input',()=>schedule('to'));el.fromAmount.addEventListener('focus',()=>lastEdited='from');el.toAmount.addEventListener('focus',()=>lastEdited='to');
+el.fromPickerBtn.addEventListener('click',()=>openPicker('from'));el.toPickerBtn.addEventListener('click',()=>openPicker('to'));el.fromSearch.addEventListener('input',e=>renderOptions('from',e.target.value));el.toSearch.addEventListener('input',e=>renderOptions('to',e.target.value));
+el.swap.addEventListener('click',()=>{const fc=fromCurrency,tc=toCurrency,fv=el.fromAmount.value,tv=el.toAmount.value;fromCurrency=tc;toCurrency=fc;el.fromAmount.value=tv==='—'?'100.00':tv;el.toAmount.value=fv;lastEdited='from';render('from');setUpdated(new Date())});
+el.langAr.addEventListener('click',()=>setLanguage('ar'));el.langEn.addEventListener('click',()=>setLanguage('en'));
+document.addEventListener('click',e=>{if(!document.getElementById('fromPicker').contains(e.target)&&!document.getElementById('toPicker').contains(e.target))closePickers()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closePickers()});
+setLanguage(lang);load();setInterval(load,60000);
 </script>
 </body>
 </html>
