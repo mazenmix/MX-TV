@@ -34,7 +34,7 @@ html[dir="ltr"] .side{direction:ltr}html[dir="ltr"] .top{direction:ltr}
       <div class="side">
         <label class="lab" id="fromLabel" for="fromAmount">من</label>
         <div class="box">
-          <input class="amount" id="fromAmount" inputmode="decimal" autocomplete="off" value="100.00" aria-label="المبلغ من">
+          <input class="amount" id="fromAmount" inputmode="decimal" autocomplete="off" value="100" aria-label="المبلغ من">
           <div class="currency" id="fromPicker">
             <button class="pickerBtn" id="fromPickerBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
               <span class="pickerMain"><span class="pickerCode" id="fromCode">USD</span><span class="pickerName" id="fromName">US Dollar</span></span><span class="chev">▼</span>
@@ -97,7 +97,7 @@ const T={
   en:{home:'Home',title:'Quick Currency Converter',sub:'Direct standard currency conversion',from:'From',to:'To',updated:'Last updated',loading:'Updating rates…',unavailable:'Rate is currently unavailable',iqdUnavailable:'Iraqi parallel-market rate is currently unavailable',fetchError:'Unable to fetch the latest rate',search:'Search USD, Dollar, Peso...',empty:'No matching currency'}
 };
 function num(v){const n=Number(String(v).replace(/,/g,'').trim());return Number.isFinite(n)?n:0}
-function fmt(n){if(!Number.isFinite(n))return '—';return new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n)}
+function fmt(n){if(!Number.isFinite(n))return '—';return new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(n)}
 function fmtRate(n){if(!Number.isFinite(n))return '—';return new Intl.NumberFormat('en-US',{maximumFractionDigits:n>=100?2:n>=1?4:6}).format(n)}
 function currencyName(code,language=lang){try{return (language==='ar'?namesAr:namesEn).of(code)||code}catch{return code}}
 function searchText(code){return `${code} ${currencyName(code,'en')} ${currencyName(code,'ar')}`.toLowerCase()}
@@ -157,7 +157,7 @@ async function load(){
 function schedule(side){lastEdited=side;clearTimeout(timer);timer=setTimeout(()=>render(side),120)}
 el.fromAmount.addEventListener('input',()=>schedule('from'));el.toAmount.addEventListener('input',()=>schedule('to'));el.fromAmount.addEventListener('focus',()=>lastEdited='from');el.toAmount.addEventListener('focus',()=>lastEdited='to');
 el.fromPickerBtn.addEventListener('click',()=>openPicker('from'));el.toPickerBtn.addEventListener('click',()=>openPicker('to'));el.fromSearch.addEventListener('input',e=>renderOptions('from',e.target.value));el.toSearch.addEventListener('input',e=>renderOptions('to',e.target.value));
-el.swap.addEventListener('click',()=>{const fc=fromCurrency,tc=toCurrency,fv=el.fromAmount.value,tv=el.toAmount.value;fromCurrency=tc;toCurrency=fc;el.fromAmount.value=tv==='—'?'100.00':tv;el.toAmount.value=fv;lastEdited='from';render('from');setUpdated(new Date())});
+el.swap.addEventListener('click',()=>{const fc=fromCurrency,tc=toCurrency,fv=el.fromAmount.value,tv=el.toAmount.value;fromCurrency=tc;toCurrency=fc;el.fromAmount.value=tv==='—'?'100':tv;el.toAmount.value=fv;lastEdited='from';render('from');setUpdated(new Date())});
 el.langAr.addEventListener('click',()=>setLanguage('ar'));el.langEn.addEventListener('click',()=>setLanguage('en'));
 document.addEventListener('click',e=>{if(!document.getElementById('fromPicker').contains(e.target)&&!document.getElementById('toPicker').contains(e.target))closePickers()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closePickers()});
 setLanguage(lang);load();setInterval(load,60000);
