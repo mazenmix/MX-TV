@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0A0E14">
+<title>محول العملة السريع | MX Exchanger</title>
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#070a0f;color:#f5f7fa;font-family:"Segoe UI",Tahoma,Arial,sans-serif}body{min-height:100dvh;background:linear-gradient(180deg,#0a0e14 0%,#070a0f 100%)}
+.wrap{width:min(1040px,calc(100% - 28px));margin:0 auto;padding:20px 0 34px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:8px 0 18px;border-bottom:1px solid #232a34}.brand{direction:ltr;font-size:24px;font-weight:850;letter-spacing:-.4px}.brand b{color:#65bcf7}.home{color:#c8d3df;text-decoration:none;background:#0d121a;border:1px solid #27313d;border-radius:14px;padding:10px 15px;font-weight:800}.hero{text-align:center;padding:44px 0 26px}.hero h1{margin:0;font-size:clamp(30px,5vw,50px);font-weight:900;letter-spacing:-1px}.hero p{margin:10px 0 0;color:#8592a2;font-size:15px}.card{background:#0d121a;border:1px solid #293341;border-radius:26px;padding:26px;box-shadow:0 24px 70px rgba(0,0,0,.3)}.grid{display:grid;grid-template-columns:1fr 74px 1fr;gap:18px;align-items:end;direction:ltr}.side{direction:rtl}.lab{display:block;color:#98a5b4;font-weight:800;margin:0 0 9px}.box{background:#10161f;border:1px solid #2b3441;border-radius:20px;overflow:hidden}.amount{width:100%;border:0;outline:0;background:transparent;color:#fff;padding:22px 20px 15px;font-size:clamp(30px,5vw,48px);font-weight:900;text-align:left;direction:ltr;font-variant-numeric:tabular-nums}.currency{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;border-top:1px solid #25303c;background:#0f151e;padding:14px 16px;direction:ltr}.currency select{width:100%;border:0;outline:0;background:#0f151e;color:#eef4fa;font-size:17px;font-weight:800;direction:ltr;appearance:auto}.currency option{color:#111;background:#fff}.code{color:#75c5f8;font-weight:900;min-width:46px;text-align:right}.swap{width:62px;height:62px;border-radius:50%;border:1px solid #336c96;background:#102032;color:#dcefff;font-size:28px;font-weight:900;margin-bottom:17px}.ratebar{margin-top:20px;background:#0b1119;border:1px solid #252f3a;border-radius:18px;padding:17px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.rate{direction:ltr;font-size:clamp(18px,2.6vw,25px);font-weight:900;font-variant-numeric:tabular-nums}.rate span{color:#6fc6ff}.updated{color:#7f8b99;font-size:13px}.status{min-height:20px;margin-top:12px;text-align:center;color:#788696;font-size:13px}.status.error{color:#ef9b9b}.foot{text-align:center;color:#5e6977;padding-top:24px;font-weight:700;font-size:12px;letter-spacing:.2px}
+@media(max-width:760px){.wrap{width:min(100% - 18px,1040px);padding-top:10px}.brand{font-size:19px}.home{padding:9px 12px;font-size:13px}.hero{padding:32px 0 20px}.card{padding:15px;border-radius:21px}.grid{grid-template-columns:1fr;gap:12px}.swap{margin:0 auto;transform:rotate(90deg);width:54px;height:54px}.amount{padding:18px 15px 12px}.ratebar{padding:15px}}
+@media(min-width:1500px){.wrap{width:min(1180px,calc(100% - 48px))}.card{padding:34px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <div class="brand"><b>MX</b> EXCHANGER</div>
+    <a class="home" href="./">الرئيسية</a>
+  </header>
+
+  <section class="hero">
+    <h1>محول العملة السريع</h1>
+    <p>تحويل قياسي مباشر بين العملات</p>
+  </section>
+
+  <section class="card">
+    <div class="grid">
+      <div class="side">
+        <label class="lab" for="fromAmount">من</label>
+        <div class="box">
+          <input class="amount" id="fromAmount" inputmode="decimal" autocomplete="off" value="100.00" aria-label="المبلغ من">
+          <div class="currency"><select id="fromCurrency" aria-label="عملة من"></select><span class="code" id="fromCode">USD</span></div>
+        </div>
+      </div>
+
+      <button class="swap" id="swap" type="button" aria-label="عكس العملات">⇄</button>
+
+      <div class="side">
+        <label class="lab" for="toAmount">إلى</label>
+        <div class="box">
+          <input class="amount" id="toAmount" inputmode="decimal" autocomplete="off" value="—" aria-label="المبلغ إلى">
+          <div class="currency"><select id="toCurrency" aria-label="عملة إلى"></select><span class="code" id="toCode">IQD</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ratebar">
+      <div class="rate" id="rateText">1 USD = <span>—</span> IQD</div>
+      <div class="updated" id="updatedText">آخر تحديث: —</div>
+    </div>
+    <div class="status" id="status">جاري تحميل أسعار العملات…</div>
+  </section>
+  <footer class="foot">MazenmiX</footer>
+</main>
+<script>
+const API='https://open.er-api.com/v6/latest/USD';
+const el={fromAmount:document.getElementById('fromAmount'),toAmount:document.getElementById('toAmount'),fromCurrency:document.getElementById('fromCurrency'),toCurrency:document.getElementById('toCurrency'),fromCode:document.getElementById('fromCode'),toCode:document.getElementById('toCode'),rateText:document.getElementById('rateText'),updatedText:document.getElementById('updatedText'),status:document.getElementById('status'),swap:document.getElementById('swap')};
+let rates={},lastEdited='from',timer=null;
+const currencyNames=new Intl.DisplayNames(['en'],{type:'currency'});
+function num(v){const n=Number(String(v).replace(/,/g,'').trim());return Number.isFinite(n)?n:0}
+function fmt(n){if(!Number.isFinite(n))return '—';return new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n)}
+function fmtRate(n){if(!Number.isFinite(n))return '—';return new Intl.NumberFormat('en-US',{maximumFractionDigits:n>=100?2:n>=1?4:6}).format(n)}
+function syncCodes(){el.fromCode.textContent=el.fromCurrency.value||'USD';el.toCode.textContent=el.toCurrency.value||'IQD'}
+function makeOptions(){const codes=Object.keys(rates).sort();for(const s of [el.fromCurrency,el.toCurrency]){s.innerHTML='';codes.forEach(code=>{const o=document.createElement('option');o.value=code;let name=code;try{name=currencyNames.of(code)||code}catch{}o.textContent=`${code} — ${name}`;s.appendChild(o)})}el.fromCurrency.value=rates.USD?'USD':codes[0];el.toCurrency.value=rates.IQD?'IQD':(rates.EUR?'EUR':codes[1]||codes[0]);syncCodes()}
+function crossRate(from,to){const a=rates[from],b=rates[to];if(!a||!b)return NaN;return b/a}
+function render(direction='from'){
+  const from=el.fromCurrency.value,to=el.toCurrency.value,r=crossRate(from,to);syncCodes();
+  if(!Number.isFinite(r)){el.status.className='status error';el.status.textContent='السعر غير متوفر حالياً';return}
+  if(direction==='from'){el.toAmount.value=fmt(num(el.fromAmount.value)*r);el.rateText.innerHTML=`1 ${from} = <span>${fmtRate(r)}</span> ${to}`}
+  else{const inv=1/r;el.fromAmount.value=fmt(num(el.toAmount.value)*inv);el.rateText.innerHTML=`1 ${to} = <span>${fmtRate(inv)}</span> ${from}`}
+  el.status.className='status';el.status.textContent='';
+}
+async function load(){
+  el.status.className='status';el.status.textContent='جاري تحديث الأسعار…';
+  try{const res=await fetch(API+'?t='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);const d=await res.json();if(d.result!=='success'||!d.rates)throw new Error('bad data');rates=d.rates;if(!el.fromCurrency.options.length)makeOptions();render(lastEdited);const stamp=d.time_last_update_unix?new Date(d.time_last_update_unix*1000):new Date();el.updatedText.textContent='آخر تحديث: '+new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(stamp)}catch(e){el.status.className='status error';el.status.textContent='تعذر جلب آخر سعر حالياً'}
+}
+function schedule(side){lastEdited=side;clearTimeout(timer);timer=setTimeout(()=>render(side),120)}
+el.fromAmount.addEventListener('input',()=>schedule('from'));el.toAmount.addEventListener('input',()=>schedule('to'));el.fromAmount.addEventListener('focus',()=>lastEdited='from');el.toAmount.addEventListener('focus',()=>lastEdited='to');el.fromCurrency.addEventListener('change',()=>render(lastEdited));el.toCurrency.addEventListener('change',()=>render(lastEdited));
+el.swap.addEventListener('click',()=>{const fc=el.fromCurrency.value,tc=el.toCurrency.value,fv=el.fromAmount.value,tv=el.toAmount.value;el.fromCurrency.value=tc;el.toCurrency.value=fc;el.fromAmount.value=tv==='—'?'100.00':tv;el.toAmount.value=fv;lastEdited='from';render('from')});
+load();setInterval(load,60000);
+</script>
+</body>
+</html>
