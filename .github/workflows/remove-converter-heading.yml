@@ -1,0 +1,39 @@
+name: Remove converter heading
+
+on:
+  push:
+    paths:
+      - '.github/workflows/remove-converter-heading.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove visible converter heading
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('web/converter.html')
+          s = p.read_text(encoding='utf-8')
+          old = '<h1 id="titleText">محول العملة السريع</h1>'
+          new = '<h1 id="titleText" hidden aria-hidden="true"></h1>'
+          if old not in s:
+              raise SystemExit('Converter heading target not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add web/converter.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Remove visible converter heading'
+          git push
