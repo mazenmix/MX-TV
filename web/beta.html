@@ -22,7 +22,7 @@ a{color:inherit;text-decoration:none}
 .section{margin-top:clamp(14px,1.4vw,24px)}
 .section-title{display:flex;align-items:center;gap:12px;font-size:clamp(18px,1.6vw,29px);font-weight:800;margin:0 4px 10px}.section-title:before,.section-title:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,#9e7b25,transparent)}
 .metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(9px,1vw,16px)}
-.metric,.card,.gold,.converter,.tablebox{border:1px solid rgba(70,139,186,.45);background:linear-gradient(180deg,rgba(13,34,55,.95),rgba(7,22,37,.96));border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.2);min-width:0}
+.metric,.card,.gold,.fuelbox,.tablebox{border:1px solid rgba(70,139,186,.45);background:linear-gradient(180deg,rgba(13,34,55,.95),rgba(7,22,37,.96));border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.2);min-width:0}
 .metric{padding:clamp(14px,1.2vw,22px);min-height:108px;display:flex;flex-direction:column;justify-content:center}.metric .label{color:#d9e4ed;font-weight:700;font-size:clamp(12px,.9vw,15px)}.metric .value{font-size:clamp(25px,2.5vw,44px);font-weight:900;direction:ltr;margin:5px 0}.metric .note{color:var(--muted);font-size:clamp(10px,.75vw,13px)}
 .green{color:var(--green)!important}.red{color:var(--red)!important}.goldc{color:var(--gold)!important}
 .sources{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:clamp(8px,.8vw,13px)}
@@ -30,14 +30,15 @@ a{color:inherit;text-decoration:none}
 .pair{display:grid;grid-template-columns:1fr 1px 1fr;gap:9px;align-items:end;margin-top:13px;direction:rtl}.sep{height:43px;background:#31536d}.p small{display:block;color:#a8bac9;font-size:10px}.p b{display:block;font-size:clamp(17px,1.2vw,22px);direction:ltr;margin-top:4px}.update{border-top:1px solid rgba(98,145,177,.18);margin-top:11px;padding-top:8px;color:#8499aa;font-size:10px}.official{margin-top:13px;text-align:center}.official small{display:block;color:#9eb0bd}.official b{display:block;font-size:clamp(22px,1.5vw,28px);color:var(--gold);direction:ltr;margin-top:5px}
 .currencies{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:clamp(8px,.8vw,13px)}.curr-code{font-size:clamp(16px,1.1vw,20px);font-weight:900;direction:ltr}.curr-name{color:#c8d5df;font-size:12px;margin-top:2px}.unit{color:#8298ab;font-size:10px;margin-top:8px;min-height:26px}.source-note{color:#aab9c6;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:8px}
 .goldrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(9px,1vw,16px)}.gold{border-color:#8a6b18;background:linear-gradient(135deg,rgba(73,53,8,.48),rgba(20,19,14,.95));padding:clamp(16px,1.3vw,24px);box-shadow:inset 0 0 24px rgba(255,199,45,.08),0 0 24px rgba(255,190,0,.05)}.gold .karat{font-weight:800;color:var(--gold);font-size:clamp(16px,1.2vw,20px)}.gold .gprice{font-weight:900;font-size:clamp(27px,2.5vw,46px);color:#ffd252;direction:ltr;margin-top:6px}.gold .gsub{color:#c7a94e;font-size:11px}
-.bottom{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:clamp(10px,1vw,16px)}.converter,.tablebox{padding:clamp(14px,1.2vw,20px)}.boxtitle{font-weight:850;font-size:clamp(18px,1.3vw,23px);margin-bottom:12px}
-.convert-grid{display:grid;grid-template-columns:minmax(0,1fr) 52px minmax(0,1fr);gap:10px;align-items:center;direction:ltr}.inputbox{border:1px solid rgba(62,124,165,.55);border-radius:14px;padding:12px;background:#081a2a;min-width:0}.inputbox:focus-within{border-color:rgba(23,231,160,.7);box-shadow:inset 0 0 22px rgba(23,231,160,.045)}.inputbox label{display:flex;justify-content:space-between;gap:8px;color:#aab9c8;font-size:11px;direction:rtl}.inputbox input{width:100%;border:0;outline:0;background:transparent;color:#fff;font-size:clamp(22px,2vw,32px);font-weight:800;direction:ltr;text-align:left;margin-top:8px;min-width:0;font-variant-numeric:tabular-nums;letter-spacing:.2px}.swap{display:grid;place-items:center;font-size:28px;color:var(--green)}.ratehint{margin-top:10px;color:#8ea4b6;font-size:11px;text-align:center}
+.bottom{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:clamp(10px,1vw,16px)}.fuelbox,.tablebox{padding:clamp(14px,1.2vw,20px)}.boxtitle{font-weight:850;font-size:clamp(18px,1.3vw,23px);margin-bottom:12px}
+.fuel-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:12px}.fuel-tab{border:1px solid rgba(70,139,186,.42);background:#081a2a;color:#b7c7d4;border-radius:11px;padding:9px 8px;font:inherit;font-weight:800;cursor:pointer;transition:.16s ease}.fuel-tab:hover{border-color:rgba(255,202,66,.6);color:#fff}.fuel-tab.active{border-color:rgba(255,202,66,.9);color:var(--gold);background:rgba(255,202,66,.09);box-shadow:inset 0 0 18px rgba(255,202,66,.05)}
+.fuel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.fuel-item{border:1px solid rgba(62,124,165,.42);border-radius:13px;padding:11px 9px;background:#081a2a;text-align:center;min-width:0}.fuel-item small{display:block;color:#9eb1c0;font-size:10px;font-weight:700}.fuel-item b{display:block;color:#fff;font-size:clamp(20px,1.55vw,28px);direction:ltr;margin-top:5px;font-variant-numeric:tabular-nums}.fuel-item span{display:block;color:#70889b;font-size:9px;margin-top:2px}.fuel-note{border-top:1px solid rgba(98,145,177,.18);margin-top:12px;padding-top:9px;color:#8298ab;font-size:10px;line-height:1.65}.fuel-city{color:#dce8f1;font-size:11px;font-weight:800;margin-bottom:8px}
 .tablewrap{overflow:auto;border-radius:12px;-webkit-overflow-scrolling:touch}table{width:100%;border-collapse:collapse;font-size:12px;min-width:560px}th,td{padding:9px;border-bottom:1px solid rgba(81,129,161,.15);text-align:right}th{color:#91a9bb;font-weight:700;background:#0a1b2b}td.num{direction:ltr;font-weight:800}
 .foot{text-align:center;color:#8d9dac;font-size:12px;margin-top:clamp(16px,1.6vw,26px);font-weight:700}.error{display:none;margin-top:10px;padding:10px;border:1px solid rgba(255,79,103,.35);border-radius:12px;color:#ff9aaa;background:rgba(255,79,103,.06);font-size:12px;text-align:center}
 @media (min-width:1900px){.wrap{width:min(2100px,94vw)}.sources{grid-template-columns:repeat(6,minmax(0,1fr))}.currencies{grid-template-columns:repeat(6,minmax(0,1fr))}.card{min-height:128px}.metric{min-height:130px}.updatebar{padding-top:10px}}
 @media (max-width:1100px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.bottom{grid-template-columns:1fr}.goldrow{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width:760px){.wrap{width:94vw}.top{align-items:center}.brand{font-size:23px}.metrics{grid-template-columns:1fr}.sources,.currencies{grid-template-columns:repeat(2,minmax(0,1fr))}.goldrow{grid-template-columns:1fr}.convert-grid{grid-template-columns:1fr}.swap{transform:rotate(90deg);height:34px}.metric{min-height:94px}.section-title{font-size:19px}.card{padding:12px}.p b{font-size:17px}}
-@media (max-width:480px){.wrap{width:93vw}.sources,.currencies{grid-template-columns:1fr}.badges{gap:6px}.badge{padding:7px 10px}.brand{font-size:21px}.section{margin-top:15px}.tablebox{padding:12px}.converter{padding:12px}.inputbox input{font-size:24px}}
+@media (max-width:760px){.wrap{width:94vw}.top{align-items:center}.brand{font-size:23px}.metrics{grid-template-columns:1fr}.sources,.currencies{grid-template-columns:repeat(2,minmax(0,1fr))}.goldrow{grid-template-columns:1fr}.fuel-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{min-height:94px}.section-title{font-size:19px}.card{padding:12px}.p b{font-size:17px}}
+@media (max-width:480px){.wrap{width:93vw}.sources,.currencies{grid-template-columns:1fr}.badges{gap:6px}.badge{padding:7px 10px}.brand{font-size:21px}.section{margin-top:15px}.tablebox,.fuelbox{padding:12px}.fuel-tabs{gap:5px}.fuel-tab{padding:8px 5px;font-size:12px}}
 </style>
 </head>
 <body>
@@ -91,21 +92,33 @@ a{color:inherit;text-decoration:none}
   </section>
 
   <section class="section bottom">
-    <div class="converter"><div class="boxtitle">محول سريع · دولار ↔ دينار</div><div class="convert-grid"><div class="inputbox"><label><span>USD</span><span>دولار أمريكي</span></label><input id="usdInput" inputmode="decimal" type="text" autocomplete="off" value="100"></div><div class="swap">↔</div><div class="inputbox"><label><span>IQD</span><span>دينار عراقي</span></label><input id="iqdInput" inputmode="decimal" type="text" autocomplete="off" value=""></div></div><div class="ratehint" id="rateHint">يُستخدم متوسط سعر شراء الدولار في الحارثية والكفاح</div></div>
+    <div class="fuelbox">
+      <div class="boxtitle">⛽ أسعار الوقود</div>
+      <div class="fuel-tabs" role="tablist" aria-label="المدينة">
+        <button class="fuel-tab active" type="button" data-city="baghdad">بغداد</button>
+        <button class="fuel-tab" type="button" data-city="erbil">أربيل</button>
+        <button class="fuel-tab" type="button" data-city="basra">البصرة</button>
+      </div>
+      <div class="fuel-city" id="fuelCity">بغداد · دينار/لتر</div>
+      <div class="fuel-grid">
+        <div class="fuel-item"><small>عادي</small><b id="fuelRegular">450</b><span>دينار/لتر</span></div>
+        <div class="fuel-item"><small>محسن</small><b id="fuelImproved">850</b><span>دينار/لتر</span></div>
+        <div class="fuel-item"><small>سوبر</small><b id="fuelSuper">1,250</b><span>دينار/لتر</span></div>
+        <div class="fuel-item"><small>كاز</small><b id="fuelGasoil">400</b><span>دينار/لتر</span></div>
+      </div>
+      <div class="fuel-note" id="fuelNote">آخر تحقق: 4 أكتوبر 2026 · المصدر: وزارة النفط العراقية / شركة توزيع المنتجات النفطية</div>
+    </div>
     <div class="tablebox"><div class="boxtitle">مقارنة سريعة</div><div class="tablewrap"><table><thead><tr><th>المصدر</th><th>شراء</th><th>بيع</th><th>آخر تحديث</th></tr></thead><tbody id="compareBody"></tbody></table></div></div>
   </section>
 
   <div class="error" id="error"></div><div class="foot">MazenmiX</div>
 </div>
 <script>
-const $=id=>document.getElementById(id);let market=null;let lastEdited='usd';
+const $=id=>document.getElementById(id);let market=null;
 const fmt=(n,d=0)=>{const x=Number(n);return Number.isFinite(x)&&x?x.toLocaleString('en-US',{maximumFractionDigits:d}):'—'};
-const parseAmount=v=>{const cleaned=String(v??'').replace(/,/g,'').replace(/[^0-9.]/g,'');const n=Number(cleaned);return Number.isFinite(n)?n:0};
-const prettyAmount=(n,d=0)=>{const x=Number(n);return Number.isFinite(x)&&x>=0?x.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:d}):''};
 const timeBaghdad=(iso)=>{if(!iso)return 'الآن';try{return new Intl.DateTimeFormat('ar-IQ',{timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit'}).format(new Date(iso))}catch(e){return 'الآن'}};
 function setPair(prefix,obj){if(!obj)return;$(prefix+'Buy').textContent=fmt(obj.buy,obj.buy%1?2:0);$(prefix+'Sell').textContent=fmt(obj.sell,obj.sell%1?2:0)}
 function validUsd(name,obj){return obj&&Number(obj.buy)>100000&&Number(obj.sell)>100000?{name,buy:Number(obj.buy),sell:Number(obj.sell)}:null}
-function livePer100(){if(!market)return 0;const h=Number(market.harithiya?.buy||0),k=Number(market.kifah?.buy||0);return h&&k?(h+k)/2:0}
 function render(d){market=d;const now=timeBaghdad(d.updated_at);$('heroUpdate').textContent='آخر تحديث '+now+' بتوقيت بغداد';
   setPair('har',d.harithiya);setPair('kif',d.kifah);setPair('kukh',d.kukh);$('harTime').textContent=timeBaghdad(d.usd_meta?.published_at);$('kifTime').textContent=$('harTime').textContent;$('kukhTime').textContent=timeBaghdad(d.kukh?.published_at);
   const hat=d.hatwan?.rates?.USD,gai=d.gailany?.rates?.USD;if(hat)setPair('hat',hat);if(gai)setPair('gai',gai);if(d.cbi?.rates?.USD)$('cbiUsd').textContent=fmt(d.cbi.rates.USD,3);
@@ -114,15 +127,19 @@ function render(d){market=d;const now=timeBaghdad(d.updated_at);$('heroUpdate').
   const sources=[validUsd('بورصة الحارثية',d.harithiya),validUsd('بورصة الكفاح',d.kifah),validUsd('كوخ العملات',d.kukh),validUsd('Hatwan Exchange',hat),validUsd('Gailany Exchange',gai)].filter(Boolean);
   if(d.harithiya?.sell&&d.kifah?.sell)$('avgBaghdad').textContent=fmt(Math.round((Number(d.harithiya.sell)+Number(d.kifah.sell))/2));
   if(sources.length){const sellBest=[...sources].sort((a,b)=>b.buy-a.buy)[0];const buyBest=[...sources].sort((a,b)=>a.sell-b.sell)[0];$('bestSellUsd').textContent=fmt(sellBest.buy);$('bestSellSource').textContent=sellBest.name;$('bestBuyUsd').textContent=fmt(buyBest.sell);$('bestBuySource').textContent=buyBest.name}
-  buildTable(sources);recalculate();$('error').style.display='none';
+  buildTable(sources);$('error').style.display='none';
 }
 function buildTable(sources){const body=$('compareBody');body.innerHTML='';sources.forEach(s=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${s.name}</td><td class="num green">${fmt(s.buy)}</td><td class="num red">${fmt(s.sell)}</td><td>${timeBaghdad(market.updated_at)}</td>`;body.appendChild(tr)});if(market.cbi?.rates?.USD){const tr=document.createElement('tr');tr.innerHTML=`<td>البنك المركزي العراقي</td><td class="num goldc" colspan="2">${fmt(market.cbi.rates.USD,3)} رسمي</td><td>${timeBaghdad(market.updated_at)}</td>`;body.appendChild(tr)}}
-function recalculate(){const per100=livePer100();if(!per100)return;const perUsd=per100/100;const usdEl=$('usdInput'),iqdEl=$('iqdInput');if(lastEdited==='iqd'){const iqd=Math.max(0,parseAmount(iqdEl.value));iqdEl.value=iqd?prettyAmount(iqd,0):'';usdEl.value=iqd?prettyAmount(iqd/perUsd,2):''}else{const usd=Math.max(0,parseAmount(usdEl.value));usdEl.value=usd?prettyAmount(usd,2):'';iqdEl.value=usd?prettyAmount(Math.round(usd*perUsd),0):''}$('rateHint').textContent=`100 USD ≈ ${fmt(per100)} IQD · متوسط شراء الحارثية والكفاح الحي`}
-$('usdInput').addEventListener('input',()=>{lastEdited='usd';recalculate()});
-$('iqdInput').addEventListener('input',()=>{lastEdited='iqd';recalculate()});
+const fuelData={
+  baghdad:{name:'بغداد',regular:450,improved:850,super:1250,gasoil:400,note:'آخر تحقق: 4 أكتوبر 2026 · المصدر: وزارة النفط العراقية / شركة توزيع المنتجات النفطية'},
+  erbil:{name:'أربيل',regular:750,improved:1000,super:1200,gasoil:null,note:'آخر تحقق: 4 أكتوبر 2026 · المصدر: وزارة الموارد الطبيعية - حكومة إقليم كردستان · الكاز: لا توجد تسعيرة موثوقة محدثة حالياً'},
+  basra:{name:'البصرة',regular:450,improved:850,super:1250,gasoil:400,note:'آخر تحقق: 4 أكتوبر 2026 · المصدر: وزارة النفط العراقية / شركة توزيع المنتجات النفطية'}
+};
+function renderFuel(city){const d=fuelData[city]||fuelData.baghdad;$('fuelCity').textContent=d.name+' · دينار/لتر';$('fuelRegular').textContent=fmt(d.regular);$('fuelImproved').textContent=fmt(d.improved);$('fuelSuper').textContent=fmt(d.super);$('fuelGasoil').textContent=d.gasoil?fmt(d.gasoil):'—';$('fuelNote').textContent=d.note;document.querySelectorAll('.fuel-tab').forEach(b=>b.classList.toggle('active',b.dataset.city===city))}
+document.querySelectorAll('.fuel-tab').forEach(b=>b.addEventListener('click',()=>renderFuel(b.dataset.city)));
 async function refresh(){try{const r=await fetch('/api/market?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(!d.harithiya?.sell||!d.kifah?.sell)throw new Error('بيانات ناقصة');render(d)}catch(e){$('error').textContent='تعذر جلب آخر الأسعار حالياً. أعد المحاولة بعد قليل.';$('error').style.display='block'}}
-refresh();setInterval(refresh,60000);
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=23',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{})}
+renderFuel('baghdad');refresh();setInterval(refresh,60000);
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=24',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{})}
 </script>
 </body>
 </html>
