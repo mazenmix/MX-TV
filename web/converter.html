@@ -98,6 +98,27 @@ const T={
 };
 function num(v){const n=Number(String(v).replace(/,/g,'').trim());return Number.isFinite(n)?n:0}
 function fmt(n){if(!Number.isFinite(n))return '—';return new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(n)}
+function formatLive(input){
+  if(input.value==='—')return;
+  const old=input.value,start=input.selectionStart??old.length,before=old.slice(0,start).replace(/,/g,'');
+  let raw=old.replace(/,/g,'').replace(/[^0-9.]/g,'');
+  const dot=raw.indexOf('.');
+  if(dot!==-1)raw=raw.slice(0,dot+1)+raw.slice(dot+1).replace(/\./g,'');
+  if(raw===''){input.value='';return}
+  const hasDot=raw.includes('.');
+  let [whole,dec='']=raw.split('.');
+  whole=whole.replace(/^0+(?=\d)/,'')||'0';
+  const grouped=whole.replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  const formatted=hasDot?`${grouped}.${dec}`:grouped;
+  input.value=formatted;
+  const significantBefore=before.replace(/[^0-9.]/g,'').length;
+  let seen=0,newCaret=formatted.length;
+  for(let i=0;i<formatted.length;i++){
+    if(/[0-9.]/.test(formatted[i]))seen++;
+    if(seen>=significantBefore){newCaret=i+1;break}
+  }
+  try{input.setSelectionRange(newCaret,newCaret)}catch{}
+}
 function fmtRate(n){if(!Number.isFinite(n))return '—';return new Intl.NumberFormat('en-US',{maximumFractionDigits:n>=100?2:n>=1?4:6}).format(n)}
 function currencyName(code,language=lang){try{return (language==='ar'?namesAr:namesEn).of(code)||code}catch{return code}}
 function searchText(code){return `${code} ${currencyName(code,'en')} ${currencyName(code,'ar')}`.toLowerCase()}
@@ -155,7 +176,7 @@ async function load(){
   }catch(e){el.status.className='status error';el.status.textContent=T[lang].fetchError}
 }
 function schedule(side){lastEdited=side;clearTimeout(timer);timer=setTimeout(()=>render(side),120)}
-el.fromAmount.addEventListener('input',()=>schedule('from'));el.toAmount.addEventListener('input',()=>schedule('to'));el.fromAmount.addEventListener('focus',()=>lastEdited='from');el.toAmount.addEventListener('focus',()=>lastEdited='to');
+el.fromAmount.addEventListener('input',()=>{formatLive(el.fromAmount);schedule('from')});el.toAmount.addEventListener('input',()=>{formatLive(el.toAmount);schedule('to')});el.fromAmount.addEventListener('focus',()=>lastEdited='from');el.toAmount.addEventListener('focus',()=>lastEdited='to');
 el.fromPickerBtn.addEventListener('click',()=>openPicker('from'));el.toPickerBtn.addEventListener('click',()=>openPicker('to'));el.fromSearch.addEventListener('input',e=>renderOptions('from',e.target.value));el.toSearch.addEventListener('input',e=>renderOptions('to',e.target.value));
 el.swap.addEventListener('click',()=>{const fc=fromCurrency,tc=toCurrency,fv=el.fromAmount.value,tv=el.toAmount.value;fromCurrency=tc;toCurrency=fc;el.fromAmount.value=tv==='—'?'100':tv;el.toAmount.value=fv;lastEdited='from';render('from');setUpdated(new Date())});
 el.langAr.addEventListener('click',()=>setLanguage('ar'));el.langEn.addEventListener('click',()=>setLanguage('en'));
