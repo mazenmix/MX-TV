@@ -7,50 +7,224 @@
 <title>محول العملة السريع | MX Exchanger</title>
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <style>
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#070a0f;color:#f5f7fa;font-family:"Segoe UI",Tahoma,Arial,sans-serif}body{min-height:100dvh;background:linear-gradient(180deg,#0a0e14 0%,#070a0f 100%)}
-.wrap{width:min(1040px,calc(100% - 28px));margin:0 auto;padding:20px 0 34px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:8px 0 18px;border-bottom:1px solid #232a34}
-.langSwitch{display:flex;gap:5px;padding:4px;background:#0d121a;border:1px solid #27313d;border-radius:14px;direction:ltr}.langBtn{border:0;background:transparent;color:#7f8b99;padding:8px 11px;border-radius:10px;font-weight:800;cursor:pointer}.langBtn.active{background:#182433;color:#f4f8fc}
-.home{color:#c8d3df;text-decoration:none;background:#0d121a;border:1px solid #27313d;border-radius:14px;padding:10px 15px;font-weight:800}.hero{text-align:center;padding:44px 0 26px}.hero p{margin:0;color:#8592a2;font-size:15px;line-height:1.65}
-.card{background:#0d121a;border:1px solid #293341;border-radius:26px;padding:26px;box-shadow:0 24px 70px rgba(0,0,0,.3)}.grid{display:grid;grid-template-columns:1fr 74px 1fr;gap:18px;align-items:end;direction:ltr}.side{direction:rtl}
-.lab{display:block;color:#98a5b4;font-weight:800;margin:0 0 9px}.box{background:#10161f;border:1px solid #2b3441;border-radius:20px;overflow:visible;position:relative}
-.amount{width:100%;border:0;outline:0;background:transparent;color:#fff;padding:22px 20px 15px;font-size:clamp(30px,5vw,48px);font-weight:900;text-align:left;direction:ltr;font-variant-numeric:tabular-nums}
-.currency{border-top:1px solid #25303c;background:#0f151e;padding:0;border-radius:0 0 19px 19px;direction:ltr;position:relative}.pickerBtn{width:100%;min-height:52px;border:0;background:transparent;color:#eef4fa;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px;cursor:pointer;text-align:left}
-.pickerMain{min-width:0;display:flex;align-items:center;gap:10px}.pickerCode{color:#75c5f8;font-weight:900;font-size:17px;min-width:42px}.pickerName{color:#eef4fa;font-weight:800;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chev{color:#7e8a98;font-size:12px}
-.pickerPanel{display:none;position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:30;background:#0d141e;border:1px solid #303b48;border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.45);padding:10px}.pickerPanel.open{display:block}
-.search{width:100%;height:42px;border:1px solid #2b3948;border-radius:11px;outline:0;background:#0a1119;color:#fff;padding:0 12px;font-size:14px;direction:ltr}.search::placeholder{color:#667483}
-.options{margin-top:8px;max-height:245px;overflow:auto;border-top:1px solid #202a35;padding-top:6px}.option{width:100%;border:0;background:transparent;color:#e8eef5;display:grid;grid-template-columns:58px 1fr;gap:8px;align-items:center;padding:10px 9px;border-radius:9px;cursor:pointer;text-align:left;direction:ltr}.option:hover,.option:focus{background:#151f2b;outline:0}.optionCode{color:#77c7fa;font-weight:900}.optionName{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.empty{padding:16px 8px;text-align:center;color:#758394;font-size:13px}
-.swap{width:62px;height:62px;border-radius:50%;border:1px solid #336c96;background:#102032;color:#dcefff;font-size:28px;font-weight:900;margin-bottom:17px;cursor:pointer}
-.ratebar{margin-top:20px;background:#0b1119;border:1px solid #252f3a;border-radius:18px;padding:17px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.rate{direction:ltr;font-size:clamp(18px,2.6vw,25px);font-weight:900;font-variant-numeric:tabular-nums}.rate span{color:#6fc6ff}.updated{color:#7f8b99;font-size:13px}
-.marketline{margin-top:10px;display:flex;justify-content:center;align-items:center;gap:8px;min-height:20px;color:#8d99a8;font-size:12px;text-align:center;direction:ltr}.dot{width:8px;height:8px;border-radius:50%;background:#4fa3e3;box-shadow:0 0 0 3px rgba(79,163,227,.12)}.marketline.street{color:#b7d8c2}.marketline.street .dot{background:#35ce72;box-shadow:0 0 0 3px rgba(53,206,114,.13)}
-.status{min-height:20px;margin-top:7px;text-align:center;color:#788696;font-size:13px}.status.error{color:#ef9b9b}.foot{text-align:center;color:#5e6977;padding-top:24px;font-weight:700;font-size:12px;letter-spacing:.2px}
-html[dir="ltr"] .side{direction:ltr}html[dir="ltr"] .top{direction:ltr}
-@media(max-width:760px){.wrap{width:min(100% - 18px,1040px);padding-top:10px}.langBtn{padding:7px 9px;font-size:12px}.home{padding:9px 12px;font-size:13px}.hero{padding:32px 6px 20px}.card{padding:15px;border-radius:21px}.grid{grid-template-columns:1fr;gap:12px}.swap{margin:0 auto;transform:rotate(90deg);width:54px;height:54px}.amount{padding:18px 15px 12px}.ratebar{padding:15px}.pickerPanel{position:absolute}.options{max-height:210px}}
-@media(min-width:1500px){.wrap{width:min(1180px,calc(100% - 48px))}.card{padding:34px}}
+:root{
+  --bg:#060b12;--panel:#0b121c;--panel2:#0e1723;--panel3:#101b28;
+  --line:#223247;--line2:#2a3b52;--text:#f5f8fc;--muted:#8c9aae;
+  --blue:#46b6ff;--blue2:#137ec4;--green:#39da7c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:"Segoe UI",Tahoma,Arial,sans-serif}
+body{
+  min-height:100dvh;
+  background:
+    radial-gradient(900px 520px at 12% -12%,rgba(30,112,211,.15),transparent 58%),
+    radial-gradient(760px 460px at 96% 0%,rgba(71,71,214,.10),transparent 58%),
+    linear-gradient(180deg,#07101a 0%,#05090f 100%);
+}
+button,input{font:inherit}
+button{-webkit-tap-highlight-color:transparent}
+.wrap{width:min(1120px,calc(100% - 36px));margin:0 auto;padding:26px 0 38px}
+.top{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;direction:ltr;
+  padding:10px 4px 20px;border-bottom:1px solid rgba(83,105,132,.32)
+}
+.home{
+  display:inline-flex;align-items:center;gap:9px;color:#e4edf7;text-decoration:none;
+  background:linear-gradient(180deg,rgba(18,31,46,.92),rgba(10,20,31,.92));
+  border:1px solid #2a4059;border-radius:15px;padding:10px 15px;font-weight:800;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);transition:.18s ease
+}
+.home:hover{border-color:#3a6d93;background:#102033}
+.homeIcon{font-size:16px;color:#d9efff}
+.langSwitch{
+  display:flex;gap:4px;padding:4px;background:#09111b;border:1px solid #26384d;
+  border-radius:15px;direction:ltr;box-shadow:inset 0 1px 0 rgba(255,255,255,.02)
+}
+.langBtn{
+  border:0;background:transparent;color:#8392a6;padding:8px 13px;border-radius:11px;
+  font-weight:800;cursor:pointer;transition:.18s ease
+}
+.langBtn.active{
+  color:#dff4ff;background:linear-gradient(180deg,#15365a,#102943);
+  box-shadow:0 0 0 1px rgba(64,167,237,.30),0 0 22px rgba(32,151,235,.13)
+}
+.hero{display:none!important}
+.card{
+  position:relative;margin-top:22px;padding:28px;
+  background:linear-gradient(180deg,rgba(13,23,35,.97),rgba(9,17,27,.97));
+  border:1px solid #26384c;border-radius:28px;
+  box-shadow:0 28px 80px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.018);
+  overflow:visible
+}
+.card:before{
+  content:"";position:absolute;inset:0;border-radius:28px;pointer-events:none;
+  background:linear-gradient(135deg,rgba(47,135,202,.035),transparent 28%,transparent 72%,rgba(59,97,162,.025))
+}
+.grid{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 72px minmax(0,1fr);gap:22px;align-items:center;direction:ltr}
+.side{direction:rtl;min-width:0}
+.box{
+  background:linear-gradient(180deg,#101a27 0%,#0d1621 100%);
+  border:1px solid #2b3c51;border-radius:20px;overflow:visible;position:relative;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.018),0 12px 35px rgba(0,0,0,.12)
+}
+.lab{
+  display:block;color:#a8b7c9;font-weight:800;font-size:14px;
+  padding:16px 18px 0;margin:0;text-align:right
+}
+.amount{
+  width:100%;border:0;outline:0;background:transparent;color:#fff;
+  padding:7px 18px 18px;font-size:clamp(36px,5vw,54px);font-weight:900;
+  text-align:left;direction:ltr;font-variant-numeric:tabular-nums;letter-spacing:-1.4px
+}
+.currency{
+  border-top:1px solid #25364a;background:rgba(7,14,23,.45);padding:0;
+  border-radius:0 0 19px 19px;direction:ltr;position:relative
+}
+.pickerBtn{
+  width:100%;min-height:58px;border:0;background:transparent;color:#eef4fa;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:13px 15px;cursor:pointer;text-align:left
+}
+.pickerMain{min-width:0;display:flex;align-items:center;gap:10px}
+.currencyFlag{
+  width:28px;min-width:28px;height:22px;display:flex;align-items:center;justify-content:center;
+  font-size:21px;line-height:1;filter:saturate(.95)
+}
+.pickerCode{color:#59bdff;font-weight:950;font-size:17px;min-width:42px}
+.pickerName{color:#edf3f9;font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chev{color:#7f92a8;font-size:12px}
+.pickerPanel{
+  display:none;position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:40;
+  background:#0a121c;border:1px solid #30445d;border-radius:16px;
+  box-shadow:0 24px 60px rgba(0,0,0,.52);padding:10px
+}
+.pickerPanel.open{display:block}
+.search{
+  width:100%;height:43px;border:1px solid #2b4058;border-radius:11px;outline:0;
+  background:#07101a;color:#fff;padding:0 12px;font-size:14px;direction:ltr
+}
+.search:focus{border-color:#3176a7;box-shadow:0 0 0 3px rgba(54,149,215,.08)}
+.search::placeholder{color:#65778b}
+.options{margin-top:8px;max-height:245px;overflow:auto;border-top:1px solid #202e3e;padding-top:6px}
+.option{
+  width:100%;border:0;background:transparent;color:#e8eef5;display:grid;
+  grid-template-columns:34px 55px minmax(0,1fr);gap:8px;align-items:center;
+  padding:10px 9px;border-radius:10px;cursor:pointer;text-align:left;direction:ltr
+}
+.option:hover,.option:focus{background:#132033;outline:0}
+.optionFlag{font-size:20px;line-height:1}
+.optionCode{color:#62c3ff;font-weight:900}
+.optionName{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.empty{padding:16px 8px;text-align:center;color:#75879b;font-size:13px}
+.swap{
+  width:60px;height:60px;border-radius:50%;border:1px solid #2777af;
+  background:linear-gradient(180deg,#102c46,#0b2033);color:#6dc8ff;
+  font-size:27px;font-weight:900;cursor:pointer;margin:22px auto 0;
+  box-shadow:0 0 0 4px rgba(37,132,198,.055),0 10px 28px rgba(0,0,0,.22);
+  transition:.18s ease
+}
+.swap:hover{transform:translateY(-1px);border-color:#42a8ed;color:#c9edff;box-shadow:0 0 0 4px rgba(56,159,226,.08),0 12px 32px rgba(0,0,0,.28)}
+.ratebar{
+  position:relative;margin-top:22px;background:rgba(6,13,22,.62);
+  border:1px solid #23354a;border-radius:17px;padding:17px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:24px
+}
+.ratebar:after{
+  content:"";position:absolute;left:50%;top:14px;bottom:14px;width:1px;background:#273a50
+}
+.rate{
+  direction:ltr;flex:1;text-align:right;font-size:clamp(18px,2.4vw,25px);
+  font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.3px
+}
+.rate span{color:#49b8fb}
+.updated{
+  flex:1;color:#91a2b6;font-size:13px;display:flex;align-items:center;gap:8px;
+  direction:rtl;justify-content:flex-end
+}
+.updated:before{
+  content:"◷";color:#b9d9ef;font-size:17px;line-height:1
+}
+.marketline{
+  margin:13px auto 0;display:flex;justify-content:center;align-items:center;gap:8px;
+  min-height:20px;color:#8fa1b4;font-size:12px;text-align:center;direction:ltr
+}
+.dot{width:8px;height:8px;border-radius:50%;background:#4fa3e3;box-shadow:0 0 0 3px rgba(79,163,227,.10)}
+.marketline.street{color:#b9dbc6}
+.marketline.street .dot{background:var(--green);box-shadow:0 0 0 3px rgba(57,218,124,.10),0 0 14px rgba(57,218,124,.28)}
+.status{margin-top:8px;text-align:center;color:#7f91a5;font-size:12px}
+.status:empty{display:none}
+.status.error{color:#ef9b9b}
+.foot{
+  width:min(540px,78%);margin:24px auto 0;display:flex;align-items:center;gap:16px;
+  color:#617289;font-weight:700;font-size:12px;letter-spacing:.3px
+}
+.foot:before,.foot:after{content:"";height:1px;background:#1f2d3d;flex:1}
+html[dir="ltr"] .side{direction:ltr}
+html[dir="ltr"] .lab{text-align:left}
+html[dir="ltr"] .updated{direction:ltr;justify-content:flex-start}
+@media(max-width:760px){
+  body{background:linear-gradient(180deg,#07101a 0%,#05090f 100%)}
+  .wrap{width:min(100% - 18px,560px);padding:10px 0 24px}
+  .top{padding:8px 2px 14px}
+  .home{padding:9px 12px;border-radius:13px;font-size:13px}
+  .homeIcon{font-size:14px}
+  .langSwitch{border-radius:13px}
+  .langBtn{padding:7px 10px;font-size:12px}
+  .card{margin-top:14px;padding:14px;border-radius:22px}
+  .card:before{border-radius:22px}
+  .grid{grid-template-columns:1fr;gap:11px}
+  .box{border-radius:17px}
+  .lab{padding:13px 14px 0;font-size:13px}
+  .amount{padding:5px 14px 15px;font-size:clamp(34px,11vw,46px);letter-spacing:-1px}
+  .currency{border-radius:0 0 16px 16px}
+  .pickerBtn{min-height:54px;padding:11px 13px}
+  .currencyFlag{width:25px;min-width:25px;font-size:19px}
+  .pickerCode{font-size:16px}
+  .pickerName{font-size:14px}
+  .swap{width:54px;height:54px;font-size:25px;margin:1px auto;transform:rotate(90deg)}
+  .swap:hover{transform:rotate(90deg)}
+  .ratebar{margin-top:14px;padding:14px 15px;display:grid;grid-template-columns:1fr;gap:12px}
+  .ratebar:after{display:none}
+  .updated{order:1;justify-content:flex-start!important;direction:rtl;font-size:12px}
+  .rate{order:2;text-align:center;font-size:20px}
+  html[dir="ltr"] .updated{direction:ltr}
+  .marketline{margin-top:11px;font-size:11.5px}
+  .pickerPanel{position:absolute}
+  .options{max-height:220px}
+  .foot{margin-top:22px;width:82%;font-size:11px}
+}
+@media(min-width:1400px){
+  .wrap{width:min(1180px,calc(100% - 48px))}
+  .card{padding:34px}
+}
 </style>
 </head>
 <body>
 <main class="wrap">
   <header class="top">
+    <a class="home" id="homeLink" href="./"><span class="homeIcon">⌂</span><span>الرئيسية</span></a>
     <div class="langSwitch" aria-label="Language">
       <button class="langBtn active" id="langAr" type="button">عربي</button>
       <button class="langBtn" id="langEn" type="button">English</button>
     </div>
-    <a class="home" id="homeLink" href="./">الرئيسية</a>
   </header>
 
-  <section class="hero" style="display:none">
-    <p id="subText"></p>
-  </section>
+  <section class="hero"><p id="subText"></p></section>
 
   <section class="card">
     <div class="grid">
       <div class="side">
-        <label class="lab" id="fromLabel" for="fromAmount">من</label>
         <div class="box">
+          <label class="lab" id="fromLabel" for="fromAmount">من</label>
           <input class="amount" id="fromAmount" inputmode="decimal" autocomplete="off" value="100" aria-label="المبلغ من">
           <div class="currency" id="fromPicker">
             <button class="pickerBtn" id="fromPickerBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
-              <span class="pickerMain"><span class="pickerCode" id="fromCode">USD</span><span class="pickerName" id="fromName">US Dollar</span></span><span class="chev">▼</span>
+              <span class="pickerMain">
+                <span class="currencyFlag" id="fromFlag">🇺🇸</span>
+                <span class="pickerCode" id="fromCode">USD</span>
+                <span class="pickerName" id="fromName">US Dollar</span>
+              </span>
+              <span class="chev">▼</span>
             </button>
             <div class="pickerPanel" id="fromPanel">
               <input class="search" id="fromSearch" autocomplete="off" placeholder="Search USD, Dollar, Peso...">
@@ -63,12 +237,17 @@ html[dir="ltr"] .side{direction:ltr}html[dir="ltr"] .top{direction:ltr}
       <button class="swap" id="swap" type="button" aria-label="عكس العملات">⇄</button>
 
       <div class="side">
-        <label class="lab" id="toLabel" for="toAmount">إلى</label>
         <div class="box">
+          <label class="lab" id="toLabel" for="toAmount">إلى</label>
           <input class="amount" id="toAmount" inputmode="decimal" autocomplete="off" value="—" aria-label="المبلغ إلى">
           <div class="currency" id="toPicker">
             <button class="pickerBtn" id="toPickerBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
-              <span class="pickerMain"><span class="pickerCode" id="toCode">IQD</span><span class="pickerName" id="toName">Iraqi Dinar</span></span><span class="chev">▼</span>
+              <span class="pickerMain">
+                <span class="currencyFlag" id="toFlag">🇮🇶</span>
+                <span class="pickerCode" id="toCode">IQD</span>
+                <span class="pickerName" id="toName">Iraqi Dinar</span>
+              </span>
+              <span class="chev">▼</span>
             </button>
             <div class="pickerPanel" id="toPanel">
               <input class="search" id="toSearch" autocomplete="off" placeholder="Search USD, Dollar, Peso...">
@@ -80,12 +259,13 @@ html[dir="ltr"] .side{direction:ltr}html[dir="ltr"] .top{direction:ltr}
     </div>
 
     <div class="ratebar">
-      <div class="rate" id="rateText">1 USD = <span>—</span> IQD</div>
       <div class="updated" id="updatedText">آخر تحديث: —</div>
+      <div class="rate" id="rateText">1 USD = <span>—</span> IQD</div>
     </div>
     <div class="marketline" id="marketLine"><span class="dot"></span><span id="marketText">—</span></div>
     <div class="status" id="status">جاري تحميل أسعار العملات…</div>
   </section>
+
   <footer class="foot">MazenmiX</footer>
 </main>
 
@@ -99,6 +279,7 @@ const el={
   fromAmount:document.getElementById('fromAmount'),toAmount:document.getElementById('toAmount'),
   fromCode:document.getElementById('fromCode'),toCode:document.getElementById('toCode'),
   fromName:document.getElementById('fromName'),toName:document.getElementById('toName'),
+  fromFlag:document.getElementById('fromFlag'),toFlag:document.getElementById('toFlag'),
   fromPickerBtn:document.getElementById('fromPickerBtn'),toPickerBtn:document.getElementById('toPickerBtn'),
   fromPanel:document.getElementById('fromPanel'),toPanel:document.getElementById('toPanel'),
   fromSearch:document.getElementById('fromSearch'),toSearch:document.getElementById('toSearch'),
@@ -143,15 +324,30 @@ function usdToCurrency(code){if(code==='USD')return 1;const r=Number(rates[code]
 function crossRate(from,to){if(from===to)return 1;const a=fromCurrencyToUsd(from),b=usdToCurrency(to);return Number.isFinite(a)&&Number.isFinite(b)?a*b:NaN}
 function pairStreetSources(){const arr=[];for(const code of [fromCurrency,toCurrency]){const m=streetMeta(code);if(m?.source&&!arr.includes(m.source))arr.push(m.source)}return arr}
 function pairUpdatedDate(){const candidates=[];for(const code of [fromCurrency,toCurrency]){const raw=streetMeta(code)?.updatedAt;if(raw){const d=new Date(raw);if(!Number.isNaN(d.getTime()))candidates.push(d)}}if(candidates.length)return new Date(Math.max(...candidates.map(d=>d.getTime())));return bookUpdated||new Date()}
-function syncSelected(){el.fromCode.textContent=fromCurrency;el.toCode.textContent=toCurrency;el.fromName.textContent=currencyName(fromCurrency);el.toName.textContent=currencyName(toCurrency)}
+function currencyFlag(code){
+  const flags={
+    USD:'🇺🇸',IQD:'🇮🇶',EUR:'🇪🇺',GBP:'🇬🇧',PHP:'🇵🇭',TRY:'🇹🇷',AED:'🇦🇪',SAR:'🇸🇦',QAR:'🇶🇦',KWD:'🇰🇼',BHD:'🇧🇭',JOD:'🇯🇴',
+    EGP:'🇪🇬',IRR:'🇮🇷',INR:'🇮🇳',PKR:'🇵🇰',CNY:'🇨🇳',JPY:'🇯🇵',KRW:'🇰🇷',THB:'🇹🇭',IDR:'🇮🇩',MYR:'🇲🇾',SGD:'🇸🇬',AUD:'🇦🇺',
+    NZD:'🇳🇿',CAD:'🇨🇦',CHF:'🇨🇭',RUB:'🇷🇺',UAH:'🇺🇦',BRL:'🇧🇷',MXN:'🇲🇽',ARS:'🇦🇷',CLP:'🇨🇱',COP:'🇨🇴',PEN:'🇵🇪',
+    ZAR:'🇿🇦',NGN:'🇳🇬',MAD:'🇲🇦',DZD:'🇩🇿',TND:'🇹🇳',LBP:'🇱🇧',SYP:'🇸🇾',OMR:'🇴🇲',YER:'🇾🇪',AFN:'🇦🇫',BDT:'🇧🇩',
+    LKR:'🇱🇰',NPR:'🇳🇵',VND:'🇻🇳',KHR:'🇰🇭',LAK:'🇱🇦',MMK:'🇲🇲',HKD:'🇭🇰',TWD:'🇹🇼',SEK:'🇸🇪',NOK:'🇳🇴',DKK:'🇩🇰',
+    PLN:'🇵🇱',CZK:'🇨🇿',HUF:'🇭🇺',RON:'🇷🇴',BGN:'🇧🇬',GEL:'🇬🇪',AMD:'🇦🇲',AZN:'🇦🇿',KZT:'🇰🇿'
+  };
+  return flags[code]||'💱'
+}
+function syncSelected(){
+  el.fromCode.textContent=fromCurrency;el.toCode.textContent=toCurrency;
+  el.fromName.textContent=currencyName(fromCurrency);el.toName.textContent=currencyName(toCurrency);
+  el.fromFlag.textContent=currencyFlag(fromCurrency);el.toFlag.textContent=currencyFlag(toCurrency)
+}
 function closePickers(){for(const [panel,btn] of [[el.fromPanel,el.fromPickerBtn],[el.toPanel,el.toPickerBtn]]){panel.classList.remove('open');btn.setAttribute('aria-expanded','false')}}
 function renderOptions(side,query=''){
   const box=side==='from'?el.fromOptions:el.toOptions,q=query.trim().toLowerCase(),filtered=codes.filter(code=>!q||searchText(code).includes(q));box.innerHTML='';
   if(!filtered.length){const d=document.createElement('div');d.className='empty';d.textContent=T[lang].empty;box.appendChild(d);return}
-  filtered.forEach(code=>{const b=document.createElement('button');b.type='button';b.className='option';b.setAttribute('role','option');b.innerHTML=`<span class="optionCode">${code}</span><span class="optionName"></span>`;b.querySelector('.optionName').textContent=currencyName(code);b.addEventListener('click',()=>{if(side==='from')fromCurrency=code;else toCurrency=code;syncSelected();closePickers();render(lastEdited)});box.appendChild(b)})
+  filtered.forEach(code=>{const b=document.createElement('button');b.type='button';b.className='option';b.setAttribute('role','option');b.innerHTML=`<span class="optionFlag">${currencyFlag(code)}</span><span class="optionCode">${code}</span><span class="optionName"></span>`;b.querySelector('.optionName').textContent=currencyName(code);b.addEventListener('click',()=>{if(side==='from')fromCurrency=code;else toCurrency=code;syncSelected();closePickers();render(lastEdited)});box.appendChild(b)})
 }
 function openPicker(side){const panel=side==='from'?el.fromPanel:el.toPanel,btn=side==='from'?el.fromPickerBtn:el.toPickerBtn,search=side==='from'?el.fromSearch:el.toSearch;const wasOpen=panel.classList.contains('open');closePickers();if(wasOpen)return;panel.classList.add('open');btn.setAttribute('aria-expanded','true');search.value='';renderOptions(side,'');setTimeout(()=>search.focus(),0)}
-function setLanguage(next){lang=next;localStorage.setItem('mx_converter_lang',lang);document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';el.langAr.classList.toggle('active',lang==='ar');el.langEn.classList.toggle('active',lang==='en');el.homeLink.textContent=T[lang].home;el.subText.textContent=T[lang].sub;el.fromLabel.textContent=T[lang].from;el.toLabel.textContent=T[lang].to;el.fromSearch.placeholder=T[lang].search;el.toSearch.placeholder=T[lang].search;el.swap.setAttribute('aria-label',lang==='ar'?'عكس العملات':'Swap currencies');document.title=(lang==='ar'?'محول العملة السريع':'Quick Currency Converter')+' | MX Exchanger';syncSelected();renderOptions('from',el.fromSearch.value);renderOptions('to',el.toSearch.value);render(lastEdited)}
+function setLanguage(next){lang=next;localStorage.setItem('mx_converter_lang',lang);document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';el.langAr.classList.toggle('active',lang==='ar');el.langEn.classList.toggle('active',lang==='en');el.homeLink.querySelector('span:last-child').textContent=T[lang].home;el.subText.textContent=T[lang].sub;el.fromLabel.textContent=T[lang].from;el.toLabel.textContent=T[lang].to;el.fromSearch.placeholder=T[lang].search;el.toSearch.placeholder=T[lang].search;el.swap.setAttribute('aria-label',lang==='ar'?'عكس العملات':'Swap currencies');document.title=(lang==='ar'?'محول العملة السريع':'Quick Currency Converter')+' | MX Exchanger';syncSelected();renderOptions('from',el.fromSearch.value);renderOptions('to',el.toSearch.value);render(lastEdited)}
 function setUpdated(){const d=pairUpdatedDate();el.updatedText.textContent=T[lang].updated+': '+new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(d)}
 function renderMarketLine(){const sources=pairStreetSources(),isStreet=sources.length>0;if([fromCurrency,toCurrency].includes('IQD')&&streetMeta('IQD')){el.marketLine.style.display='flex';el.marketLine.classList.add('street');el.marketText.textContent=T[lang].iraqBoard;return}if(isStreet){el.marketLine.style.display='flex';el.marketLine.classList.add('street');const directionAware=[fromCurrency,toCurrency].some(c=>{const m=streetMeta(c);return Number(m?.buy)>0&&Number(m?.sell)>0});el.marketText.textContent=`${T[lang].street} · ${sources.join(' + ')}${directionAware?' · '+T[lang].direction:''}`;return}el.marketLine.style.display='none';el.marketLine.classList.remove('street');el.marketText.textContent=''}
 async function applyIraqMarket(){
