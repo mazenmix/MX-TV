@@ -220,6 +220,8 @@ body{display:block;min-height:100dvh}
       linear-gradient(180deg,#08111a 0%,#060b11 100%)!important;
   }
   #app>.abs{position:static!important;left:auto!important;right:auto!important;top:auto!important}
+  /* Hero must remain the containing block for its absolute children on mobile */
+  #app>.hero.abs{position:relative!important;left:auto!important;right:auto!important;top:auto!important}
   .header{display:none!important}
 
   .brand{
@@ -453,7 +455,7 @@ function renderUsdMeta(m){const box=$('marketState'),label=$('marketStateText');
 function render(d){if(!d||!d.kifah||!d.harithiya||!d.gold)return;lastData=d;const hs=Math.max(d.kifah.sell||0,d.harithiya.sell||0,d.kukh?.sell||0);const hb=Math.max(d.kifah.buy||0,d.harithiya.buy||0,d.kukh?.buy||0);$('highSell').textContent=fmt(hs);$('highSell2').textContent=fmt(hs);$('highBuy').textContent=fmt(hb);$('kifahSell').textContent=fmt(d.kifah.sell);$('kifahBuy').textContent=fmt(d.kifah.buy);$('harSell').textContent=fmt(d.harithiya.sell);$('harBuy').textContent=fmt(d.harithiya.buy);if(d.kukh){$('kukhSell').textContent=fmt(d.kukh.sell);$('kukhBuy').textContent=fmt(d.kukh.buy)}$('g18').textContent=fmt(d.gold.k18);$('g21').textContent=fmt(d.gold.k21);$('g24').textContent=fmt(d.gold.k24);renderUsdMeta(d.usd_meta||{});stampRefreshTime()}
 async function refresh(){stampRefreshTime();const b=$('refresh'),old=b.textContent;b.disabled=true;b.textContent='جارِ التحديث...';b.style.background='#1f4968';$('err').textContent='';try{const r=await fetch(DATA_URL+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(!d.kifah?.sell||!d.harithiya?.sell||!d.gold?.k21||!d.gold?.k24)throw new Error('incomplete');render(d)}catch(e){$('err').textContent='تعذر جلب آخر الأسعار — البيانات الظاهرة هي آخر بيانات محفوظة';if(lastData)render(lastData)}finally{b.disabled=false;b.textContent=old;b.style.background='#2470a8'}}
 $('refresh').addEventListener('click',refresh);stampRefreshTime();refresh();setInterval(refresh,60000);
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=21',{updateViaCache:'none'}).then(reg=>reg.update().catch(()=>{})).catch(()=>{})}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=22',{updateViaCache:'none'}).then(reg=>reg.update().catch(()=>{})).catch(()=>{})}
 </script>
 </body>
 </html>
