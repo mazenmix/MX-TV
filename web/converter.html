@@ -38,8 +38,8 @@ html[dir="ltr"] .side{direction:ltr}html[dir="ltr"] .top{direction:ltr}
     <a class="home" id="homeLink" href="./">الرئيسية</a>
   </header>
 
-  <section class="hero">
-    <p id="subText">سعر شارع/سوق موازي حيث يتوفر مصدر محلي موثوق — وسعر سوق حي لباقي العملات</p>
+  <section class="hero" style="display:none">
+    <p id="subText"></p>
   </section>
 
   <section class="card">
@@ -116,8 +116,8 @@ let lang=localStorage.getItem('mx_converter_lang')||'ar',fromCurrency='USD',toCu
 const namesEn=new Intl.DisplayNames(['en'],{type:'currency'});
 const namesAr=new Intl.DisplayNames(['ar'],{type:'currency'});
 const T={
-  ar:{home:'الرئيسية',sub:'سعر شارع/سوق موازي حيث يتوفر مصدر محلي موثوق — وسعر سوق حي لباقي العملات',from:'من',to:'إلى',updated:'آخر تحديث',loading:'جاري تحديث أسعار السوق…',unavailable:'السعر غير متوفر حالياً',fetchError:'تعذر جلب آخر سعر حالياً',search:'ابحث USD أو Dollar أو Peso...',empty:'ماكو عملة مطابقة',street:'سوق شارع / موازي',market:'سوق عالمي',direction:'شراء/بيع فعلي',iraqBoard:'الرقم محدث بورصة الحارثية/الكفاح'},
-  en:{home:'Home',sub:'Verified street/parallel rates where a local market exists — live market FX for the rest',from:'From',to:'To',updated:'Last updated',loading:'Updating market rates…',unavailable:'Rate is currently unavailable',fetchError:'Unable to fetch the latest rate',search:'Search USD, Dollar, Peso...',empty:'No matching currency',street:'Street / parallel market',market:'Global FX market',direction:'direction-aware cash',iraqBoard:'Rate updated from Harithiya/Kifah exchange'}
+  ar:{home:'الرئيسية',sub:'',from:'من',to:'إلى',updated:'آخر تحديث',loading:'جاري تحديث أسعار السوق…',unavailable:'السعر غير متوفر حالياً',fetchError:'تعذر جلب آخر سعر حالياً',search:'ابحث USD أو Dollar أو Peso...',empty:'ماكو عملة مطابقة',street:'سوق شارع / موازي',market:'سوق عالمي',direction:'شراء/بيع فعلي',iraqBoard:'الرقم محدث بورصة الحارثية/الكفاح'},
+  en:{home:'Home',sub:'',from:'From',to:'To',updated:'Last updated',loading:'Updating market rates…',unavailable:'Rate is currently unavailable',fetchError:'Unable to fetch the latest rate',search:'Search USD, Dollar, Peso...',empty:'No matching currency',street:'Street / parallel market',market:'Global FX market',direction:'direction-aware cash',iraqBoard:'Rate updated from Harithiya/Kifah exchange'}
 };
 
 function num(v){const n=Number(String(v).replace(/,/g,'').trim());return Number.isFinite(n)?n:0}
