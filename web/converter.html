@@ -91,6 +91,7 @@ html[dir="ltr"] .side{direction:ltr}html[dir="ltr"] .top{direction:ltr}
 
 <script>
 const STREET_API='https://raw.githubusercontent.com/mazenmix/MX-Currency-/main/data/rates.json';
+const IRAQ_MARKET_API='/api/market';
 const FX_API='https://open.er-api.com/v6/latest/USD';
 const STREET_KINDS=new Set(['parallel','street','informal','open-market','cash-market','free-market']);
 
@@ -138,7 +139,7 @@ function currencyName(code,language=lang){try{return (language==='ar'?namesAr:na
 function searchText(code){return `${code} ${currencyName(code,'en')} ${currencyName(code,'ar')}`.toLowerCase()}
 function streetMeta(code){const m=meta[code];return m&&STREET_KINDS.has(String(m.kind||'').toLowerCase())?m:null}
 function fromCurrencyToUsd(code){if(code==='USD')return 1;const r=Number(rates[code]);if(!(r>0))return NaN;const m=streetMeta(code),ask=Number(m?.sell);return 1/(ask>0?ask:r)}
-function usdToCurrency(code){if(code==='USD')return 1;const r=Number(rates[code]);if(!(r>0))return NaN;const m=streetMeta(code),bid=Number(m?.buy);return bid>0?bid:r}
+function usdToCurrency(code){if(code==='USD')return 1;const r=Number(rates[code]);if(!(r>0))return NaN;const m=streetMeta(code);if(code==='IQD'){const sell=Number(m?.sell);return sell>0?sell:r}const bid=Number(m?.buy);return bid>0?bid:r}
 function crossRate(from,to){if(from===to)return 1;const a=fromCurrencyToUsd(from),b=usdToCurrency(to);return Number.isFinite(a)&&Number.isFinite(b)?a*b:NaN}
 function pairStreetSources(){const arr=[];for(const code of [fromCurrency,toCurrency]){const m=streetMeta(code);if(m?.source&&!arr.includes(m.source))arr.push(m.source)}return arr}
 function pairUpdatedDate(){const candidates=[];for(const code of [fromCurrency,toCurrency]){const raw=streetMeta(code)?.updatedAt;if(raw){const d=new Date(raw);if(!Number.isNaN(d.getTime()))candidates.push(d)}}if(candidates.length)return new Date(Math.max(...candidates.map(d=>d.getTime())));return bookUpdated||new Date()}
@@ -153,6 +154,26 @@ function openPicker(side){const panel=side==='from'?el.fromPanel:el.toPanel,btn=
 function setLanguage(next){lang=next;localStorage.setItem('mx_converter_lang',lang);document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';el.langAr.classList.toggle('active',lang==='ar');el.langEn.classList.toggle('active',lang==='en');el.homeLink.textContent=T[lang].home;el.subText.textContent=T[lang].sub;el.fromLabel.textContent=T[lang].from;el.toLabel.textContent=T[lang].to;el.fromSearch.placeholder=T[lang].search;el.toSearch.placeholder=T[lang].search;el.swap.setAttribute('aria-label',lang==='ar'?'عكس العملات':'Swap currencies');document.title=(lang==='ar'?'محول العملة السريع':'Quick Currency Converter')+' | MX Exchanger';syncSelected();renderOptions('from',el.fromSearch.value);renderOptions('to',el.toSearch.value);render(lastEdited)}
 function setUpdated(){const d=pairUpdatedDate();el.updatedText.textContent=T[lang].updated+': '+new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(d)}
 function renderMarketLine(){const sources=pairStreetSources(),isStreet=sources.length>0;el.marketLine.classList.toggle('street',isStreet);if([fromCurrency,toCurrency].includes('IQD')&&streetMeta('IQD')){el.marketText.textContent=T[lang].iraqBoard;return}if(isStreet){const directionAware=[fromCurrency,toCurrency].some(c=>{const m=streetMeta(c);return Number(m?.buy)>0&&Number(m?.sell)>0});el.marketText.textContent=`${T[lang].street} · ${sources.join(' + ')}${directionAware?' · '+T[lang].direction:''}`}else{el.marketText.textContent=T[lang].market+' · USD cross-rate'}}
+async function applyIraqMarket(){
+  try{
+    const r=await fetch(IRAQ_MARKET_API+'?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error('Iraq market HTTP '+r.status);
+    const d=await r.json();
+    const board=(d.harithiya&&Number(d.harithiya.sell)>0)?d.harithiya:((d.kifah&&Number(d.kifah.sell)>0)?d.kifah:null);
+    if(!board)throw new Error('No Harithiya/Kifah quote');
+    const buy100=Number(board.buy),sell100=Number(board.sell);
+    if(!(sell100>0))throw new Error('Bad IQD sell quote');
+    const buy=(buy100>0?buy100:sell100)/100,sell=sell100/100;
+    rates.IQD=sell;
+    meta.IQD={
+      kind:'parallel',
+      source:'Baghdad Harithiya/Kifah board · @dollariraqi',
+      buy,
+      sell,
+      updatedAt:d.usd_meta?.published_at||d.updated_at||new Date().toISOString()
+    };
+  }catch(_){}
+}
 function render(direction='from'){
   const r=crossRate(fromCurrency,toCurrency);syncSelected();renderMarketLine();setUpdated();
   if(!Number.isFinite(r)){el.status.className='status error';el.status.textContent=T[lang].unavailable;return}
@@ -165,6 +186,7 @@ async function load(){
   try{const r=await fetch(STREET_API+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('Street HTTP '+r.status);const d=await r.json();if(d.base!=='USD'||!d.rates)throw new Error('bad street data');rates=d.rates;meta=d.meta||{};const t=new Date(d.updatedAt||Date.now());bookUpdated=Number.isNaN(t.getTime())?new Date():t;loaded=true}catch(_){}
   if(!loaded){try{const r=await fetch(FX_API+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('FX HTTP '+r.status);const d=await r.json();if(d.result!=='success'||!d.rates)throw new Error('bad fx data');rates=d.rates;meta={};bookUpdated=d.time_last_update_unix?new Date(d.time_last_update_unix*1000):new Date();loaded=true}catch(_){}}
   if(!loaded){el.status.className='status error';el.status.textContent=T[lang].fetchError;return}
+  await applyIraqMarket();
   codes=Object.keys(rates).filter(c=>/^[A-Z]{3}$/.test(c)).sort();renderOptions('from');renderOptions('to');render(lastEdited)
 }
 function schedule(side){lastEdited=side;clearTimeout(timer);timer=setTimeout(()=>render(side),120)}
