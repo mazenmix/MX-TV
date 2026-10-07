@@ -320,7 +320,7 @@ function currencyName(code,language=lang){try{return (language==='ar'?namesAr:na
 function searchText(code){return `${code} ${currencyName(code,'en')} ${currencyName(code,'ar')}`.toLowerCase()}
 function streetMeta(code){const m=meta[code];return m&&STREET_KINDS.has(String(m.kind||'').toLowerCase())?m:null}
 function fromCurrencyToUsd(code){if(code==='USD')return 1;const r=Number(rates[code]);if(!(r>0))return NaN;const m=streetMeta(code),ask=Number(m?.sell);return 1/(ask>0?ask:r)}
-function usdToCurrency(code){if(code==='USD')return 1;const r=Number(rates[code]);if(!(r>0))return NaN;const m=streetMeta(code);if(code==='IQD'){const sell=Number(m?.sell);return sell>0?sell:r}const bid=Number(m?.buy);return bid>0?bid:r}
+function usdToCurrency(code){if(code==='USD')return 1;const r=Number(rates[code]);if(!(r>0))return NaN;const m=streetMeta(code),sell=Number(m?.sell);return sell>0?sell:r}
 function crossRate(from,to){if(from===to)return 1;const a=fromCurrencyToUsd(from),b=usdToCurrency(to);return Number.isFinite(a)&&Number.isFinite(b)?a*b:NaN}
 function pairStreetSources(){const arr=[];for(const code of [fromCurrency,toCurrency]){const m=streetMeta(code);if(m?.source&&!arr.includes(m.source))arr.push(m.source)}return arr}
 function pairUpdatedDate(){const candidates=[];for(const code of [fromCurrency,toCurrency]){const raw=streetMeta(code)?.updatedAt;if(raw){const d=new Date(raw);if(!Number.isNaN(d.getTime()))candidates.push(d)}}if(candidates.length)return new Date(Math.max(...candidates.map(d=>d.getTime())));return bookUpdated||new Date()}
