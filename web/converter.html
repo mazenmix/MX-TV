@@ -245,7 +245,7 @@ html[dir="ltr"] .updated{direction:ltr;justify-content:flex-start}
               <span class="pickerMain">
                 <span class="currencyFlag" id="toFlag">🇮🇶</span>
                 <span class="pickerCode" id="toCode">IQD</span>
-                <span class="pickerText"><span class="pickerName" id="toName">Iraqi Dinar</span><span class="pickerSub" id="toSub" dir="auto" style="display:block">سعر صرف الكفاح/الحارثية</span></span>
+                <span class="pickerText"><span class="pickerName" id="toName">Iraqi Dinar</span><span class="pickerSub" id="toSub" dir="auto"></span></span>
               </span>
               <span class="chev">▼</span>
             </button>
@@ -298,8 +298,8 @@ let lang=localStorage.getItem('mx_converter_lang')||'ar',fromCurrency='USD',toCu
 const namesEn=new Intl.DisplayNames(['en'],{type:'currency'});
 const namesAr=new Intl.DisplayNames(['ar'],{type:'currency'});
 const T={
-  ar:{home:'الرئيسية',sub:'',from:'من',to:'إلى',updated:'آخر تحديث',loading:'جاري تحديث أسعار السوق…',unavailable:'السعر غير متوفر حالياً',fetchError:'تعذر جلب آخر سعر حالياً',search:'ابحث USD أو Dollar أو Peso...',empty:'ماكو عملة مطابقة',street:'سوق شارع / موازي',market:'سوق عالمي',direction:'شراء/بيع فعلي',iraqBoard:'نفس السعر الأعلى من الصفحة الرئيسية',iqdSubtitle:'سعر صرف الكفاح/الحارثية'},
-  en:{home:'Home',sub:'',from:'From',to:'To',updated:'Last updated',loading:'Updating market rates…',unavailable:'Rate is currently unavailable',fetchError:'Unable to fetch the latest rate',search:'Search USD, Dollar, Peso...',empty:'No matching currency',street:'Street / parallel market',market:'Global FX market',direction:'direction-aware cash',iraqBoard:'Same highest sell rate as the home page',iqdSubtitle:'Kifah / Harithiya exchange rate'}
+  ar:{home:'الرئيسية',sub:'',from:'من',to:'إلى',updated:'آخر تحديث',loading:'جاري تحديث أسعار السوق…',unavailable:'السعر غير متوفر حالياً',fetchError:'تعذر جلب آخر سعر حالياً',search:'ابحث USD أو Dollar أو Peso...',empty:'ماكو عملة مطابقة',street:'سوق شارع / موازي',market:'سوق عالمي',direction:'شراء/بيع فعلي',iraqBoard:'سعر صرف الكفاح / الحارثية',iqdSubtitle:'سعر صرف الكفاح/الحارثية'},
+  en:{home:'Home',sub:'',from:'From',to:'To',updated:'Last updated',loading:'Updating market rates…',unavailable:'Rate is currently unavailable',fetchError:'Unable to fetch the latest rate',search:'Search USD, Dollar, Peso...',empty:'No matching currency',street:'Street / parallel market',market:'Global FX market',direction:'direction-aware cash',iraqBoard:'Kifah / Harithiya exchange rate',iqdSubtitle:'Kifah / Harithiya exchange rate'}
 };
 
 function num(v){const n=Number(String(v).replace(/,/g,'').trim());return Number.isFinite(n)?n:0}
@@ -340,11 +340,10 @@ function syncSelected(){
   el.fromCode.textContent=fromCurrency;el.toCode.textContent=toCurrency;
   el.fromName.textContent=currencyName(fromCurrency);el.toName.textContent=currencyName(toCurrency);
   el.fromFlag.textContent=currencyFlag(fromCurrency);el.toFlag.textContent=currencyFlag(toCurrency);
-  for(const [sub,code] of [[el.fromSub,fromCurrency],[el.toSub,toCurrency]]){
+  for(const sub of [el.fromSub,el.toSub]){
     if(!sub)continue;
-    const isIqd=code==='IQD';
-    sub.textContent=isIqd?T[lang].iqdSubtitle:'';
-    sub.style.display=isIqd?'block':'none';
+    sub.textContent='';
+    sub.style.display='none';
   }
 }
 function closePickers(){for(const [panel,btn] of [[el.fromPanel,el.fromPickerBtn],[el.toPanel,el.toPickerBtn]]){panel.classList.remove('open');btn.setAttribute('aria-expanded','false')}}
