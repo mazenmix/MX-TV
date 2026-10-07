@@ -297,8 +297,8 @@ let lang=localStorage.getItem('mx_converter_lang')||'ar',fromCurrency='USD',toCu
 const namesEn=new Intl.DisplayNames(['en'],{type:'currency'});
 const namesAr=new Intl.DisplayNames(['ar'],{type:'currency'});
 const T={
-  ar:{home:'الرئيسية',sub:'',from:'من',to:'إلى',updated:'آخر تحديث',loading:'جاري تحديث أسعار السوق…',unavailable:'السعر غير متوفر حالياً',fetchError:'تعذر جلب آخر سعر حالياً',search:'ابحث USD أو Dollar أو Peso...',empty:'ماكو عملة مطابقة',street:'سوق شارع / موازي',market:'سوق عالمي',direction:'شراء/بيع فعلي',iraqBoard:'الرقم محدث بورصة الحارثية/الكفاح'},
-  en:{home:'Home',sub:'',from:'From',to:'To',updated:'Last updated',loading:'Updating market rates…',unavailable:'Rate is currently unavailable',fetchError:'Unable to fetch the latest rate',search:'Search USD, Dollar, Peso...',empty:'No matching currency',street:'Street / parallel market',market:'Global FX market',direction:'direction-aware cash',iraqBoard:'Rate updated from Harithiya/Kifah exchange'}
+  ar:{home:'الرئيسية',sub:'',from:'من',to:'إلى',updated:'آخر تحديث',loading:'جاري تحديث أسعار السوق…',unavailable:'السعر غير متوفر حالياً',fetchError:'تعذر جلب آخر سعر حالياً',search:'ابحث USD أو Dollar أو Peso...',empty:'ماكو عملة مطابقة',street:'سوق شارع / موازي',market:'سوق عالمي',direction:'شراء/بيع فعلي',iraqBoard:'نفس السعر الأعلى من الصفحة الرئيسية'},
+  en:{home:'Home',sub:'',from:'From',to:'To',updated:'Last updated',loading:'Updating market rates…',unavailable:'Rate is currently unavailable',fetchError:'Unable to fetch the latest rate',search:'Search USD, Dollar, Peso...',empty:'No matching currency',street:'Street / parallel market',market:'Global FX market',direction:'direction-aware cash',iraqBoard:'Same highest sell rate as the home page'}
 };
 
 function num(v){const n=Number(String(v).replace(/,/g,'').trim());return Number.isFinite(n)?n:0}
@@ -355,15 +355,26 @@ async function applyIraqMarket(){
     const r=await fetch(IRAQ_MARKET_API+'?t='+Date.now(),{cache:'no-store'});
     if(!r.ok)throw new Error('Iraq market HTTP '+r.status);
     const d=await r.json();
-    const board=(d.harithiya&&Number(d.harithiya.sell)>0)?d.harithiya:((d.kifah&&Number(d.kifah.sell)>0)?d.kifah:null);
-    if(!board)throw new Error('No Harithiya/Kifah quote');
-    const buy100=Number(board.buy),sell100=Number(board.sell);
-    if(!(sell100>0))throw new Error('Bad IQD sell quote');
-    const buy=(buy100>0?buy100:sell100)/100,sell=sell100/100;
+
+    // Keep USD/IQD identical to the homepage "highest price" card:
+    // highest SELL among Kifah, Harithiya and Kukh Alomlat.
+    const boards=[
+      ['Kifah',d.kifah],
+      ['Harithiya',d.harithiya],
+      ['Kukh Alomlat',d.kukh]
+    ].filter(([,q])=>q&&Number(q.sell)>0);
+    if(!boards.length)throw new Error('No Baghdad market quote');
+
+    const [boardName,board]=boards.reduce((best,cur)=>Number(cur[1].sell)>Number(best[1].sell)?cur:best);
+    const sell100=Number(board.sell);
+    const buy100=Number(board.buy);
+    const sell=sell100/100;
+    const buy=(buy100>0?buy100:sell100)/100;
+
     rates.IQD=sell;
     meta.IQD={
       kind:'parallel',
-      source:'Baghdad Harithiya/Kifah board · @dollariraqi',
+      source:'MX Exchanger highest sell · '+boardName,
       buy,
       sell,
       updatedAt:d.usd_meta?.published_at||d.updated_at||new Date().toISOString()
