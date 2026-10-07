@@ -85,7 +85,7 @@ button{-webkit-tap-highlight-color:transparent}
   display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:13px 15px;cursor:pointer;text-align:left
 }
-.pickerMain{min-width:0;display:flex;align-items:center;gap:10px}
+.pickerMain{min-width:0;display:flex;align-items:center;gap:10px}.pickerText{min-width:0;display:flex;flex-direction:column;justify-content:center}.pickerSub{display:none;margin-top:3px;color:#7894aa;font-size:10px;font-weight:500;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .currencyFlag{
   width:28px;min-width:28px;height:22px;display:flex;align-items:center;justify-content:center;
   font-size:21px;line-height:1;filter:saturate(.95)
@@ -222,7 +222,7 @@ html[dir="ltr"] .updated{direction:ltr;justify-content:flex-start}
               <span class="pickerMain">
                 <span class="currencyFlag" id="fromFlag">🇺🇸</span>
                 <span class="pickerCode" id="fromCode">USD</span>
-                <span class="pickerName" id="fromName">US Dollar</span>
+                <span class="pickerText"><span class="pickerName" id="fromName">US Dollar</span><span class="pickerSub" id="fromSub" dir="auto"></span></span>
               </span>
               <span class="chev">▼</span>
             </button>
@@ -245,7 +245,7 @@ html[dir="ltr"] .updated{direction:ltr;justify-content:flex-start}
               <span class="pickerMain">
                 <span class="currencyFlag" id="toFlag">🇮🇶</span>
                 <span class="pickerCode" id="toCode">IQD</span>
-                <span class="pickerName" id="toName">Iraqi Dinar</span>
+                <span class="pickerText"><span class="pickerName" id="toName">Iraqi Dinar</span><span class="pickerSub" id="toSub" dir="auto"></span></span>
               </span>
               <span class="chev">▼</span>
             </button>
@@ -279,6 +279,7 @@ const el={
   fromAmount:document.getElementById('fromAmount'),toAmount:document.getElementById('toAmount'),
   fromCode:document.getElementById('fromCode'),toCode:document.getElementById('toCode'),
   fromName:document.getElementById('fromName'),toName:document.getElementById('toName'),
+  fromSub:document.getElementById('fromSub'),toSub:document.getElementById('toSub'),
   fromFlag:document.getElementById('fromFlag'),toFlag:document.getElementById('toFlag'),
   fromPickerBtn:document.getElementById('fromPickerBtn'),toPickerBtn:document.getElementById('toPickerBtn'),
   fromPanel:document.getElementById('fromPanel'),toPanel:document.getElementById('toPanel'),
@@ -297,8 +298,8 @@ let lang=localStorage.getItem('mx_converter_lang')||'ar',fromCurrency='USD',toCu
 const namesEn=new Intl.DisplayNames(['en'],{type:'currency'});
 const namesAr=new Intl.DisplayNames(['ar'],{type:'currency'});
 const T={
-  ar:{home:'الرئيسية',sub:'',from:'من',to:'إلى',updated:'آخر تحديث',loading:'جاري تحديث أسعار السوق…',unavailable:'السعر غير متوفر حالياً',fetchError:'تعذر جلب آخر سعر حالياً',search:'ابحث USD أو Dollar أو Peso...',empty:'ماكو عملة مطابقة',street:'سوق شارع / موازي',market:'سوق عالمي',direction:'شراء/بيع فعلي',iraqBoard:'نفس السعر الأعلى من الصفحة الرئيسية'},
-  en:{home:'Home',sub:'',from:'From',to:'To',updated:'Last updated',loading:'Updating market rates…',unavailable:'Rate is currently unavailable',fetchError:'Unable to fetch the latest rate',search:'Search USD, Dollar, Peso...',empty:'No matching currency',street:'Street / parallel market',market:'Global FX market',direction:'direction-aware cash',iraqBoard:'Same highest sell rate as the home page'}
+  ar:{home:'الرئيسية',sub:'',from:'من',to:'إلى',updated:'آخر تحديث',loading:'جاري تحديث أسعار السوق…',unavailable:'السعر غير متوفر حالياً',fetchError:'تعذر جلب آخر سعر حالياً',search:'ابحث USD أو Dollar أو Peso...',empty:'ماكو عملة مطابقة',street:'سوق شارع / موازي',market:'سوق عالمي',direction:'شراء/بيع فعلي',iraqBoard:'نفس السعر الأعلى من الصفحة الرئيسية',iqdSubtitle:'سعر صرف الكفاح/الحارثية'},
+  en:{home:'Home',sub:'',from:'From',to:'To',updated:'Last updated',loading:'Updating market rates…',unavailable:'Rate is currently unavailable',fetchError:'Unable to fetch the latest rate',search:'Search USD, Dollar, Peso...',empty:'No matching currency',street:'Street / parallel market',market:'Global FX market',direction:'direction-aware cash',iraqBoard:'Same highest sell rate as the home page',iqdSubtitle:'Kifah / Harithiya exchange rate'}
 };
 
 function num(v){const n=Number(String(v).replace(/,/g,'').trim());return Number.isFinite(n)?n:0}
@@ -338,7 +339,13 @@ function currencyFlag(code){
 function syncSelected(){
   el.fromCode.textContent=fromCurrency;el.toCode.textContent=toCurrency;
   el.fromName.textContent=currencyName(fromCurrency);el.toName.textContent=currencyName(toCurrency);
-  el.fromFlag.textContent=currencyFlag(fromCurrency);el.toFlag.textContent=currencyFlag(toCurrency)
+  el.fromFlag.textContent=currencyFlag(fromCurrency);el.toFlag.textContent=currencyFlag(toCurrency);
+  for(const [sub,code] of [[el.fromSub,fromCurrency],[el.toSub,toCurrency]]){
+    if(!sub)continue;
+    const isIqd=code==='IQD';
+    sub.textContent=isIqd?T[lang].iqdSubtitle:'';
+    sub.style.display=isIqd?'block':'none';
+  }
 }
 function closePickers(){for(const [panel,btn] of [[el.fromPanel,el.fromPickerBtn],[el.toPanel,el.toPickerBtn]]){panel.classList.remove('open');btn.setAttribute('aria-expanded','false')}}
 function renderOptions(side,query=''){
