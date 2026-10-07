@@ -132,7 +132,7 @@ function parseCbi(body){
   const rate=(label,code)=>{
     const re=new RegExp(label+'\\s*'+code+'\\s*([0-9]+(?:\\.[0-9]+)?)','i');
     const m=txt.match(re);
-    return m?num(m[1]):0;
+    return m?num(m[1]):null;
   };
   return {source:'البنك المركزي العراقي',source_url:CBI_URL,rates:{USD:rate('U\\.?S\\.? dollar','USD'),EUR:rate('Euro','EUR'),GBP:rate('Pound Sterling','GBP'),TRY:rate('Turkish Lira','TRY'),AED:rate('U\\.?A\\.?E Dirham','AED'),SAR:rate('Saudi Arabian Rial','SAR')}};
 }
@@ -181,7 +181,7 @@ async function marketResponse(){
   const old=await fallbackData();
   const data={
     kifah:old.kifah||{},harithiya:old.harithiya||{},kukh:old.kukh||{},gold:old.gold||{},usd_meta:old.usd_meta||{},usd_source_time:old.usd_source_time||'',
-    kukh_rates:old.kukh_rates||{},gailany:old.gailany||{},hatwan:old.hatwan||{},cbi:old.cbi||{},updated_at:new Date().toISOString(),error:''
+    kukh_rates:old.kukh_rates||{},gailany:old.gailany||{},hatwan:old.hatwan||{},cbi:{source:'البنك المركزي العراقي',source_url:CBI_URL,rates:{USD:null}},updated_at:new Date().toISOString(),error:''
   };
   const errors=[];
   const jobs=await Promise.allSettled([fetchText(TELEGRAM_URL),fetchText(KUKH_URL),fetchText(GAILANY_TG_URL),fetchText(HATWAN_URL),fetchText(CBI_URL),fetchText(GOLD_URL)]);
@@ -212,7 +212,7 @@ async function marketResponse(){
 
   if(jobs[4].status==='fulfilled'){
     const c=parseCbi(jobs[4].value);
-    if(c?.rates?.USD) data.cbi=c; else errors.push('cbi-parse');
+    if(c?.rates?.USD!==null && c?.rates?.USD!==undefined) data.cbi=c; else errors.push('cbi-parse');
   }else errors.push('cbi');
 
   if(jobs[5].status==='fulfilled'){
