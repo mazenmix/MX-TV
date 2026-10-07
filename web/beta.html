@@ -116,7 +116,7 @@ a{color:inherit;text-decoration:none}
 <script>
 const $=id=>document.getElementById(id);let market=null;
 const fmt=(n,d=0)=>{if(n===null||n===undefined||n==='')return '—';const x=Number(n);return Number.isFinite(x)?x.toLocaleString('en-US',{maximumFractionDigits:d}):'—'};
-const fmtCbi=n=>{if(n===null||n===undefined||n==='')return '—';const x=Number(n);return Number.isFinite(x)?x.toLocaleString('en-US',{minimumFractionDigits:3,maximumFractionDigits:3}):'—'};
+const fmtCbi=n=>{if(n===null||n===undefined||n==='')return '—';const x=Number(n);return Number.isFinite(x)?x.toLocaleString('en-US',{maximumFractionDigits:0}):'—'};
 const timeBaghdad=(iso)=>{if(!iso)return 'الآن';try{return new Intl.DateTimeFormat('ar-IQ',{timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit'}).format(new Date(iso))}catch(e){return 'الآن'}};
 function setPair(prefix,obj){if(!obj)return;$(prefix+'Buy').textContent=fmt(obj.buy,obj.buy%1?2:0);$(prefix+'Sell').textContent=fmt(obj.sell,obj.sell%1?2:0)}
 function validUsd(name,obj){return obj&&Number(obj.buy)>100000&&Number(obj.sell)>100000?{name,buy:Number(obj.buy),sell:Number(obj.sell)}:null}
