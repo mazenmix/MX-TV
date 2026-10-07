@@ -66,7 +66,7 @@ a{color:inherit;text-decoration:none}
       <article class="card"><div class="card-head"><strong>كوخ العملات</strong><span class="status">محدث</span></div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="kukhBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="kukhSell">—</b></div></div><div class="update">آخر تحديث: <span id="kukhTime">—</span></div></article>
       <article class="card"><div class="card-head"><strong>Hatwan Exchange</strong><span class="status">محدث</span></div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="hatBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="hatSell">—</b></div></div><div class="update">المصدر: Hatwan.co</div></article>
       <article class="card"><div class="card-head"><strong>Gailany Exchange</strong><span class="status">محدث</span></div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="gaiBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="gaiSell">—</b></div></div><div class="update">المصدر: @gailany_rates</div></article>
-      <article class="card"><div class="card-head"><strong>البنك المركزي العراقي</strong><span class="status">رسمي</span></div><div class="official"><small>السعر الرسمي المرجعي</small><b id="cbiUsd">—</b><small>دينار لكل 1 USD</small></div><div class="update">المصدر: cbi.iq</div></article>
+      <article class="card"><div class="card-head"><strong>البنك المركزي العراقي</strong><span class="status">رسمي</span></div><div class="official"><small>السعر الرسمي المرجعي</small><b id="cbiUsd">—</b><small>دينار لكل 100 USD</small></div><div class="update">المصدر: cbi.iq</div></article>
     </div>
   </section>
 
@@ -116,7 +116,7 @@ a{color:inherit;text-decoration:none}
 <script>
 const $=id=>document.getElementById(id);let market=null;
 const fmt=(n,d=0)=>{if(n===null||n===undefined||n==='')return '—';const x=Number(n);return Number.isFinite(x)?x.toLocaleString('en-US',{maximumFractionDigits:d}):'—'};
-const fmtCbi=n=>{if(n===null||n===undefined||n==='')return '—';const x=Number(n);return Number.isFinite(x)?x.toLocaleString('en-US',{maximumFractionDigits:0}):'—'};
+const fmtCbi=n=>{if(n===null||n===undefined||n==='')return '—';const x=Number(n);return Number.isFinite(x)?Math.round(x*100).toLocaleString('en-US',{maximumFractionDigits:0}):'—'};
 const timeBaghdad=(iso)=>{if(!iso)return 'الآن';try{return new Intl.DateTimeFormat('ar-IQ',{timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit'}).format(new Date(iso))}catch(e){return 'الآن'}};
 function setPair(prefix,obj){if(!obj)return;$(prefix+'Buy').textContent=fmt(obj.buy,obj.buy%1?2:0);$(prefix+'Sell').textContent=fmt(obj.sell,obj.sell%1?2:0)}
 function validUsd(name,obj){return obj&&Number(obj.buy)>100000&&Number(obj.sell)>100000?{name,buy:Number(obj.buy),sell:Number(obj.sell)}:null}
