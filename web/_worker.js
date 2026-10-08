@@ -223,12 +223,12 @@ async function marketResponse(){
 
   if(jobs[2].status==='fulfilled'){
     const g=parseGailanyLatest(jobs[2].value);
-    if(g) data.gailany=g; else errors.push('gailany-parse');
+    if(g) data.gailany={...g,checked_at:new Date().toISOString()}; else errors.push('gailany-parse');
   }else errors.push('gailany');
 
   if(jobs[3].status==='fulfilled'){
     const h=parseHatwan(jobs[3].value);
-    if(h?.rates?.USD) data.hatwan=h; else errors.push('hatwan-parse');
+    if(h?.rates?.USD) data.hatwan={...h,checked_at:new Date().toISOString()}; else errors.push('hatwan-parse');
   }else errors.push('hatwan');
 
   if(jobs[4].status==='fulfilled'){
@@ -250,6 +250,60 @@ async function marketResponse(){
   return new Response(JSON.stringify(data,null,2),{status:200,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Access-Control-Allow-Origin':'*'}});
 }
 
+
+/* MX Fuel: independently check published price references, never invent new prices. */
+const FUEL_PRICE_REFERENCES={
+  federal:[
+    {url:'https://www.dostor.org/5660420',prices:[450,850,1250]},
+    {url:'https://www.rudawarabia.net/arabic/categories/news/1367254',prices:[450,850]}
+  ],
+  erbil:[
+    {url:'https://www.kurdistan24.net/ar/story/927400',prices:[750,1000,1200]},
+    {url:'https://gov.krd/mnr-ar/activities/news-and-press-releases/2026/july/%D8%AA%D8%AD%D8%AF%D9%8A%D8%AF-%D9%82%D9%8A%D9%85%D8%A9-%D8%A7%D9%84%D8%A8%D9%86%D8%B2%D9%8A%D9%86-%D8%A8-750-%D8%AF%D9%8A%D9%86%D8%A7%D8%B1-%D8%A7-%D8%B9%D9%84%D9%89-%D8%A3%D9%84%D8%A7-%D9%8A%D8%AA%D8%AC%D8%A7%D9%88%D8%B2-%D8%B3%D8%B9%D8%B1%D9%87-%D8%A7%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D9%8A-850-%D8%AF%D9%8A%D9%86%D8%A7%D8%B1-%D8%A7/',prices:[750,850]}
+  ]
+};
+async function checkFuelReference(reference){
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),9500);
+  try{
+    const response=await fetch(reference.url,{
+      signal:controller.signal,redirect:'follow',
+      headers:{'User-Agent':UA,'Accept-Language':'ar-IQ,ar;q=0.9','Accept':'text/html'},
+      cf:{cacheEverything:true,cacheTtl:900}
+    });
+    if(!response.ok) return null;
+    const html=await response.text();
+    if(html.length<300) return null;
+    const numbers=stripHtml(html).replace(/([0-9])[,،](?=[0-9]{3}(?![0-9]))/g,'$1');
+    if(!reference.prices.every(p=>new RegExp('(^|[^0-9])'+p+'([^0-9]|$)').test(numbers)))return null;
+    return reference.url;
+  }catch(_){return null}
+  finally{clearTimeout(timer)}
+}
+async function fuelReferenceResponse(request,ctx){
+  const cache=caches.default;
+  const key=new Request(new URL('/api/fuel',request.url).toString(),{method:'GET'});
+  const saved=await cache.match(key);
+  if(saved)return saved;
+  const now=new Date().toISOString();
+  const entries=await Promise.all(Object.entries(FUEL_PRICE_REFERENCES).map(async ([region,references])=>{
+    const attempts=await Promise.allSettled(references.map(checkFuelReference));
+    const match=attempts.find(v=>v.status==='fulfilled' && v.value);
+    return [region,{ok:!!match,checked_at:match?now:null,reference_url:match?match.value:null}];
+  }));
+  const body={attempted_at:now,check_interval_minutes:60,sources:Object.fromEntries(entries)};
+  const response=new Response(JSON.stringify(body),{
+    status:200,
+    headers:{
+      'Content-Type':'application/json; charset=utf-8',
+      'Cache-Control':'public, max-age=0, s-maxage=3600',
+      'Access-Control-Allow-Origin':'*'
+    }
+  });
+  ctx.waitUntil(cache.put(key,response.clone()));
+  return response;
+}
+
 export default {
   async fetch(request,env,ctx){
     const url=new URL(request.url);
@@ -257,6 +311,11 @@ export default {
     if(url.pathname==='/beta' || url.pathname==='/beta/' || url.pathname==='/beta.html'){
       if(request.method!=='GET' && request.method!=='HEAD') return new Response('Method Not Allowed',{status:405});
       return betaPageResponse(request,env);
+    }
+
+    if(url.pathname==='/api/fuel'){
+      if(request.method!=='GET')return new Response('Method Not Allowed',{status:405});
+      return fuelReferenceResponse(request,ctx);
     }
 
     if(url.pathname==='/api/market'){
