@@ -127,6 +127,18 @@ function parseHatwan(body){
   return {source:'Hatwan Exchange',source_url:HATWAN_URL,updated:updated.trim(),rates:{USD:rate('US Dollar'),EUR:rate('Euro'),GBP:rate('British Pound'),TRY:rate('Turkish Lira'),AED:rate('UAE Dirham'),SAR:rate('Saudi Riyal'),TOMAN:rate('Tuman')}};
 }
 
+function hatwanPublishedAt(relative, checkedAt){
+  const str=String(relative||'').trim().toLowerCase();
+  if(!str) return null;
+  if(/just now|right now|less than (a|one) minute/.test(str)) return checkedAt;
+  const match=str.match(/(\d+)\s*(minute|min|hour|day|week)s?\s*ago/);
+  if(!match) return null;
+  const unit=match[2];
+  const minutes=Number(match[1])*(unit.startsWith('min')?1:unit.startsWith('hour')?60:unit.startsWith('day')?1440:10080);
+  const ms=Date.parse(checkedAt)-minutes*60000;
+  return Number.isFinite(ms)?new Date(ms).toISOString():null;
+}
+
 function parseCbi(body){
   const txt=stripHtml(body).replace(/\|/g,' ');
   const rate=(label,code)=>{
@@ -228,7 +240,7 @@ async function marketResponse(){
 
   if(jobs[3].status==='fulfilled'){
     const h=parseHatwan(jobs[3].value);
-    if(h?.rates?.USD) data.hatwan={...h,checked_at:new Date().toISOString()}; else errors.push('hatwan-parse');
+    if(h?.rates?.USD){const checked_at=new Date().toISOString();data.hatwan={...h,checked_at,published_at:hatwanPublishedAt(h.updated,checked_at)};} else errors.push('hatwan-parse');
   }else errors.push('hatwan');
 
   if(jobs[4].status==='fulfilled'){
