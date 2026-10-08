@@ -11,22 +11,22 @@
     "buy": 165500,
     "sell": 166500,
     "source": "https://t.me/s/Kukh_alomlat",
-    "published_at": "2026-10-08T12:50:27+00:00"
+    "published_at": "2026-10-08T14:01:50+00:00"
   },
   "gold": {
-    "k18": 827495,
-    "k21": 965411,
-    "k24": 1103327
+    "k18": 828518,
+    "k21": 966605,
+    "k24": 1104691
   },
   "usd_meta": {
     "source": "Telegram @dollariraqi",
     "source_url": "https://t.me/s/dollariraqi",
     "published_at": "2026-10-08T12:41:58+00:00",
-    "state": "live",
-    "note": "المصدر الوحيد: Telegram @dollariraqi",
+    "state": "stale",
+    "note": "المصدر الوحيد: Telegram @dollariraqi · آخر منشور متاح من القناة",
     "source_time": "15:35"
   },
   "usd_source_time": "15:35",
-  "updated_at": "2026-10-08T16:44:37.154105+03:00",
+  "updated_at": "2026-10-08T17:52:15.634007+03:00",
   "error": ""
 }
