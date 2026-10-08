@@ -1,0 +1,21 @@
+name: Hourly MX Fuel Price Reference Check
+
+on:
+  schedule:
+    - cron: '11 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-fuel-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger verified hourly source fetch
+        shell: bash
+        run: |
+          set -euo pipefail
+          response="$(curl --fail --silent --show-error --retry 2 --max-time 60 'https://mxdollar.pages.dev/api/fuel')"
+          printf '%s' "$response" | python -c "import json,sys; d=json.load(sys.stdin); assert 'attempted_at' in d and 'sources' in d, 'Invalid verification response'; print('Fuel verification:', d['attempted_at'], {k:v['ok'] for k,v in d['sources'].items()})"
