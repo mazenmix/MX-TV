@@ -320,8 +320,8 @@ function formatLive(input){
 function currencyName(code,language=lang){try{return (language==='ar'?namesAr:namesEn).of(code)||code}catch{return code}}
 function searchText(code){return `${code} ${currencyName(code,'en')} ${currencyName(code,'ar')}`.toLowerCase()}
 function streetMeta(code){const m=meta[code];return m&&STREET_KINDS.has(String(m.kind||'').toLowerCase())?m:null}
-function fromCurrencyToUsd(code){if(code==='USD')return 1;const r=Number(rates[code]);if(!(r>0))return NaN;const m=streetMeta(code),ask=Number(m?.sell);return 1/(ask>0?ask:r)}
-function usdToCurrency(code){if(code==='USD')return 1;const r=Number(rates[code]);if(!(r>0))return NaN;const m=streetMeta(code),sell=Number(m?.sell);return sell>0?sell:r}
+function fromCurrencyToUsd(code){if(code==='USD')return 1;const r=Number(rates[code]);if(!(r>0))return NaN;if(code==='IQD')return 1/r;const m=streetMeta(code),ask=Number(m?.sell);return 1/(ask>0?ask:r)}
+function usdToCurrency(code){if(code==='USD')return 1;const r=Number(rates[code]);if(!(r>0))return NaN;if(code==='IQD')return r;const m=streetMeta(code),sell=Number(m?.sell);return sell>0?sell:r}
 function crossRate(from,to){if(from===to)return 1;const a=fromCurrencyToUsd(from),b=usdToCurrency(to);return Number.isFinite(a)&&Number.isFinite(b)?a*b:NaN}
 function pairStreetSources(){const arr=[];for(const code of [fromCurrency,toCurrency]){const m=streetMeta(code);if(m?.source&&!arr.includes(m.source))arr.push(m.source)}return arr}
 function pairUpdatedDate(){const candidates=[];for(const code of [fromCurrency,toCurrency]){const raw=streetMeta(code)?.updatedAt;if(raw){const d=new Date(raw);if(!Number.isNaN(d.getTime()))candidates.push(d)}}if(candidates.length)return new Date(Math.max(...candidates.map(d=>d.getTime())));return bookUpdated||new Date()}
@@ -363,24 +363,24 @@ async function applyIraqMarket(){
     const d=await r.json();
 
     // Keep USD/IQD identical to the homepage "highest price" card:
-    // highest SELL among Kifah, Harithiya and Kukh Alomlat.
+    // highest BUY among Kifah, Harithiya and Kukh Alomlat.
     const boards=[
       ['Kifah',d.kifah],
       ['Harithiya',d.harithiya],
       ['Kukh Alomlat',d.kukh]
-    ].filter(([,q])=>q&&Number(q.sell)>0);
+    ].filter(([,q])=>q&&Number(q.buy)>0);
     if(!boards.length)throw new Error('No Baghdad market quote');
 
-    const [boardName,board]=boards.reduce((best,cur)=>Number(cur[1].sell)>Number(best[1].sell)?cur:best);
-    const sell100=Number(board.sell);
+    const [boardName,board]=boards.reduce((best,cur)=>Number(cur[1].buy)>Number(best[1].buy)?cur:best);
     const buy100=Number(board.buy);
-    const sell=sell100/100;
-    const buy=(buy100>0?buy100:sell100)/100;
+    const sell100=Number(board.sell);
+    const buy=buy100/100;
+    const sell=(sell100>0?sell100:buy100)/100;
 
-    rates.IQD=sell;
+    rates.IQD=buy;
     meta.IQD={
       kind:'parallel',
-      source:'MX Exchanger highest sell · '+boardName,
+      source:'MX Exchanger highest buy · '+boardName,
       buy,
       sell,
       updatedAt:d.usd_meta?.published_at||d.updated_at||new Date().toISOString()
