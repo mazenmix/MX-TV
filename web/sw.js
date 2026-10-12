@@ -1,4 +1,4 @@
-const CACHE='mx-dollar-v23';
+const CACHE='mx-dollar-v25';
 
 self.addEventListener('install',event=>{
   self.skipWaiting();
