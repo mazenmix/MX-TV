@@ -302,6 +302,25 @@ const T={
   en:{home:'Home',sub:'',from:'From',to:'To',updated:'Last updated',loading:'Updating market rates…',unavailable:'Rate is currently unavailable',fetchError:'Unable to fetch the latest rate',search:'Search USD, Dollar, Peso...',empty:'No matching currency',street:'Street / parallel market',market:'Global FX market',direction:'direction-aware cash',iraqBoard:'Kifah / Harithiya exchange rate',iqdSubtitle:'Kifah / Harithiya exchange rate'}
 };
 
+function normalizeUsd100(value) {
+  if (value===null || value===undefined || value==='') return null;
+  let s=String(value).trim()
+    .replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-0x660))
+    .replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-0x6f0))
+    .replace(/[٬،]/g,',').replace(/\s+/g,'');
+  if(!/^\d[\d,.]*$/.test(s)) return null;
+  let n;
+  if(/^\d{1,3}(?:[,.]\d{3})+$/.test(s)) n=Number(s.replace(/[,.]/g,''));
+  else if(s.includes('.')&&s.includes(',')){
+    const p=Math.max(s.lastIndexOf('.'),s.lastIndexOf(','));
+    n=Number(s.slice(0,p).replace(/[,.]/g,'')+'.'+s.slice(p+1));
+  } else n=Number(s.replace(',','.'));
+  if(!Number.isFinite(n)) return null;
+  if(n>=100&&n<300) n*=1000;
+  else if(n>=1000&&n<3000) n*=100;
+  else if(n>=10000&&n<30000) n*=10;
+  return n>=100000&&n<=300000?Math.round(n):null;
+}
 function num(v){const n=Number(String(v).replace(/,/g,'').trim());return Number.isFinite(n)?n:0}
 function fmt(n){if(!Number.isFinite(n))return '—';return new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(n)}
 function fmtRate(n){if(!Number.isFinite(n))return '—';let max=6;if(n>=1000)max=2;else if(n>=100)max=3;else if(n>=1)max=4;return new Intl.NumberFormat('en-US',{maximumFractionDigits:max}).format(n)}
@@ -368,10 +387,11 @@ async function applyIraqMarket(){
       ['Kifah',d.kifah],
       ['Harithiya',d.harithiya],
       ['Kukh Alomlat',d.kukh]
-    ].filter(([,q])=>q&&Number(q.buy)>0);
+    ].map(([name,q])=>[name,q?{buy:normalizeUsd100(q.buy),sell:normalizeUsd100(q.sell)}:null])
+     .filter(([,q])=>q?.buy>0&&q?.sell>0);
     if(!boards.length)throw new Error('No Baghdad market quote');
 
-    const [boardName,board]=boards.reduce((best,cur)=>Number(cur[1].buy)>Number(best[1].buy)?cur:best);
+    const [boardName,board]=boards.reduce((best,cur)=>cur[1].buy>best[1].buy?cur:best);
     const buy100=Number(board.buy);
     const sell100=Number(board.sell);
     const buy=buy100/100;
