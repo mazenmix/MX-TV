@@ -115,20 +115,39 @@ a{color:inherit;text-decoration:none}
 </div>
 <script>
 const $=id=>document.getElementById(id);let market=null;
+function normalizeUsd100(value) {
+  if (value===null || value===undefined || value==='') return null;
+  let s=String(value).trim()
+    .replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-0x660))
+    .replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-0x6f0))
+    .replace(/[٬،]/g,',').replace(/\s+/g,'');
+  if(!/^\d[\d,.]*$/.test(s)) return null;
+  let n;
+  if(/^\d{1,3}(?:[,.]\d{3})+$/.test(s)) n=Number(s.replace(/[,.]/g,''));
+  else if(s.includes('.')&&s.includes(',')){
+    const p=Math.max(s.lastIndexOf('.'),s.lastIndexOf(','));
+    n=Number(s.slice(0,p).replace(/[,.]/g,'')+'.'+s.slice(p+1));
+  } else n=Number(s.replace(',','.'));
+  if(!Number.isFinite(n)) return null;
+  if(n>=100&&n<300) n*=1000;
+  else if(n>=1000&&n<3000) n*=100;
+  else if(n>=10000&&n<30000) n*=10;
+  return n>=100000&&n<=300000?Math.round(n):null;
+}
 const fmt=(n,d=0)=>{if(n===null||n===undefined||n==='')return '—';const x=Number(n);return Number.isFinite(x)?x.toLocaleString('en-US',{maximumFractionDigits:d}):'—'};
-const fmtCbi=n=>{if(n===null||n===undefined||n==='')return '—';const x=Number(n);return Number.isFinite(x)?Math.round(x*100).toLocaleString('en-US',{maximumFractionDigits:0}):'—'};
+const fmtCbi=n=>{const x=Number(n);const full=(Number.isFinite(x)&&x>=1000&&x<3000)?Math.round(x*100):normalizeUsd100(n);return full===null?'—':fmt(full)};
 const timeBaghdad=(iso)=>{if(!iso)return 'الآن';try{return new Intl.DateTimeFormat('ar-IQ',{timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit'}).format(new Date(iso))}catch(e){return 'الآن'}};
 const sourceTimeBaghdad=(iso)=>{if(!iso)return '—';const date=new Date(iso);if(!Number.isFinite(date.getTime()))return '—';try{return new Intl.DateTimeFormat('ar-IQ-u-nu-arab',{timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit',hour12:true}).format(date)}catch(_){return '—'}};
 const stampBaghdad=(iso)=>{if(!iso)return '—';const d=new Date(iso);if(!Number.isFinite(d.getTime()))return '—';try{return new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Baghdad',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(d)}catch(_){return '—'}};
-function setPair(prefix,obj){if(!obj)return;$(prefix+'Buy').textContent=fmt(obj.buy,obj.buy%1?2:0);$(prefix+'Sell').textContent=fmt(obj.sell,obj.sell%1?2:0)}
-function validUsd(name,obj){return obj&&Number(obj.buy)>100000&&Number(obj.sell)>100000?{name,buy:Number(obj.buy),sell:Number(obj.sell)}:null}
+function setPair(prefix,obj,isUsd=false){if(!obj)return;const buy=isUsd?normalizeUsd100(obj.buy):Number(obj.buy),sell=isUsd?normalizeUsd100(obj.sell):Number(obj.sell);$(prefix+'Buy').textContent=buy===null?'—':fmt(buy,buy%1?2:0);$(prefix+'Sell').textContent=sell===null?'—':fmt(sell,sell%1?2:0)}
+function validUsd(name,obj){const buy=normalizeUsd100(obj?.buy),sell=normalizeUsd100(obj?.sell);return buy&&sell?{name,buy,sell}:null}
 function render(d){market=d;const now=timeBaghdad(d.updated_at);$('heroUpdate').textContent='آخر تحديث '+now+' بتوقيت بغداد';
-  setPair('har',d.harithiya);setPair('kif',d.kifah);setPair('kukh',d.kukh);$('harTime').textContent=timeBaghdad(d.usd_meta?.published_at);$('kifTime').textContent=$('harTime').textContent;$('kukhTime').textContent=timeBaghdad(d.kukh?.published_at);
-  const hat=d.hatwan?.rates?.USD,gai=d.gailany?.rates?.USD;if(hat)setPair('hat',hat);if(gai)setPair('gai',gai);$('hatTime').textContent=sourceTimeBaghdad(d.hatwan?.published_at||d.hatwan?.checked_at);$('gaiTime').textContent=sourceTimeBaghdad(d.gailany?.published_at||d.gailany?.checked_at);const cbiUsd=d.cbi?.rates?.USD;$('cbiUsd').textContent=(cbiUsd!==null&&cbiUsd!==undefined)?fmtCbi(cbiUsd):'—';
-  setPair('usd',d.harithiya);const kr=d.kukh_rates||{};setPair('eur',kr.EUR);setPair('gbp',kr.GBP);setPair('try',kr.TRY);setPair('aed',kr.AED);setPair('sar',kr.SAR);
+  setPair('har',d.harithiya,true);setPair('kif',d.kifah,true);setPair('kukh',d.kukh,true);$('harTime').textContent=timeBaghdad(d.usd_meta?.published_at);$('kifTime').textContent=$('harTime').textContent;$('kukhTime').textContent=timeBaghdad(d.kukh?.published_at);
+  const hat=d.hatwan?.rates?.USD,gai=d.gailany?.rates?.USD;if(hat)setPair('hat',hat,true);if(gai)setPair('gai',gai,true);$('hatTime').textContent=sourceTimeBaghdad(d.hatwan?.published_at||d.hatwan?.checked_at);$('gaiTime').textContent=sourceTimeBaghdad(d.gailany?.published_at||d.gailany?.checked_at);const cbiUsd=d.cbi?.rates?.USD;$('cbiUsd').textContent=(cbiUsd!==null&&cbiUsd!==undefined)?fmtCbi(cbiUsd):'—';
+  setPair('usd',d.harithiya,true);const kr=d.kukh_rates||{};setPair('eur',kr.EUR);setPair('gbp',kr.GBP);setPair('try',kr.TRY);setPair('aed',kr.AED);setPair('sar',kr.SAR);
   $('g18').textContent=fmt(d.gold?.k18);$('g21').textContent=fmt(d.gold?.k21);$('g24').textContent=fmt(d.gold?.k24);
   const sources=[validUsd('بورصة الحارثية',d.harithiya),validUsd('بورصة الكفاح',d.kifah),validUsd('كوخ العملات',d.kukh),validUsd('Hatwan Exchange',hat),validUsd('Gailany Exchange',gai)].filter(Boolean);
-  if(d.harithiya?.sell&&d.kifah?.sell)$('avgBaghdad').textContent=fmt(Math.round((Number(d.harithiya.sell)+Number(d.kifah.sell))/2));
+  {const h=normalizeUsd100(d.harithiya?.sell),k=normalizeUsd100(d.kifah?.sell);$('avgBaghdad').textContent=h&&k?fmt(Math.round((h+k)/2)):'—';}
   if(sources.length){const sellBest=[...sources].sort((a,b)=>b.buy-a.buy)[0];const buyBest=[...sources].sort((a,b)=>a.sell-b.sell)[0];$('bestSellUsd').textContent=fmt(sellBest.buy);$('bestSellSource').textContent=sellBest.name;$('bestBuyUsd').textContent=fmt(buyBest.sell);$('bestBuySource').textContent=buyBest.name}
   buildTable(sources);$('error').style.display='none';
 }
@@ -142,9 +161,9 @@ const fuelData={
 function renderFuel(city){activeFuelCity=city;const d=fuelData[city]||fuelData.baghdad;$('fuelCity').textContent=d.name+' · دينار/لتر';$('fuelRegular').textContent=fmt(d.regular);$('fuelImproved').textContent=fmt(d.improved);$('fuelSuper').textContent=fmt(d.super);$('fuelGasoil').textContent=d.gasoil?fmt(d.gasoil):'—';const region=city==='erbil'?'erbil':'federal';const check=fuelChecks?.sources?.[region];if(check?.ok&&check.checked_at){$('fuelNote').textContent='آخر تحديث: '+stampBaghdad(check.checked_at)+'';}else if(fuelChecks?.attempted_at){$('fuelNote').textContent='آخر محاولة فحص: '+stampBaghdad(fuelChecks.attempted_at)+' · تعذّر تأكيد الأسعار، آخر مرجع: 4 أكتوبر 2026';}else{$('fuelNote').textContent=d.note;}document.querySelectorAll('.fuel-tab').forEach(b=>b.classList.toggle('active',b.dataset.city===city))}
 async function refreshFuelChecks(){try{const response=await fetch('/api/fuel?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);const data=await response.json();if(!data.sources||!data.attempted_at)throw Error('Invalid fuel response');fuelChecks=data;}catch(_){fuelChecks=null;}renderFuel(activeFuelCity);}
 document.querySelectorAll('.fuel-tab').forEach(b=>b.addEventListener('click',()=>renderFuel(b.dataset.city)));
-async function refresh(){try{const r=await fetch('/api/market?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(!d.harithiya?.sell||!d.kifah?.sell)throw new Error('بيانات ناقصة');render(d)}catch(e){$('error').textContent='تعذر جلب آخر الأسعار حالياً. أعد المحاولة بعد قليل.';$('error').style.display='block'}}
+async function refresh(){try{const r=await fetch('/api/market?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(!normalizeUsd100(d.harithiya?.sell)||!normalizeUsd100(d.kifah?.sell))throw new Error('بيانات ناقصة');render(d)}catch(e){$('error').textContent='تعذر جلب آخر الأسعار حالياً. أعد المحاولة بعد قليل.';$('error').style.display='block'}}
 renderFuel('baghdad');refreshFuelChecks();refresh();setInterval(refresh,60000);setInterval(refreshFuelChecks,60*60*1000);
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=24',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{})}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=25',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{})}
 </script>
 </body>
 </html>
