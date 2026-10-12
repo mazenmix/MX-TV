@@ -40,24 +40,39 @@ function num(v){
   return Number.isFinite(n)?n:0;
 }
 
-function normPrice(s){
-  s=String(s||'').trim().replace(/،/g,',');
-  if(s.includes(',') && s.includes('.')) s=s.replace(/,/g,'');
-  else if(s.includes(',')) return parseInt(s.replace(/,/g,''),10);
-  if(s.includes('.')){
-    const parts=s.split('.');
-    if(parts[parts.length-1].length===2) return Math.round(parseFloat(s)*100);
-    return parseInt(s.replace(/\./g,''),10);
-  }
-  const n=parseInt(s,10);
-  return n>=1000 && n<=9999 ? n*100 : n;
+function normalizeUsd100(value) {
+  if (value===null || value===undefined || value==='') return null;
+  let s=String(value).trim()
+    .replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-0x660))
+    .replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-0x6f0))
+    .replace(/[٬،]/g,',').replace(/\s+/g,'');
+  if(!/^\d[\d,.]*$/.test(s)) return null;
+  let n;
+  if(/^\d{1,3}(?:[,.]\d{3})+$/.test(s)) n=Number(s.replace(/[,.]/g,''));
+  else if(s.includes('.')&&s.includes(',')){
+    const p=Math.max(s.lastIndexOf('.'),s.lastIndexOf(','));
+    n=Number(s.slice(0,p).replace(/[,.]/g,'')+'.'+s.slice(p+1));
+  } else n=Number(s.replace(',','.'));
+  if(!Number.isFinite(n)) return null;
+  if(n>=100&&n<300) n*=1000;
+  else if(n>=1000&&n<3000) n*=100;
+  else if(n>=10000&&n<30000) n*=10;
+  return n>=100000&&n<=300000?Math.round(n):null;
 }
 
+function normalizeUsdPair(obj) {
+  if(!obj || typeof obj!=='object') return null;
+  return {...obj, buy:normalizeUsd100(obj.buy)||0, sell:normalizeUsd100(obj.sell)||0};
+}
+
+const normPrice=normalizeUsd100;
+
 function parseMarket(text,name){
-  const p=new RegExp(name+'\\s*([0-9]{3,4}(?:\\.[0-9]{2})?|[0-9]{1,3}(?:[,،][0-9]{3}))\\s*\\|\\s*([0-9]{3,4}(?:\\.[0-9]{2})?|[0-9]{1,3}(?:[,،][0-9]{3}))');
+  const p=new RegExp(name+'\\s*([0-9]{1,6}(?:[.,،][0-9]{1,3})?)\\s*\\|\\s*([0-9]{1,6}(?:[.,،][0-9]{1,3})?)');
   const m=text.match(p);
   if(!m) return null;
-  return {buy:normPrice(m[1]),sell:normPrice(m[2])};
+  const buy=normPrice(m[1]),sell=normPrice(m[2]);
+  return buy&&sell?{buy,sell}:null;
 }
 
 function parseTelegramBaghdad(body){
@@ -84,7 +99,7 @@ function parseKukhLatest(body){
     if(!txt.includes('سعر الان') && !txt.includes('سعر الصرف')) continue;
     const pairs=[...txt.matchAll(/البيع[.\s]*([0-9][0-9.,]*)[\s\S]{0,90}?(?:لشراء|الشراء|شراء)[.\s]*([0-9][0-9.,]*)/g)];
     if(!pairs.length) continue;
-    const p=pairs.map(x=>({sell:num(x[1]),buy:num(x[2])}));
+    const p=pairs.map((x,i)=>({sell:i===0?normalizeUsd100(x[1]):num(x[1]),buy:i===0?normalizeUsd100(x[2]):num(x[2])}));
     if(!p[0]?.sell || !p[0]?.buy || p[0].sell<120000 || p[0].buy<120000) continue;
     const dm=raw.match(/datetime=["']([^"']+)["']/i);
     return {
@@ -106,8 +121,8 @@ function parseGailanyLatest(body){
       const m=txt.match(new RegExp(code+'\\s*([0-9][0-9.,]*)\\s*[→>\\-]+\\s*([0-9][0-9.,]*)','i'));
       return m?{buy:num(m[1]),sell:num(m[2])}:null;
     };
-    const usd=rate('USD');
-    if(!usd) continue;
+    const usd=normalizeUsdPair(rate('USD'));
+    if(!usd?.buy || !usd?.sell) continue;
     const dm=raw.match(/datetime=["']([^"']+)["']/i);
     return {source:'Gailany Exchange',source_url:GAILANY_TG_URL,published_at:dm?dm[1]:'',rates:{USD:usd,EUR:rate('EUR'),GBP:rate('GBP'),TRY:rate('TRY'),AED:rate('AED'),SAR:rate('SAR')}};
   }
@@ -124,7 +139,7 @@ function parseHatwan(body){
     return m?{buy:num(m[1]),sell:num(m[2])}:null;
   };
   const updated=(txt.match(/Updated\s+([^|]{1,40}?)(?=US Dollar|Currency converter|All currencies)/i)||[])[1]||'';
-  return {source:'Hatwan Exchange',source_url:HATWAN_URL,updated:updated.trim(),rates:{USD:rate('US Dollar'),EUR:rate('Euro'),GBP:rate('British Pound'),TRY:rate('Turkish Lira'),AED:rate('UAE Dirham'),SAR:rate('Saudi Riyal'),TOMAN:rate('Tuman')}};
+  return {source:'Hatwan Exchange',source_url:HATWAN_URL,updated:updated.trim(),rates:{USD:normalizeUsdPair(rate('US Dollar')),EUR:rate('Euro'),GBP:rate('British Pound'),TRY:rate('Turkish Lira'),AED:rate('UAE Dirham'),SAR:rate('Saudi Riyal'),TOMAN:rate('Tuman')}};
 }
 
 function hatwanPublishedAt(relative, checkedAt){
@@ -257,6 +272,12 @@ async function marketResponse(){
     if(k21 && k24) data.gold={k18,k21,k24}; else errors.push('gold-parse');
   }else errors.push('gold');
 
+  // The API always returns IQD per 100 USD as complete integer dinars.
+  // Normalize fallback quotes as well as live sources, without touching other currencies.
+  for(const key of ['kifah','harithiya','kukh'])data[key]=normalizeUsdPair(data[key])||{};
+  if(data.kukh_rates?.USD)data.kukh_rates.USD=normalizeUsdPair(data.kukh_rates.USD);
+  if(data.gailany?.rates?.USD)data.gailany.rates.USD=normalizeUsdPair(data.gailany.rates.USD);
+  if(data.hatwan?.rates?.USD)data.hatwan.rates.USD=normalizeUsdPair(data.hatwan.rates.USD);
   data.updated_at=new Date().toISOString();
   data.error=errors.join(', ');
   return new Response(JSON.stringify(data,null,2),{status:200,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Access-Control-Allow-Origin':'*'}});
