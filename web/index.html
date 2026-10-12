@@ -450,13 +450,56 @@ body{display:block;min-height:100dvh}
   <section class="footer abs"><div class="updated abs" id="updated">آخر تحديث: —</div><div class="sig abs">MazenmiX</div><button class="refresh abs" id="refresh">تحديث الأسعار</button></section><div class="err abs" id="err"></div>
 </div></div>
 <script>
+function normalizeUsd100(value) {
+  if (value===null || value===undefined || value==='') return null;
+  let s=String(value).trim()
+    .replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-0x660))
+    .replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-0x6f0))
+    .replace(/[٬،]/g,',').replace(/\s+/g,'');
+  if(!/^\d[\d,.]*$/.test(s)) return null;
+  let n;
+  if(/^\d{1,3}(?:[,.]\d{3})+$/.test(s)) n=Number(s.replace(/[,.]/g,''));
+  else if(s.includes('.')&&s.includes(',')){
+    const p=Math.max(s.lastIndexOf('.'),s.lastIndexOf(','));
+    n=Number(s.slice(0,p).replace(/[,.]/g,'')+'.'+s.slice(p+1));
+  } else n=Number(s.replace(',','.'));
+  if(!Number.isFinite(n)) return null;
+  if(n>=100&&n<300) n*=1000;
+  else if(n>=1000&&n<3000) n*=100;
+  else if(n>=10000&&n<30000) n*=10;
+  return n>=100000&&n<=300000?Math.round(n):null;
+}
 const DATA_URL='/api/market';const $=id=>document.getElementById(id);const fmt=n=>Number(n||0).toLocaleString('en-US');let lastData=null;
 function fit(){const DESIGN_W=760,DESIGN_H=925;const viewportWidth=(window.visualViewport&&window.visualViewport.width)||window.innerWidth||document.documentElement.clientWidth;const vp=$('viewport'),app=$('app');if(viewportWidth<=1024){vp.style.width='100%';vp.style.height='auto';vp.style.margin='0';vp.style.transform='none';app.style.transform='none';return}const available=Math.max(280,viewportWidth);const scale=Math.min(available/DESIGN_W,1);vp.style.width=(DESIGN_W*scale)+'px';vp.style.height=(DESIGN_H*scale)+'px';vp.style.margin='0 auto';vp.style.transform='none';app.style.transform='scale('+scale+')'}
 window.addEventListener('resize',fit,{passive:true});window.addEventListener('orientationchange',()=>setTimeout(fit,120),{passive:true});if(window.visualViewport)window.visualViewport.addEventListener('resize',fit,{passive:true});document.addEventListener('DOMContentLoaded',fit);fit();
 function clockFromIso(iso){try{return new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(new Date(iso))}catch(e){return new Date().toLocaleTimeString('ar-IQ')}}
 function stampRefreshTime(){$('updated').textContent='آخر تحديث: '+clockFromIso(new Date().toISOString())}
 function renderUsdMeta(){const box=$('marketState');box.classList.add('ready');$('marketStateText').textContent='LIVE';$('err').textContent=''}
-function render(d){if(!d||!d.kifah||!d.harithiya||!d.gold)return;lastData=d;const hs=Math.max(d.kifah.sell||0,d.harithiya.sell||0,d.kukh?.sell||0);const hb=Math.max(d.kifah.buy||0,d.harithiya.buy||0,d.kukh?.buy||0);$('highSell').textContent=fmt(hb);$('highSell2').textContent=fmt(hs);$('highBuy').textContent=fmt(hb);$('kifahSell').textContent=fmt(d.kifah.sell);$('kifahBuy').textContent=fmt(d.kifah.buy);$('harSell').textContent=fmt(d.harithiya.sell);$('harBuy').textContent=fmt(d.harithiya.buy);if(d.kukh){$('kukhSell').textContent=fmt(d.kukh.sell);$('kukhBuy').textContent=fmt(d.kukh.buy)}$('g18').textContent=fmt(d.gold.k18);$('g21').textContent=fmt(d.gold.k21);$('g24').textContent=fmt(d.gold.k24);renderUsdMeta(d.usd_meta||{});stampRefreshTime()}
+function render(d){
+  if(!d?.kifah||!d?.harithiya||!d?.gold)return;
+  // Each displayed USD/IQD market quote is IQD for 100 USD, never abbreviated.
+  const pair=q=>q?{buy:normalizeUsd100(q.buy),sell:normalizeUsd100(q.sell)}:{buy:null,sell:null};
+  const kif=pair(d.kifah),har=pair(d.harithiya),kukh=pair(d.kukh);
+  if(!kif.buy||!kif.sell||!har.buy||!har.sell)return;
+  const fmtUsd=n=>n===null?'—':fmt(n);
+  const highBuy=Math.max(kif.buy,har.buy,kukh.buy||0);
+  const highSell=Math.max(kif.sell,har.sell,kukh.sell||0);
+  $('highSell').textContent=fmtUsd(highBuy);
+  $('highBuy').textContent=fmtUsd(highBuy);
+  $('highSell2').textContent=fmtUsd(highSell);
+  $('kifahSell').textContent=fmtUsd(kif.sell);
+  $('kifahBuy').textContent=fmtUsd(kif.buy);
+  $('harSell').textContent=fmtUsd(har.sell);
+  $('harBuy').textContent=fmtUsd(har.buy);
+  $('kukhSell').textContent=fmtUsd(kukh.sell);
+  $('kukhBuy').textContent=fmtUsd(kukh.buy);
+  $('g18').textContent=fmt(d.gold.k18);
+  $('g21').textContent=fmt(d.gold.k21);
+  $('g24').textContent=fmt(d.gold.k24);
+  lastData=d;
+  renderUsdMeta(d.usd_meta||{});
+  stampRefreshTime();
+}
 async function refresh(){
   const b=$('refresh');if(b.disabled)return;
   const old=b.textContent;b.disabled=true;b.textContent='جارِ التحديث...';b.style.background='#1f4968';
@@ -465,7 +508,7 @@ async function refresh(){
     const r=await fetch(DATA_URL+'?t='+Date.now(),{cache:'no-store'});
     if(!r.ok)throw new Error('HTTP '+r.status);
     const d=await r.json();
-    if(!d.kifah?.sell||!d.harithiya?.sell||!d.gold?.k21||!d.gold?.k24)throw new Error('incomplete');
+    if(!normalizeUsd100(d.kifah?.buy)||!normalizeUsd100(d.kifah?.sell)||!normalizeUsd100(d.harithiya?.buy)||!normalizeUsd100(d.harithiya?.sell)||!d.gold?.k21||!d.gold?.k24)throw new Error('incomplete');
     render(d);
   }catch(e){
     $('marketState').classList.remove('ready');
@@ -475,7 +518,7 @@ async function refresh(){
   }finally{b.disabled=false;b.textContent=old;b.style.background='#2470a8'}
 }
 $('refresh').addEventListener('click',refresh);refresh();setInterval(refresh,60000);
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=23',{updateViaCache:'none'}).then(reg=>reg.update().catch(()=>{})).catch(()=>{})}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=25',{updateViaCache:'none'}).then(reg=>reg.update().catch(()=>{})).catch(()=>{})}
 </script>
 </body>
 </html>
