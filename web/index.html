@@ -19,8 +19,8 @@ body{display:block;min-height:100dvh}
 .brandbox{left:28px;top:18px;width:40px;height:40px;border-radius:20px;background:#19212d;border:1px solid #cca855;display:flex;align-items:center;justify-content:center;color:#e5c576;font-weight:700;font-size:24px;direction:ltr}
 .brand{left:28px;top:17px;width:272px;height:40px;direction:rtl;text-align:left;font-weight:800;font-size:22px;line-height:40px;color:#f5f7fa;white-space:nowrap}
 .subtitle{left:82px;top:43px;width:218px;height:18px;direction:ltr;text-align:left;font-weight:600;font-size:12px;line-height:18px;color:#7d8999;letter-spacing:.2px}
-.live{right:28px;top:24px;width:88px;height:28px;border-radius:14px;background:#132b23;display:flex;align-items:center;justify-content:center;gap:8px;direction:ltr;color:#67e0a8;font-weight:700;font-size:12px}
-.live i{width:8px;height:8px;border-radius:50%;background:#4bd197;display:block}
+.live{right:28px;top:24px;width:88px;height:28px;border-radius:14px;background:#1c2835;display:flex;align-items:center;justify-content:center;gap:8px;direction:ltr;color:#9fb0c3;font-weight:700;font-size:12px}
+.live i{width:8px;height:8px;border-radius:50%;background:#8da0b4;display:block}
 .betaLink{right:128px;top:24px;width:132px;height:28px;border-radius:14px;border:1px solid #caa742;background:#2a2414;color:#f1cd67;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;direction:rtl;text-decoration:none;box-shadow:0 0 15px rgba(225,187,74,.08);white-space:nowrap}
 .betaLink:hover{filter:brightness(1.12)}
 
@@ -235,12 +235,12 @@ body{display:block;min-height:100dvh}
   }
   .live{
     grid-area:live;width:100%!important;height:clamp(44px,11vw,58px)!important;
-    align-self:center!important;border:1px solid rgba(24,175,103,.42)!important;
-    background:#0d2a20!important;border-radius:999px!important;
+    align-self:center!important;border:1px solid rgba(151,172,197,.30)!important;
+    background:#1a2735!important;border-radius:999px!important;
     font-size:clamp(13px,3.6vw,18px)!important;direction:ltr!important;
     box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
   }
-  .live i{width:10px!important;height:10px!important;box-shadow:0 0 14px rgba(75,209,151,.5)}
+  .live i{width:10px!important;height:10px!important;box-shadow:0 0 14px rgba(151,172,197,.18)}
 
   .betaLink,.converterButton{
     position:static!important;width:100%!important;height:clamp(46px,11vw,60px)!important;
@@ -427,6 +427,9 @@ body{display:block;min-height:100dvh}
   .footer .refresh{height:54px!important;font-size:13px!important}
 }
 
+/* Prices remain blank until /api/market returns verified numeric data. */
+.live.ready{background:#0d2a20!important;color:#67e0a8!important;border-color:rgba(24,175,103,.42)!important}
+.live.ready i{background:#4bd197!important;box-shadow:0 0 0 4px rgba(75,209,151,.10),0 0 12px rgba(75,209,151,.55)!important}
 </style>
 </head>
 <body>
@@ -435,16 +438,16 @@ body{display:block;min-height:100dvh}
   <div class="brand abs">أسعار الصرف اليوم</div>
   <a class="betaLink abs" href="./beta.html">النسخة الموسعة هنا</a>
   <a class="betaLink converterButton abs" href="./converter.html">محول العملة السريع</a>
-  <div class="live abs" id="marketState"><i></i><span id="marketStateText">LIVE</span></div>
-  <section class="hero abs"><div class="accent abs"></div><div class="usdlabel abs">USD / IQD</div><div class="heroar abs">السعر الأعلى الآن لكل 100$</div><div class="mainprice abs" id="highSell">158,300</div><div class="iqd abs">د.ع</div><div class="chip buy"><div class="chiplabel">شراء</div><div class="chipval" id="highBuy">158,300</div></div><div class="chip sell"><div class="chiplabel">بيع</div><div class="chipval" id="highSell2">158,300</div></div></section>
-  <section class="source s1"><div class="arname abs">بورصة الكفاح</div><div class="selllab abs">بيع</div><div class="sellvalue abs" id="kifahSell">158,300</div><div class="buylab abs">شراء</div><div class="buyvalue abs" id="kifahBuy">158,300</div></section>
-  <section class="source s2"><div class="arname abs">بورصة الحارثية</div><div class="selllab abs">بيع</div><div class="sellvalue abs" id="harSell">158,000</div><div class="buylab abs">شراء</div><div class="buyvalue abs" id="harBuy">157,900</div></section>
-  <section class="source s3"><div class="arname abs">كوخ العملات</div><div class="selllab abs">بيع</div><div class="sellvalue abs" id="kukhSell">158,000</div><div class="buylab abs">شراء</div><div class="buyvalue abs" id="kukhBuy">157,250</div></section>
+  <div class="live abs" id="marketState"><i></i><span id="marketStateText">تحميل...</span></div>
+  <section class="hero abs"><div class="accent abs"></div><div class="usdlabel abs">USD / IQD</div><div class="heroar abs">السعر الأعلى الآن لكل 100$</div><div class="mainprice abs" id="highSell">—</div><div class="iqd abs">د.ع</div><div class="chip buy"><div class="chiplabel">شراء</div><div class="chipval" id="highBuy">—</div></div><div class="chip sell"><div class="chiplabel">بيع</div><div class="chipval" id="highSell2">—</div></div></section>
+  <section class="source s1"><div class="arname abs">بورصة الكفاح</div><div class="selllab abs">بيع</div><div class="sellvalue abs" id="kifahSell">—</div><div class="buylab abs">شراء</div><div class="buyvalue abs" id="kifahBuy">—</div></section>
+  <section class="source s2"><div class="arname abs">بورصة الحارثية</div><div class="selllab abs">بيع</div><div class="sellvalue abs" id="harSell">—</div><div class="buylab abs">شراء</div><div class="buyvalue abs" id="harBuy">—</div></section>
+  <section class="source s3"><div class="arname abs">كوخ العملات</div><div class="selllab abs">بيع</div><div class="sellvalue abs" id="kukhSell">—</div><div class="buylab abs">شراء</div><div class="buyvalue abs" id="kukhBuy">—</div></section>
   <div class="goldtitle abs">الذهب</div><div class="goldsub abs">سعر المثقال · 5 غرام</div>
-  <section class="goldcard g18"><div class="kbadge abs">18K</div><div class="kar abs">عيار 18</div><div class="gprice abs" id="g18">834,169</div><div class="giqd abs">د.ع</div></section>
-  <section class="goldcard g21"><div class="kbadge abs">21K</div><div class="kar abs">عيار 21</div><div class="gprice abs" id="g21">973,197</div><div class="giqd abs">د.ع</div></section>
-  <section class="goldcard g24"><div class="kbadge abs">24K</div><div class="kar abs">عيار 24</div><div class="gprice abs" id="g24">1,112,225</div><div class="giqd abs">د.ع</div></section>
-  <section class="footer abs"><div class="updated abs" id="updated">آخر تحديث: --:--:--</div><div class="sig abs">MazenmiX</div><button class="refresh abs" id="refresh">تحديث الأسعار</button></section><div class="err abs" id="err"></div>
+  <section class="goldcard g18"><div class="kbadge abs">18K</div><div class="kar abs">عيار 18</div><div class="gprice abs" id="g18">—</div><div class="giqd abs">د.ع</div></section>
+  <section class="goldcard g21"><div class="kbadge abs">21K</div><div class="kar abs">عيار 21</div><div class="gprice abs" id="g21">—</div><div class="giqd abs">د.ع</div></section>
+  <section class="goldcard g24"><div class="kbadge abs">24K</div><div class="kar abs">عيار 24</div><div class="gprice abs" id="g24">—</div><div class="giqd abs">د.ع</div></section>
+  <section class="footer abs"><div class="updated abs" id="updated">آخر تحديث: —</div><div class="sig abs">MazenmiX</div><button class="refresh abs" id="refresh">تحديث الأسعار</button></section><div class="err abs" id="err"></div>
 </div></div>
 <script>
 const DATA_URL='/api/market';const $=id=>document.getElementById(id);const fmt=n=>Number(n||0).toLocaleString('en-US');let lastData=null;
@@ -452,11 +455,27 @@ function fit(){const DESIGN_W=760,DESIGN_H=925;const viewportWidth=(window.visua
 window.addEventListener('resize',fit,{passive:true});window.addEventListener('orientationchange',()=>setTimeout(fit,120),{passive:true});if(window.visualViewport)window.visualViewport.addEventListener('resize',fit,{passive:true});document.addEventListener('DOMContentLoaded',fit);fit();
 function clockFromIso(iso){try{return new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(new Date(iso))}catch(e){return new Date().toLocaleTimeString('ar-IQ')}}
 function stampRefreshTime(){$('updated').textContent='آخر تحديث: '+clockFromIso(new Date().toISOString())}
-function renderUsdMeta(m){const box=$('marketState'),label=$('marketStateText');box.style.background='#132b23';box.style.color='#67e0a8';box.querySelector('i').style.background='#4bd197';box.querySelector('i').style.boxShadow='0 0 0 4px rgba(75,209,151,.10),0 0 12px rgba(75,209,151,.55)';label.textContent='LIVE';$('err').textContent=''}
+function renderUsdMeta(){const box=$('marketState');box.classList.add('ready');$('marketStateText').textContent='LIVE';$('err').textContent=''}
 function render(d){if(!d||!d.kifah||!d.harithiya||!d.gold)return;lastData=d;const hs=Math.max(d.kifah.sell||0,d.harithiya.sell||0,d.kukh?.sell||0);const hb=Math.max(d.kifah.buy||0,d.harithiya.buy||0,d.kukh?.buy||0);$('highSell').textContent=fmt(hb);$('highSell2').textContent=fmt(hs);$('highBuy').textContent=fmt(hb);$('kifahSell').textContent=fmt(d.kifah.sell);$('kifahBuy').textContent=fmt(d.kifah.buy);$('harSell').textContent=fmt(d.harithiya.sell);$('harBuy').textContent=fmt(d.harithiya.buy);if(d.kukh){$('kukhSell').textContent=fmt(d.kukh.sell);$('kukhBuy').textContent=fmt(d.kukh.buy)}$('g18').textContent=fmt(d.gold.k18);$('g21').textContent=fmt(d.gold.k21);$('g24').textContent=fmt(d.gold.k24);renderUsdMeta(d.usd_meta||{});stampRefreshTime()}
-async function refresh(){stampRefreshTime();const b=$('refresh'),old=b.textContent;b.disabled=true;b.textContent='جارِ التحديث...';b.style.background='#1f4968';$('err').textContent='';try{const r=await fetch(DATA_URL+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(!d.kifah?.sell||!d.harithiya?.sell||!d.gold?.k21||!d.gold?.k24)throw new Error('incomplete');render(d)}catch(e){$('err').textContent='تعذر جلب آخر الأسعار — البيانات الظاهرة هي آخر بيانات محفوظة';if(lastData)render(lastData)}finally{b.disabled=false;b.textContent=old;b.style.background='#2470a8'}}
-$('refresh').addEventListener('click',refresh);stampRefreshTime();refresh();setInterval(refresh,60000);
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=22',{updateViaCache:'none'}).then(reg=>reg.update().catch(()=>{})).catch(()=>{})}
+async function refresh(){
+  const b=$('refresh');if(b.disabled)return;
+  const old=b.textContent;b.disabled=true;b.textContent='جارِ التحديث...';b.style.background='#1f4968';
+  $('err').textContent='';
+  try{
+    const r=await fetch(DATA_URL+'?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    if(!d.kifah?.sell||!d.harithiya?.sell||!d.gold?.k21||!d.gold?.k24)throw new Error('incomplete');
+    render(d);
+  }catch(e){
+    $('marketState').classList.remove('ready');
+    $('marketStateText').textContent=lastData?'STALE':'تعذر';
+    $('err').textContent=lastData?'تعذر تحديث الأسعار — المعروض آخر سعر تم جلبه':'تعذر جلب الأسعار — اضغط تحديث الأسعار للمحاولة مجدداً';
+    if(!lastData)$('updated').textContent='آخر تحديث: غير متوفر';
+  }finally{b.disabled=false;b.textContent=old;b.style.background='#2470a8'}
+}
+$('refresh').addEventListener('click',refresh);refresh();setInterval(refresh,60000);
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=23',{updateViaCache:'none'}).then(reg=>reg.update().catch(()=>{})).catch(()=>{})}
 </script>
 </body>
 </html>
