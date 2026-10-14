@@ -145,6 +145,7 @@ function render(d){market=d;
   const usdTime=d.usd_meta?.published_at;
   const live=d.usd_meta?.state==='live'&&usdTime&&Date.now()-Date.parse(usdTime)<=30*60000;
   $('marketBadge').textContent=live?'LIVE':'آخر سعر';
+  $('marketBadge').classList.toggle('live',!!live);
   $('marketBadge').title=(d.usd_meta?.source||'آخر مصدر متوفر')+' · '+(usdTime||'بدون تاريخ');
   $('heroUpdate').textContent='آخر تسعيرة للكفاح: '+stampBaghdad(usdTime)+(live?' · حديثة':' · آخر سعر منشور')+' · البيانات من IQWealth عند استخدام المصدر';
   setPair('har',d.harithiya,true);setPair('kif',d.kifah,true);setPair('kukh',d.kukh,true);$('harTime').textContent=timeBaghdad(d.usd_meta?.published_at);$('kifTime').textContent=$('harTime').textContent;$('kukhTime').textContent=timeBaghdad(d.kukh?.published_at);
