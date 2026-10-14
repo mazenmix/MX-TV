@@ -447,7 +447,7 @@ body{display:block;min-height:100dvh}
   <section class="goldcard g18"><div class="kbadge abs">18K</div><div class="kar abs">عيار 18</div><div class="gprice abs" id="g18">—</div><div class="giqd abs">د.ع</div></section>
   <section class="goldcard g21"><div class="kbadge abs">21K</div><div class="kar abs">عيار 21</div><div class="gprice abs" id="g21">—</div><div class="giqd abs">د.ع</div></section>
   <section class="goldcard g24"><div class="kbadge abs">24K</div><div class="kar abs">عيار 24</div><div class="gprice abs" id="g24">—</div><div class="giqd abs">د.ع</div></section>
-  <section class="footer abs"><div class="updated abs" id="updated">آخر تحديث: —</div><div class="sig abs">MazenmiX</div><button class="refresh abs" id="refresh">تحديث الأسعار</button></section><div class="err abs" id="err"></div>
+  <section class="footer abs"><a class="updated abs" id="updated" href="https://iraqsm.com/fx" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none" title="مصدر السعر وتاريخ نشره">آخر تسعيرة: —</a><div class="sig abs">MazenmiX</div><button class="refresh abs" id="refresh">تحديث الأسعار</button></section><div class="err abs" id="err"></div>
 </div></div>
 <script>
 function normalizeUsd100(value) {
@@ -473,17 +473,38 @@ const DATA_URL='/api/market';const $=id=>document.getElementById(id);const fmt=n
 function fit(){const DESIGN_W=760,DESIGN_H=925;const viewportWidth=(window.visualViewport&&window.visualViewport.width)||window.innerWidth||document.documentElement.clientWidth;const vp=$('viewport'),app=$('app');if(viewportWidth<=1024){vp.style.width='100%';vp.style.height='auto';vp.style.margin='0';vp.style.transform='none';app.style.transform='none';return}const available=Math.max(280,viewportWidth);const scale=Math.min(available/DESIGN_W,1);vp.style.width=(DESIGN_W*scale)+'px';vp.style.height=(DESIGN_H*scale)+'px';vp.style.margin='0 auto';vp.style.transform='none';app.style.transform='scale('+scale+')'}
 window.addEventListener('resize',fit,{passive:true});window.addEventListener('orientationchange',()=>setTimeout(fit,120),{passive:true});if(window.visualViewport)window.visualViewport.addEventListener('resize',fit,{passive:true});document.addEventListener('DOMContentLoaded',fit);fit();
 function clockFromIso(iso){try{return new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(new Date(iso))}catch(e){return new Date().toLocaleTimeString('ar-IQ')}}
-function stampRefreshTime(){$('updated').textContent='آخر تحديث: '+clockFromIso(new Date().toISOString())}
-function renderUsdMeta(){const box=$('marketState');box.classList.add('ready');$('marketStateText').textContent='LIVE';$('err').textContent=''}
+function renderUsdMeta(d){
+  const meta=d.usd_meta||{},box=$('marketState');
+  const ms=Date.parse(meta.published_at||'');
+  const age=Number.isFinite(ms)?(Date.now()-ms)/60000:Infinity;
+  const live=meta.state==='live'&&age>=-10&&age<=30;
+  box.classList.toggle('ready',live);
+  $('marketStateText').textContent=live?'LIVE':'آخر سعر';
+  const source=String(meta.source||'آخر مصدر معروف');
+  const url=/iraqsm\\.com/i.test(meta.source_url||'')?'https://iraqsm.com/fx':meta.source_url||'https://t.me/dollariraqi';
+  const credit=/IQWealth/i.test(source)?' · البيانات من IQWealth':' · '+source;
+  $('updated').href=url;
+  $('updated').textContent='آخر تسعيرة: '+(Number.isFinite(ms)?clockFromIso(meta.published_at):'غير معروف')+credit;
+  const hmeta=d.harithiya_meta||{};
+  const harAge=Date.parse(hmeta.published_at||'');
+  const harStale=hmeta.state!=='live'||!Number.isFinite(harAge)||(Date.now()-harAge)>30*60000;
+  $('harSell').title=$('harBuy').title=harStale?'الحارثية: آخر تسعيرة متوفرة · '+(hmeta.published_at||'الوقت غير معروف'):'الحارثية: تسعيرة حديثة';
+  $('err').textContent=!live?'السعر المعروض آخر تسعيرة منشورة، مو تحديث لحظي.':harStale?'الحارثية: آخر سعر منشور، وقد يكون أقدم من الكفاح.':'';
+}
 function render(d){
   if(!d?.kifah||!d?.harithiya||!d?.gold)return;
   // Each displayed USD/IQD market quote is IQD for 100 USD, never abbreviated.
   const pair=q=>q?{buy:normalizeUsd100(q.buy),sell:normalizeUsd100(q.sell)}:{buy:null,sell:null};
   const kif=pair(d.kifah),har=pair(d.harithiya),kukh=pair(d.kukh);
-  if(!kif.buy||!kif.sell||!har.buy||!har.sell)return;
+  if(!kif.buy||!kif.sell)return;
   const fmtUsd=n=>n===null?'—':fmt(n);
-  const highBuy=Math.max(kif.buy,har.buy,kukh.buy||0);
-  const highSell=Math.max(kif.sell,har.sell,kukh.sell||0);
+  const recent=(iso)=>{const ts=Date.parse(iso||'');return Number.isFinite(ts)&&Date.now()-ts<24*3600000&&Date.now()-ts>=-600000};
+  // Never let last week's saved Harithiya/Kukh quote outrank today's Kifah.
+  const options=[kif];
+  if(har.buy&&har.sell&&recent(d.harithiya_meta?.published_at))options.push(har);
+  if(kukh.buy&&kukh.sell&&recent(d.kukh?.published_at))options.push(kukh);
+  const highBuy=Math.max(...options.map(q=>q.buy));
+  const highSell=Math.max(...options.map(q=>q.sell));
   $('highSell').textContent=fmtUsd(highBuy);
   $('highBuy').textContent=fmtUsd(highBuy);
   $('highSell2').textContent=fmtUsd(highSell);
@@ -497,8 +518,7 @@ function render(d){
   $('g21').textContent=fmt(d.gold.k21);
   $('g24').textContent=fmt(d.gold.k24);
   lastData=d;
-  renderUsdMeta(d.usd_meta||{});
-  stampRefreshTime();
+  renderUsdMeta(d);
 }
 async function refresh(){
   const b=$('refresh');if(b.disabled)return;
@@ -508,13 +528,13 @@ async function refresh(){
     const r=await fetch(DATA_URL+'?t='+Date.now(),{cache:'no-store'});
     if(!r.ok)throw new Error('HTTP '+r.status);
     const d=await r.json();
-    if(!normalizeUsd100(d.kifah?.buy)||!normalizeUsd100(d.kifah?.sell)||!normalizeUsd100(d.harithiya?.buy)||!normalizeUsd100(d.harithiya?.sell)||!d.gold?.k21||!d.gold?.k24)throw new Error('incomplete');
+    if(!normalizeUsd100(d.kifah?.buy)||!normalizeUsd100(d.kifah?.sell))throw new Error('incomplete Kifah quote');
     render(d);
   }catch(e){
     $('marketState').classList.remove('ready');
     $('marketStateText').textContent=lastData?'STALE':'تعذر';
     $('err').textContent=lastData?'تعذر تحديث الأسعار — المعروض آخر سعر تم جلبه':'تعذر جلب الأسعار — اضغط تحديث الأسعار للمحاولة مجدداً';
-    if(!lastData)$('updated').textContent='آخر تحديث: غير متوفر';
+    if(!lastData)$('updated').textContent='آخر تسعيرة: غير متوفر';
   }finally{b.disabled=false;b.textContent=old;b.style.background='#2470a8'}
 }
 $('refresh').addEventListener('click',refresh);refresh();setInterval(refresh,60000);
