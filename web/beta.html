@@ -61,13 +61,19 @@ a{color:inherit;text-decoration:none}
   .baghdad-card{padding:26px 12px}
   .baghdad-purchase b{font-size:clamp(38px,10vw,56px)}
 }
+
+/* MX Currency shortcut — wide and phone layout */
+.mx-converter-link{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:39px;padding:8px 16px;color:#e5f7ff;border:1px solid #2d8bc3;background:linear-gradient(180deg,#10415f,#0c2e4a);box-shadow:0 5px 18px rgba(28,145,204,.12);white-space:nowrap;transition:background .16s,border-color .16s}
+.mx-converter-link span{font-size:18px;color:#73dcff;line-height:1}
+.mx-converter-link:hover,.mx-converter-link:focus-visible{color:#fff;background:#155679;border-color:#69d1ff}
+@media(max-width:480px){.top{align-items:flex-start;flex-wrap:wrap}.top .badges{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.top .badges .badge{width:100%;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(10px,2.7vw,13px);padding:9px 7px;white-space:normal}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
     <div class="brand" aria-hidden="true"></div>
-    <div class="badges"><a class="badge backLink" href="https://mxdollar.pages.dev/">الرجوع للنسخة المصغرة</a></div>
+    <div class="badges"><a class="badge mx-converter-link" href="https://mxmoney.pages.dev/" aria-label="محول العملة السريع">محول العملة السريع <span aria-hidden="true">⇄</span></a><a class="badge backLink" href="https://mxdollar.pages.dev/">الرجوع للنسخة المصغرة</a></div>
   </header>
   <div class="updatebar" id="heroUpdate">جاري تحميل الأسعار المحدثة…</div>
 
