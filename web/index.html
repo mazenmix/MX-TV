@@ -430,6 +430,51 @@ body{display:block;min-height:100dvh}
 /* Prices remain blank until /api/market returns verified numeric data. */
 .live.ready{background:#0d2a20!important;color:#67e0a8!important;border-color:rgba(24,175,103,.42)!important}
 .live.ready i{background:#4bd197!important;box-shadow:0 0 0 4px rgba(75,209,151,.10),0 0 12px rgba(75,209,151,.55)!important}
+
+/* MX Exchanger / single-price dashboard: simplified layout, desktop + mobile */
+@media(min-width:1025px){
+  #viewport,#app{height:820px!important}
+  .hero.clean-hero{top:112px!important;height:275px!important}
+  .hero.clean-hero .accent{height:100%!important}
+  .hero.clean-hero .usdlabel{left:35px!important;top:28px!important}
+  .hero.clean-hero .heroar{left:35px!important;top:79px!important;width:660px!important;
+    height:auto!important;text-align:center!important;font-size:23px!important;font-weight:800!important}
+  .hero.clean-hero .mainprice{left:20px!important;top:121px!important;width:680px!important;
+    height:82px!important;line-height:82px!important;text-align:center!important;font-size:70px!important}
+  .hero.clean-hero .iqd{left:20px!important;top:206px!important;width:680px!important;
+    height:34px!important;line-height:34px!important;text-align:center!important}
+  .goldtitle,.goldsub{top:421px!important}
+  .goldcard{top:471px!important}
+  .footer{top:665px!important}
+  .err{top:783px!important}
+}
+@media(max-width:1024px){
+  #app{grid-template-areas:
+      "brand brand brand brand live live"
+      "converter converter converter beta beta beta"
+      "hero hero hero hero hero hero"
+      "goldtitle goldtitle goldtitle goldsub goldsub goldsub"
+      "g18 g18 g21 g21 g24 g24"
+      "footer footer footer footer footer footer"
+      "err err err err err err"!important}
+  .hero.clean-hero{height:clamp(255px,49vw,320px)!important}
+  .hero.clean-hero .usdlabel{left:clamp(20px,5vw,36px)!important;top:22px!important;width:70%!important}
+  .hero.clean-hero .heroar{left:5%!important;top:75px!important;width:90%!important;
+      text-align:center!important;direction:rtl!important;font-size:clamp(17px,3.4vw,25px)!important}
+  .hero.clean-hero .mainprice{left:0!important;top:130px!important;width:100%!important;
+      font-size:clamp(47px,10vw,80px)!important;text-align:center!important;line-height:1.1!important}
+  .hero.clean-hero .iqd{left:0!important;top:215px!important;width:100%!important;
+      font-size:clamp(16px,3.7vw,22px)!important;text-align:center!important;line-height:1.2!important}
+  .goldtitle,.goldsub,.goldcard,.footer,.err{top:auto!important}
+  .footer .updated{white-space:normal!important;text-align:center!important;
+     font-size:clamp(10px,2.8vw,14px)!important;line-height:1.35!important;height:auto!important}
+}
+@media(max-width:420px){
+  .hero.clean-hero{height:265px!important}
+  .hero.clean-hero .heroar{top:65px!important;width:90%!important;font-size:16px!important}
+  .hero.clean-hero .mainprice{top:123px!important;font-size:clamp(45px,12.5vw,56px)!important}
+  .hero.clean-hero .iqd{top:193px!important;font-size:17px!important}
+}
 </style>
 </head>
 <body>
@@ -439,10 +484,10 @@ body{display:block;min-height:100dvh}
   <a class="betaLink abs" href="./beta.html">النسخة الموسعة هنا</a>
   <a class="betaLink converterButton abs" href="./converter.html">محول العملة السريع</a>
   <div class="live abs" id="marketState"><i></i><span id="marketStateText">تحميل...</span></div>
-  <section class="hero abs"><div class="accent abs"></div><div class="usdlabel abs">USD / IQD</div><div class="heroar abs">السعر الأعلى الآن لكل 100$</div><div class="mainprice abs" id="highSell">—</div><div class="iqd abs">د.ع</div><div class="chip buy"><div class="chiplabel">شراء</div><div class="chipval" id="highBuy">—</div></div><div class="chip sell"><div class="chiplabel">بيع</div><div class="chipval" id="highSell2">—</div></div></section>
-  <section class="source s1"><div class="arname abs">بورصة الكفاح</div><div class="selllab abs">بيع</div><div class="sellvalue abs" id="kifahSell">—</div><div class="buylab abs">شراء</div><div class="buyvalue abs" id="kifahBuy">—</div></section>
-  <section class="source s2"><div class="arname abs">بورصة الحارثية</div><div class="selllab abs">بيع</div><div class="sellvalue abs" id="harSell">—</div><div class="buylab abs">شراء</div><div class="buyvalue abs" id="harBuy">—</div></section>
-  <section class="source s3"><div class="arname abs">كوخ العملات</div><div class="selllab abs">بيع</div><div class="sellvalue abs" id="kukhSell">—</div><div class="buylab abs">شراء</div><div class="buyvalue abs" id="kukhBuy">—</div></section>
+  <section class="hero abs clean-hero"><div class="accent abs"></div><div class="usdlabel abs">USD / IQD</div><div class="heroar abs">السعر الأعلى الآن لكل 100 دولار</div><div class="mainprice abs" id="highSell">—</div><div class="iqd abs">د.ع</div></section>
+  
+  
+  
   <div class="goldtitle abs">الذهب</div><div class="goldsub abs">سعر المثقال · 5 غرام</div>
   <section class="goldcard g18"><div class="kbadge abs">18K</div><div class="kar abs">عيار 18</div><div class="gprice abs" id="g18">—</div><div class="giqd abs">د.ع</div></section>
   <section class="goldcard g21"><div class="kbadge abs">21K</div><div class="kar abs">عيار 21</div><div class="gprice abs" id="g21">—</div><div class="giqd abs">د.ع</div></section>
@@ -470,7 +515,7 @@ function normalizeUsd100(value) {
   return n>=100000&&n<=300000?Math.round(n):null;
 }
 const DATA_URL='/api/market';const $=id=>document.getElementById(id);const fmt=n=>Number(n||0).toLocaleString('en-US');let lastData=null;
-function fit(){const DESIGN_W=760,DESIGN_H=925;const viewportWidth=(window.visualViewport&&window.visualViewport.width)||window.innerWidth||document.documentElement.clientWidth;const vp=$('viewport'),app=$('app');if(viewportWidth<=1024){vp.style.width='100%';vp.style.height='auto';vp.style.margin='0';vp.style.transform='none';app.style.transform='none';return}const available=Math.max(280,viewportWidth);const scale=Math.min(available/DESIGN_W,1);vp.style.width=(DESIGN_W*scale)+'px';vp.style.height=(DESIGN_H*scale)+'px';vp.style.margin='0 auto';vp.style.transform='none';app.style.transform='scale('+scale+')'}
+function fit(){const DESIGN_W=760,DESIGN_H=820;const viewportWidth=(window.visualViewport&&window.visualViewport.width)||window.innerWidth||document.documentElement.clientWidth;const vp=$('viewport'),app=$('app');if(viewportWidth<=1024){vp.style.width='100%';vp.style.height='auto';vp.style.margin='0';vp.style.transform='none';app.style.transform='none';return}const available=Math.max(280,viewportWidth);const scale=Math.min(available/DESIGN_W,1);vp.style.width=(DESIGN_W*scale)+'px';vp.style.height=(DESIGN_H*scale)+'px';vp.style.margin='0 auto';vp.style.transform='none';app.style.transform='scale('+scale+')'}
 window.addEventListener('resize',fit,{passive:true});window.addEventListener('orientationchange',()=>setTimeout(fit,120),{passive:true});if(window.visualViewport)window.visualViewport.addEventListener('resize',fit,{passive:true});document.addEventListener('DOMContentLoaded',fit);fit();
 function clockFromIso(iso){try{return new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(new Date(iso))}catch(e){return new Date().toLocaleTimeString('ar-IQ')}}
 function renderUsdMeta(d){
@@ -480,43 +525,24 @@ function renderUsdMeta(d){
   const live=meta.state==='live'&&age>=-10&&age<=30;
   box.classList.toggle('ready',live);
   $('marketStateText').textContent=live?'LIVE':'آخر سعر';
-  const source=String(meta.source||'آخر مصدر معروف');
-  const url=/iraqsm\\.com/i.test(meta.source_url||'')?'https://iraqsm.com/fx':meta.source_url||'https://t.me/dollariraqi';
-  const credit=/IQWealth/i.test(source)?' · البيانات من IQWealth':' · '+source;
+  const source=String(meta.source||'آخر مصدر متوفر');
+  const url=/^https:\/\//i.test(meta.source_url||'')?meta.source_url:'https://iraqsm.com/fx';
   $('updated').href=url;
-  $('updated').textContent='آخر تسعيرة: '+(Number.isFinite(ms)?clockFromIso(meta.published_at):'غير معروف')+credit;
-  const hmeta=d.harithiya_meta||{};
-  const harAge=Date.parse(hmeta.published_at||'');
-  const harStale=hmeta.state!=='live'||!Number.isFinite(harAge)||(Date.now()-harAge)>30*60000;
-  $('harSell').title=$('harBuy').title=harStale?'الحارثية: آخر تسعيرة متوفرة · '+(hmeta.published_at||'الوقت غير معروف'):'الحارثية: تسعيرة حديثة';
-  $('err').textContent=!live?'السعر المعروض آخر تسعيرة منشورة، مو تحديث لحظي.':harStale?'الحارثية: آخر سعر منشور، وقد يكون أقدم من الكفاح.':'';
+  const sourceName=/IQWealth/i.test(source)?'IQWealth':source;
+  const stamped=Number.isFinite(ms)?clockFromIso(meta.published_at):'غير معروف';
+  $('updated').textContent='آخر تسعيرة: '+stamped+' · '+sourceName;
+  $('err').textContent=live?'':'المعروض آخر سعر منشور · آخر فحص لا يعني تحديث التسعيرة';
 }
 function render(d){
-  if(!d?.kifah||!d?.harithiya||!d?.gold)return;
-  // Each displayed USD/IQD market quote is IQD for 100 USD, never abbreviated.
-  const pair=q=>q?{buy:normalizeUsd100(q.buy),sell:normalizeUsd100(q.sell)}:{buy:null,sell:null};
-  const kif=pair(d.kifah),har=pair(d.harithiya),kukh=pair(d.kukh);
-  if(!kif.buy||!kif.sell)return;
-  const fmtUsd=n=>n===null?'—':fmt(n);
-  const recent=(iso)=>{const ts=Date.parse(iso||'');return Number.isFinite(ts)&&Date.now()-ts<24*3600000&&Date.now()-ts>=-600000};
-  // Never let last week's saved Harithiya/Kukh quote outrank today's Kifah.
-  const options=[kif];
-  if(har.buy&&har.sell&&recent(d.harithiya_meta?.published_at))options.push(har);
-  if(kukh.buy&&kukh.sell&&recent(d.kukh?.published_at))options.push(kukh);
-  const highBuy=Math.max(...options.map(q=>q.buy));
-  const highSell=Math.max(...options.map(q=>q.sell));
-  $('highSell').textContent=fmtUsd(highBuy);
-  $('highBuy').textContent=fmtUsd(highBuy);
-  $('highSell2').textContent=fmtUsd(highSell);
-  $('kifahSell').textContent=fmtUsd(kif.sell);
-  $('kifahBuy').textContent=fmtUsd(kif.buy);
-  $('harSell').textContent=fmtUsd(har.sell);
-  $('harBuy').textContent=fmtUsd(har.buy);
-  $('kukhSell').textContent=fmtUsd(kukh.sell);
-  $('kukhBuy').textContent=fmtUsd(kukh.buy);
-  $('g18').textContent=fmt(d.gold.k18);
-  $('g21').textContent=fmt(d.gold.k21);
-  $('g24').textContent=fmt(d.gold.k24);
+  // The unified Baghdad quote is selected upstream from dated FX sources.
+  // No stale Harithiya or Kukh values can override the Baghdad headline.
+  const price=normalizeUsd100(d?.kifah?.buy);
+  if(!price)throw new Error('No validated Baghdad quote');
+  $('highSell').textContent=fmt(price);
+  for(const [id,key] of [['g18','k18'],['g21','k21'],['g24','k24']]){
+    const raw=d?.gold?.[key],value=Number(raw);
+    $(id).textContent=raw!=null&&Number.isFinite(value)&&value>0?fmt(value):'—';
+  }
   lastData=d;
   renderUsdMeta(d);
 }
@@ -538,7 +564,7 @@ async function refresh(){
   }finally{b.disabled=false;b.textContent=old;b.style.background='#2470a8'}
 }
 $('refresh').addEventListener('click',refresh);refresh();setInterval(refresh,60000);
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=25',{updateViaCache:'none'}).then(reg=>reg.update().catch(()=>{})).catch(()=>{})}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=26',{updateViaCache:'none'}).then(reg=>reg.update().catch(()=>{})).catch(()=>{})}
 </script>
 </body>
 </html>
