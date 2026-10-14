@@ -39,6 +39,29 @@ a{color:inherit;text-decoration:none}
 @media (max-width:1100px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.bottom{grid-template-columns:1fr}.goldrow{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:760px){.wrap{width:94vw}.top{align-items:center}.brand{font-size:23px}.metrics{grid-template-columns:1fr}.sources,.currencies{grid-template-columns:repeat(2,minmax(0,1fr))}.goldrow{grid-template-columns:1fr}.fuel-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{min-height:94px}.section-title{font-size:19px}.card{padding:12px}.p b{font-size:17px}}
 @media (max-width:480px){.wrap{width:93vw}.sources,.currencies{grid-template-columns:1fr}.badges{gap:6px}.badge{padding:7px 10px}.brand{font-size:21px}.section{margin-top:15px}.tablebox,.fuelbox{padding:12px}.fuel-tabs{gap:5px}.fuel-tab{padding:8px 5px;font-size:12px}}
+
+/* Dedicated IQWealth Baghdad quote - single clean source card */
+.sources.only-baghdad{display:grid!important;grid-template-columns:minmax(0,720px)!important;justify-content:center;gap:0!important}
+.baghdad-card{width:100%;border-radius:22px;padding:clamp(20px,2.4vw,34px);
+  background:linear-gradient(145deg,rgba(10,40,62,.98),rgba(5,20,34,.98));
+  border:1px solid rgba(67,164,228,.48);box-shadow:0 18px 45px rgba(0,0,0,.22)}
+.baghdad-card .card-head strong{font-size:clamp(24px,2.2vw,34px);font-weight:900;overflow:visible}
+.baghdad-card .status.muted{color:#bacbd9}.baghdad-card .status.muted:before{background:#8297a8;box-shadow:none}
+.baghdad-caption{color:#a8c2d6;font-size:clamp(12px,1vw,15px);margin-top:12px}
+.baghdad-card .pair{margin-top:20px;gap:clamp(12px,2vw,25px);align-items:center}
+.baghdad-card .pair .p small{font-size:clamp(12px,1vw,15px)}
+.baghdad-card .pair .p b{font-size:clamp(31px,3vw,49px)!important;letter-spacing:-.5px;font-weight:900;white-space:nowrap}
+.baghdad-card .pair .sep{height:65px}
+.baghdad-card .update{font-size:clamp(11px,.9vw,14px);line-height:1.6;margin-top:22px}
+.baghdad-card .update a{color:#83ccff;text-decoration:underline;text-underline-offset:3px}
+.bottom{grid-template-columns:minmax(0,1fr)!important}
+@media(max-width:480px){
+  .sources.only-baghdad{grid-template-columns:minmax(0,1fr)!important}
+  .baghdad-card{padding:18px 14px}
+  .baghdad-card .pair{gap:10px}
+  .baghdad-card .pair .p b{font-size:clamp(23px,7.4vw,36px)!important}
+  .baghdad-card .pair .sep{height:50px}
+}
 </style>
 </head>
 <body>
@@ -49,31 +72,28 @@ a{color:inherit;text-decoration:none}
   </header>
   <div class="updatebar" id="heroUpdate">جاري تحميل الأسعار المحدثة…</div>
 
-  <section class="section">
-    <h2 class="section-title">أسعار الصرف اليوم</h2>
-    <div class="metrics">
-      <div class="metric"><span class="label">متوسط دولار بغداد</span><b class="value goldc" id="avgBaghdad">—</b><span class="note">الحارثية + الكفاح · لكل 100$</span></div>
-      <div class="metric"><span class="label">أعلى شراء للدولار</span><b class="value green" id="bestSellUsd">—</b><span class="note" id="bestSellSource">—</span></div>
-      <div class="metric"><span class="label">أقل بيع للدولار</span><b class="value green" id="bestBuyUsd">—</b><span class="note" id="bestBuySource">—</span></div>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2 class="section-title">مصادر أسعار الصرف</h2>
-    <div class="sources">
-      <article class="card"><div class="card-head"><strong>بورصة الحارثية</strong><span class="status">محدث</span></div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="harBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="harSell">—</b></div></div><div class="update">آخر تحديث: <span id="harTime">—</span></div></article>
-      <article class="card"><div class="card-head"><strong>بورصة الكفاح</strong><span class="status">محدث</span></div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="kifBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="kifSell">—</b></div></div><div class="update">آخر تحديث: <span id="kifTime">—</span></div></article>
-      <article class="card"><div class="card-head"><strong>كوخ العملات</strong><span class="status">محدث</span></div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="kukhBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="kukhSell">—</b></div></div><div class="update">آخر تحديث: <span id="kukhTime">—</span></div></article>
-      <article class="card"><div class="card-head"><strong>Hatwan Exchange</strong><span class="status">محدث</span></div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="hatBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="hatSell">—</b></div></div><div class="update">آخر تحديث: <span id="hatTime">—</span></div></article>
-      <article class="card"><div class="card-head"><strong>Gailany Exchange</strong><span class="status">محدث</span></div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="gaiBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="gaiSell">—</b></div></div><div class="update">آخر تحديث: <span id="gaiTime">—</span></div></article>
-      <article class="card"><div class="card-head"><strong>البنك المركزي العراقي</strong><span class="status">رسمي</span></div><div class="official"><small>السعر الرسمي المرجعي</small><b id="cbiUsd">—</b><small>دينار لكل 100 USD</small></div><div class="update">المصدر: cbi.iq</div></article>
+  <section class="section baghdad-section">
+    <h2 class="section-title">أسعار صرف بغداد</h2>
+    <div class="sources only-baghdad">
+      <article class="card baghdad-card">
+        <div class="card-head"><strong>بغداد</strong><span class="status muted" id="baghdadState">جاري التحديث…</span></div>
+        <div class="baghdad-caption">سعر الدولار مقابل الدينار العراقي · لكل 100 دولار</div>
+        <div class="pair">
+          <div class="p"><small>شراء</small><b class="green" id="bagBuy">—</b></div>
+          <i class="sep"></i>
+          <div class="p"><small>بيع</small><b class="red" id="bagSell">—</b></div>
+        </div>
+        <div class="update">آخر تسعيرة: <span id="baghdadTime">—</span>
+          <span class="source-credit"> · المصدر: <a id="baghdadSource" href="https://iraqsm.com/fx" target="_blank" rel="noopener noreferrer">IQWealth</a></span>
+        </div>
+      </article>
     </div>
   </section>
 
   <section class="section">
     <h2 class="section-title">العملات الرئيسية</h2>
     <div class="currencies">
-      <article class="card"><div class="curr-code">USD 🇺🇸</div><div class="curr-name">الدولار الأمريكي</div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="usdBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="usdSell">—</b></div></div><div class="unit">دينار عراقي لكل 100$</div><div class="source-note">المصدر: بورصة الحارثية</div></article>
+      <article class="card"><div class="curr-code">USD 🇺🇸</div><div class="curr-name">الدولار الأمريكي</div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="usdBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="usdSell">—</b></div></div><div class="unit">دينار عراقي لكل 100$</div><div class="source-note" id="usdSource">مصدر سعر بغداد</div></article>
       <article class="card"><div class="curr-code">EUR 🇪🇺</div><div class="curr-name">اليورو</div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="eurBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="eurSell">—</b></div></div><div class="unit">دولار لكل 100€ حسب تسعير الصيرفة</div><div class="source-note">المصدر: كوخ العملات</div></article>
       <article class="card"><div class="curr-code">GBP 🇬🇧</div><div class="curr-name">الجنيه الإسترليني</div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="gbpBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="gbpSell">—</b></div></div><div class="unit">دولار لكل 100£ حسب تسعير الصيرفة</div><div class="source-note">المصدر: كوخ العملات</div></article>
       <article class="card"><div class="curr-code">TRY 🇹🇷</div><div class="curr-name">الليرة التركية</div><div class="pair"><div class="p"><small>شراء</small><b class="green" id="tryBuy">—</b></div><i class="sep"></i><div class="p"><small>بيع</small><b class="red" id="trySell">—</b></div></div><div class="unit">ليرة تركية لكل 100$</div><div class="source-note">المصدر: كوخ العملات</div></article>
@@ -108,7 +128,7 @@ a{color:inherit;text-decoration:none}
       </div>
       <div class="fuel-note" id="fuelNote">جاري فحص أسعار الوقود والمراجع…</div>
     </div>
-    <div class="tablebox"><div class="boxtitle">مقارنة سريعة</div><div class="tablewrap"><table><thead><tr><th>المصدر</th><th>شراء</th><th>بيع</th><th>آخر تحديث</th></tr></thead><tbody id="compareBody"></tbody></table></div></div>
+
   </section>
 
   <div class="error" id="error"></div><div class="foot">MazenmiX · <a href="https://iraqsm.com/fx" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px">البيانات من IQWealth</a> عند استخدام مصدره</div>
@@ -140,33 +160,39 @@ const timeBaghdad=(iso)=>{if(!iso)return 'الآن';try{return new Intl.DateTime
 const sourceTimeBaghdad=(iso)=>{if(!iso)return '—';const date=new Date(iso);if(!Number.isFinite(date.getTime()))return '—';try{return new Intl.DateTimeFormat('ar-IQ-u-nu-arab',{timeZone:'Asia/Baghdad',hour:'2-digit',minute:'2-digit',hour12:true}).format(date)}catch(_){return '—'}};
 const stampBaghdad=(iso)=>{if(!iso)return '—';const d=new Date(iso);if(!Number.isFinite(d.getTime()))return '—';try{return new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Baghdad',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(d)}catch(_){return '—'}};
 function setPair(prefix,obj,isUsd=false){if(!obj)return;const buy=isUsd?normalizeUsd100(obj.buy):Number(obj.buy),sell=isUsd?normalizeUsd100(obj.sell):Number(obj.sell);$(prefix+'Buy').textContent=buy===null?'—':fmt(buy,buy%1?2:0);$(prefix+'Sell').textContent=sell===null?'—':fmt(sell,sell%1?2:0)}
-function validUsd(name,obj){const buy=normalizeUsd100(obj?.buy),sell=normalizeUsd100(obj?.sell);return buy&&sell?{name,buy,sell}:null}
-function render(d){market=d;
-  const usdTime=d.usd_meta?.published_at;
-  const live=d.usd_meta?.state==='live'&&usdTime&&Date.now()-Date.parse(usdTime)<=30*60000;
+
+function render(d){
+  market=d;
+  const quote=d?.kifah;
+  const buy=normalizeUsd100(quote?.buy),sell=normalizeUsd100(quote?.sell);
+  if(!buy||!sell)throw new Error('بيانات سعر بغداد غير مكتملة');
+  setPair('bag',quote,true);
+  const meta=d.usd_meta||{};
+  const published=Date.parse(meta.published_at||'');
+  const age=Number.isFinite(published)?(Date.now()-published)/60000:Infinity;
+  const live=meta.state==='live'&&age>=-10&&age<=30;
   $('marketBadge').textContent=live?'LIVE':'آخر سعر';
-  $('marketBadge').classList.toggle('live',!!live);
-  $('marketBadge').title=(d.usd_meta?.source||'آخر مصدر متوفر')+' · '+(usdTime||'بدون تاريخ');
-  $('heroUpdate').textContent='آخر تسعيرة للكفاح: '+stampBaghdad(usdTime)+(live?' · حديثة':' · آخر سعر منشور')+' · البيانات من IQWealth عند استخدام المصدر';
-  setPair('har',d.harithiya,true);setPair('kif',d.kifah,true);setPair('kukh',d.kukh,true);$('harTime').textContent=timeBaghdad(d.usd_meta?.published_at);$('kifTime').textContent=$('harTime').textContent;$('kukhTime').textContent=timeBaghdad(d.kukh?.published_at);
-  const hat=d.hatwan?.rates?.USD,gai=d.gailany?.rates?.USD;if(hat)setPair('hat',hat,true);if(gai)setPair('gai',gai,true);$('hatTime').textContent=sourceTimeBaghdad(d.hatwan?.published_at||d.hatwan?.checked_at);$('gaiTime').textContent=sourceTimeBaghdad(d.gailany?.published_at||d.gailany?.checked_at);const cbiUsd=d.cbi?.rates?.USD;$('cbiUsd').textContent=(cbiUsd!==null&&cbiUsd!==undefined)?fmtCbi(cbiUsd):'—';
-  setPair('usd',d.kifah,true);const kr=d.kukh_rates||{};setPair('eur',kr.EUR);setPair('gbp',kr.GBP);setPair('try',kr.TRY);setPair('aed',kr.AED);setPair('sar',kr.SAR);
-  $('g18').textContent=fmt(d.gold?.k18);$('g21').textContent=fmt(d.gold?.k21);$('g24').textContent=fmt(d.gold?.k24);
-  const sources=[validUsd('بورصة الحارثية',d.harithiya),validUsd('بورصة الكفاح',d.kifah),validUsd('كوخ العملات',d.kukh),validUsd('Hatwan Exchange',hat),validUsd('Gailany Exchange',gai)].filter(Boolean);
-  const fresh=(iso)=>{const ms=Date.parse(iso||'');return Number.isFinite(ms)&&Date.now()-ms<=24*3600000&&Date.now()-ms>=-600000};
-  // Last-known quotes are visible, but must not win a "best rate today" comparison.
-  const comparable=sources.filter(s=>
-    s.name==='بورصة الكفاح'?fresh(d.usd_meta?.published_at):
-    s.name==='بورصة الحارثية'?fresh(d.harithiya_meta?.published_at):
-    s.name==='كوخ العملات'?fresh(d.kukh?.published_at):
-    s.name==='Hatwan Exchange'?fresh(d.hatwan?.published_at):
-    fresh(d.gailany?.published_at)
-  );
-  {const h=normalizeUsd100(d.harithiya?.sell),k=normalizeUsd100(d.kifah?.sell);$('avgBaghdad').textContent=h&&k?fmt(Math.round((h+k)/2)):'—';}
-  if(comparable.length){const sellBest=[...comparable].sort((a,b)=>b.buy-a.buy)[0];const buyBest=[...comparable].sort((a,b)=>a.sell-b.sell)[0];$('bestSellUsd').textContent=fmt(sellBest.buy);$('bestSellSource').textContent=sellBest.name;$('bestBuyUsd').textContent=fmt(buyBest.sell);$('bestBuySource').textContent=buyBest.name}
-  buildTable(sources);$('error').style.display='none';
+  $('marketBadge').classList.toggle('live',live);
+  $('baghdadState').textContent=live?'مباشر':'آخر سعر منشور';
+  $('baghdadState').classList.toggle('muted',!live);
+  const stamp=Number.isFinite(published)?stampBaghdad(meta.published_at):'غير معروف';
+  const source=String(meta.source||'آخر مصدر متوفر');
+  const sourceURL=/^https:\/\//i.test(meta.source_url||'')?meta.source_url:'https://iraqsm.com/fx';
+  $('baghdadTime').textContent=stamp+' بتوقيت بغداد';
+  $('baghdadSource').textContent=/IQWealth/i.test(source)?'IQWealth':source;
+  $('baghdadSource').href=sourceURL;
+  $('heroUpdate').textContent='آخر تسعيرة بغداد: '+stamp+(live?' · مباشر':' · آخر سعر منشور');
+  setPair('usd',quote,true);
+  $('usdSource').textContent='المصدر: '+source;
+  const kr=d.kukh_rates||{};
+  setPair('eur',kr.EUR);setPair('gbp',kr.GBP);setPair('try',kr.TRY);
+  setPair('aed',kr.AED);setPair('sar',kr.SAR);
+  for(const [id,key] of [['g18','k18'],['g21','k21'],['g24','k24']]){
+    const n=Number(d.gold?.[key]);
+    $(id).textContent=Number.isFinite(n)&&n>0?fmt(n):'—';
+  }
+  $('error').style.display='none';
 }
-function buildTable(sources){const body=$('compareBody');body.innerHTML='';sources.forEach(s=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${s.name}</td><td class="num green">${fmt(s.buy)}</td><td class="num red">${fmt(s.sell)}</td><td>${timeBaghdad(market.updated_at)}</td>`;body.appendChild(tr)});const cbiUsd=market.cbi?.rates?.USD;const tr=document.createElement('tr');tr.innerHTML=`<td>البنك المركزي العراقي</td><td class="num green" colspan="2">${(cbiUsd!==null&&cbiUsd!==undefined)?fmtCbi(cbiUsd):'—'}</td><td>${timeBaghdad(market.updated_at)}</td>`;body.appendChild(tr)}
 let activeFuelCity='baghdad';let fuelChecks=null;
 const fuelData={
   baghdad:{name:'بغداد',regular:450,improved:850,super:1250,gasoil:400,note:'آخر تحقق: 4 أكتوبر 2026 · المصدر: وزارة النفط العراقية / شركة توزيع المنتجات النفطية'},
@@ -178,7 +204,7 @@ async function refreshFuelChecks(){try{const response=await fetch('/api/fuel?t='
 document.querySelectorAll('.fuel-tab').forEach(b=>b.addEventListener('click',()=>renderFuel(b.dataset.city)));
 async function refresh(){try{const r=await fetch('/api/market?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(!normalizeUsd100(d.kifah?.buy)||!normalizeUsd100(d.kifah?.sell))throw new Error('بيانات الكفاح ناقصة');render(d)}catch(e){$('error').textContent='تعذر جلب آخر الأسعار حالياً. أعد المحاولة بعد قليل.';$('error').style.display='block'}}
 renderFuel('baghdad');refreshFuelChecks();refresh();setInterval(refresh,60000);setInterval(refreshFuelChecks,60*60*1000);
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=25',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{})}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=26',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{})}
 </script>
 </body>
 </html>
