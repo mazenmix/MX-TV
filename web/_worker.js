@@ -248,11 +248,11 @@ function makeMarketMeta(source,source_url,published_at,note,stale){
 }
 function parseIqwealthFx(json){
   const root=json?.data||json||{};
-  const quote=root.parallel||root.fx?.parallel||root.usd?.parallel||root.market?.parallel||json?.parallel;
+  const quote=root.parallel||root.fx?.parallel||root.usd?.parallel||root.market?.parallel||json?.parallel||((root.buy!=null&&root.sell!=null)?root:null);
   if(!quote||typeof quote!=='object')return null;
   const buy=normalizeUsd100(quote.buy),sell=normalizeUsd100(quote.sell);
   if(!buy||!sell)return null;
-  const published_at=quote.publishedAt||quote.published_at||quote.updatedAt||root.publishedAt||root.published_at||root.updatedAt||json?.updatedAt||'';
+  const published_at=quote.publishedAt||quote.published_at||quote.updatedAt||root.publishedAt||root.published_at||root.updatedAt||root.asOf||json?.updatedAt||json?.asOf||'';
   // An undated JSON or future-dated rate cannot displace a dated market quote.
   const ts=Date.parse(published_at);
   if(!Number.isFinite(ts)||ts>Date.now()+10*60000)return null;
@@ -322,10 +322,16 @@ async function marketResponse(){
   }else errors.push('iqwealth-fx');
 
   if(jobs[2].status==='fulfilled'){
-    const tg=parseIqwealthTelegram(jobs[2].value);
+    // Some posts may publish BOTH boards in the full | separated market format.
+    const both=parseTelegramBaghdad(jobs[2].value);
+    if(both&&publishedMs({published_at:both.published_at})>publishedMs(data.harithiya_meta)){
+      data.harithiya=both.harithiya;
+      data.harithiya_meta=makeMarketMeta('Telegram @iqwealth_rates',IQW_TG_URL,both.published_at,'الحارثية · @iqwealth_rates',false);
+    }
+    const tg=both?{...both,source:'Telegram @iqwealth_rates',source_url:IQW_TG_URL}:parseIqwealthTelegram(jobs[2].value);
     if(tg&&publishedMs({published_at:tg.published_at})>publishedMs(data.usd_meta)){
       data.kifah=tg.kifah;
-      data.usd_meta=makeMarketMeta(tg.source,tg.source_url,tg.published_at,'بورصة الكفاح · @iqwealth_rates',false);
+      data.usd_meta=makeMarketMeta('Telegram @iqwealth_rates',IQW_TG_URL,tg.published_at,'بورصة الكفاح · @iqwealth_rates',false);
       data.usd_source_time='';
     }
   }else errors.push('iqwealth-telegram');
