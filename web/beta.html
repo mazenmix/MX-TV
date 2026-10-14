@@ -45,7 +45,7 @@ a{color:inherit;text-decoration:none}
 <div class="wrap">
   <header class="top">
     <div class="brand" aria-hidden="true"></div>
-    <div class="badges"><a class="badge backLink" href="https://mxdollar.pages.dev/">الرجوع للنسخة المصغرة</a><span class="badge live">LIVE</span></div>
+    <div class="badges"><a class="badge backLink" href="https://mxdollar.pages.dev/">الرجوع للنسخة المصغرة</a><span class="badge live" id="marketBadge">تحميل...</span></div>
   </header>
   <div class="updatebar" id="heroUpdate">جاري تحميل الأسعار المحدثة…</div>
 
@@ -111,7 +111,7 @@ a{color:inherit;text-decoration:none}
     <div class="tablebox"><div class="boxtitle">مقارنة سريعة</div><div class="tablewrap"><table><thead><tr><th>المصدر</th><th>شراء</th><th>بيع</th><th>آخر تحديث</th></tr></thead><tbody id="compareBody"></tbody></table></div></div>
   </section>
 
-  <div class="error" id="error"></div><div class="foot">MazenmiX</div>
+  <div class="error" id="error"></div><div class="foot">MazenmiX · <a href="https://iraqsm.com/fx" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px">البيانات من IQWealth</a> عند استخدام مصدره</div>
 </div>
 <script>
 const $=id=>document.getElementById(id);let market=null;
@@ -141,14 +141,28 @@ const sourceTimeBaghdad=(iso)=>{if(!iso)return '—';const date=new Date(iso);if
 const stampBaghdad=(iso)=>{if(!iso)return '—';const d=new Date(iso);if(!Number.isFinite(d.getTime()))return '—';try{return new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Baghdad',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(d)}catch(_){return '—'}};
 function setPair(prefix,obj,isUsd=false){if(!obj)return;const buy=isUsd?normalizeUsd100(obj.buy):Number(obj.buy),sell=isUsd?normalizeUsd100(obj.sell):Number(obj.sell);$(prefix+'Buy').textContent=buy===null?'—':fmt(buy,buy%1?2:0);$(prefix+'Sell').textContent=sell===null?'—':fmt(sell,sell%1?2:0)}
 function validUsd(name,obj){const buy=normalizeUsd100(obj?.buy),sell=normalizeUsd100(obj?.sell);return buy&&sell?{name,buy,sell}:null}
-function render(d){market=d;const now=timeBaghdad(d.updated_at);$('heroUpdate').textContent='آخر تحديث '+now+' بتوقيت بغداد';
+function render(d){market=d;
+  const usdTime=d.usd_meta?.published_at;
+  const live=d.usd_meta?.state==='live'&&usdTime&&Date.now()-Date.parse(usdTime)<=30*60000;
+  $('marketBadge').textContent=live?'LIVE':'آخر سعر';
+  $('marketBadge').title=(d.usd_meta?.source||'آخر مصدر متوفر')+' · '+(usdTime||'بدون تاريخ');
+  $('heroUpdate').textContent='آخر تسعيرة للكفاح: '+stampBaghdad(usdTime)+(live?' · حديثة':' · آخر سعر منشور')+' · البيانات من IQWealth عند استخدام المصدر';
   setPair('har',d.harithiya,true);setPair('kif',d.kifah,true);setPair('kukh',d.kukh,true);$('harTime').textContent=timeBaghdad(d.usd_meta?.published_at);$('kifTime').textContent=$('harTime').textContent;$('kukhTime').textContent=timeBaghdad(d.kukh?.published_at);
   const hat=d.hatwan?.rates?.USD,gai=d.gailany?.rates?.USD;if(hat)setPair('hat',hat,true);if(gai)setPair('gai',gai,true);$('hatTime').textContent=sourceTimeBaghdad(d.hatwan?.published_at||d.hatwan?.checked_at);$('gaiTime').textContent=sourceTimeBaghdad(d.gailany?.published_at||d.gailany?.checked_at);const cbiUsd=d.cbi?.rates?.USD;$('cbiUsd').textContent=(cbiUsd!==null&&cbiUsd!==undefined)?fmtCbi(cbiUsd):'—';
-  setPair('usd',d.harithiya,true);const kr=d.kukh_rates||{};setPair('eur',kr.EUR);setPair('gbp',kr.GBP);setPair('try',kr.TRY);setPair('aed',kr.AED);setPair('sar',kr.SAR);
+  setPair('usd',d.kifah,true);const kr=d.kukh_rates||{};setPair('eur',kr.EUR);setPair('gbp',kr.GBP);setPair('try',kr.TRY);setPair('aed',kr.AED);setPair('sar',kr.SAR);
   $('g18').textContent=fmt(d.gold?.k18);$('g21').textContent=fmt(d.gold?.k21);$('g24').textContent=fmt(d.gold?.k24);
   const sources=[validUsd('بورصة الحارثية',d.harithiya),validUsd('بورصة الكفاح',d.kifah),validUsd('كوخ العملات',d.kukh),validUsd('Hatwan Exchange',hat),validUsd('Gailany Exchange',gai)].filter(Boolean);
+  const fresh=(iso)=>{const ms=Date.parse(iso||'');return Number.isFinite(ms)&&Date.now()-ms<=24*3600000&&Date.now()-ms>=-600000};
+  // Last-known quotes are visible, but must not win a "best rate today" comparison.
+  const comparable=sources.filter(s=>
+    s.name==='بورصة الكفاح'?fresh(d.usd_meta?.published_at):
+    s.name==='بورصة الحارثية'?fresh(d.harithiya_meta?.published_at):
+    s.name==='كوخ العملات'?fresh(d.kukh?.published_at):
+    s.name==='Hatwan Exchange'?fresh(d.hatwan?.published_at):
+    fresh(d.gailany?.published_at)
+  );
   {const h=normalizeUsd100(d.harithiya?.sell),k=normalizeUsd100(d.kifah?.sell);$('avgBaghdad').textContent=h&&k?fmt(Math.round((h+k)/2)):'—';}
-  if(sources.length){const sellBest=[...sources].sort((a,b)=>b.buy-a.buy)[0];const buyBest=[...sources].sort((a,b)=>a.sell-b.sell)[0];$('bestSellUsd').textContent=fmt(sellBest.buy);$('bestSellSource').textContent=sellBest.name;$('bestBuyUsd').textContent=fmt(buyBest.sell);$('bestBuySource').textContent=buyBest.name}
+  if(comparable.length){const sellBest=[...comparable].sort((a,b)=>b.buy-a.buy)[0];const buyBest=[...comparable].sort((a,b)=>a.sell-b.sell)[0];$('bestSellUsd').textContent=fmt(sellBest.buy);$('bestSellSource').textContent=sellBest.name;$('bestBuyUsd').textContent=fmt(buyBest.sell);$('bestBuySource').textContent=buyBest.name}
   buildTable(sources);$('error').style.display='none';
 }
 function buildTable(sources){const body=$('compareBody');body.innerHTML='';sources.forEach(s=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${s.name}</td><td class="num green">${fmt(s.buy)}</td><td class="num red">${fmt(s.sell)}</td><td>${timeBaghdad(market.updated_at)}</td>`;body.appendChild(tr)});const cbiUsd=market.cbi?.rates?.USD;const tr=document.createElement('tr');tr.innerHTML=`<td>البنك المركزي العراقي</td><td class="num green" colspan="2">${(cbiUsd!==null&&cbiUsd!==undefined)?fmtCbi(cbiUsd):'—'}</td><td>${timeBaghdad(market.updated_at)}</td>`;body.appendChild(tr)}
@@ -161,7 +175,7 @@ const fuelData={
 function renderFuel(city){activeFuelCity=city;const d=fuelData[city]||fuelData.baghdad;$('fuelCity').textContent=d.name+' · دينار/لتر';$('fuelRegular').textContent=fmt(d.regular);$('fuelImproved').textContent=fmt(d.improved);$('fuelSuper').textContent=fmt(d.super);$('fuelGasoil').textContent=d.gasoil?fmt(d.gasoil):'—';const region=city==='erbil'?'erbil':'federal';const check=fuelChecks?.sources?.[region];if(check?.ok&&check.checked_at){$('fuelNote').textContent='آخر تحديث: '+stampBaghdad(check.checked_at)+'';}else if(fuelChecks?.attempted_at){$('fuelNote').textContent='آخر محاولة فحص: '+stampBaghdad(fuelChecks.attempted_at)+' · تعذّر تأكيد الأسعار، آخر مرجع: 4 أكتوبر 2026';}else{$('fuelNote').textContent=d.note;}document.querySelectorAll('.fuel-tab').forEach(b=>b.classList.toggle('active',b.dataset.city===city))}
 async function refreshFuelChecks(){try{const response=await fetch('/api/fuel?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);const data=await response.json();if(!data.sources||!data.attempted_at)throw Error('Invalid fuel response');fuelChecks=data;}catch(_){fuelChecks=null;}renderFuel(activeFuelCity);}
 document.querySelectorAll('.fuel-tab').forEach(b=>b.addEventListener('click',()=>renderFuel(b.dataset.city)));
-async function refresh(){try{const r=await fetch('/api/market?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(!normalizeUsd100(d.harithiya?.sell)||!normalizeUsd100(d.kifah?.sell))throw new Error('بيانات ناقصة');render(d)}catch(e){$('error').textContent='تعذر جلب آخر الأسعار حالياً. أعد المحاولة بعد قليل.';$('error').style.display='block'}}
+async function refresh(){try{const r=await fetch('/api/market?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(!normalizeUsd100(d.kifah?.buy)||!normalizeUsd100(d.kifah?.sell))throw new Error('بيانات الكفاح ناقصة');render(d)}catch(e){$('error').textContent='تعذر جلب آخر الأسعار حالياً. أعد المحاولة بعد قليل.';$('error').style.display='block'}}
 renderFuel('baghdad');refreshFuelChecks();refresh();setInterval(refresh,60000);setInterval(refreshFuelChecks,60*60*1000);
 if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=25',{updateViaCache:'none'}).then(r=>r.update().catch(()=>{})).catch(()=>{})}
 </script>
