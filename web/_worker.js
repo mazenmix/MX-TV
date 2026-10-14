@@ -1,4 +1,6 @@
 const TELEGRAM_URL='https://t.me/s/dollariraqi';
+const IQW_FX_URL='https://iraqsm.com/data/fx.json';
+const IQW_TG_URL='https://t.me/s/iqwealth_rates';
 const KUKH_URL='https://t.me/s/Kukh_alomlat';
 const GAILANY_TG_URL='https://t.me/s/gailany_rates';
 const HATWAN_URL='https://hatwan.co/en';
@@ -225,64 +227,158 @@ async function betaPageResponse(request,env){
   return new Response('MX Exchanger Beta temporarily unavailable',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});
 }
 
+
+/* IQWealth publishes Baghdad/Kifah's parallel-market quote as IQD per USD.
+   Its public feed does NOT guarantee Harithiya separately. Never copy Kifah
+   to Harithiya, nor confuse fetch time with the quote's publication time. */
+function publishedMs(meta){
+  const t=Date.parse(meta?.published_at||meta?.publishedAt||'');
+  return Number.isFinite(t)?t:0;
+}
+function marketState(meta){
+  const ms=publishedMs(meta);
+  if(!ms)return 'unknown';
+  const mins=(Date.now()-ms)/60000;
+  return mins>=-10&&mins<=30&&!meta.stale?'live':'stale';
+}
+function makeMarketMeta(source,source_url,published_at,note,stale){
+  const m={source,source_url,published_at:published_at||'',note:note||'',stale:!!stale};
+  m.state=marketState(m);
+  return m;
+}
+function parseIqwealthFx(json){
+  const root=json?.data||json||{};
+  const quote=root.parallel||root.fx?.parallel||root.usd?.parallel||root.market?.parallel||json?.parallel;
+  if(!quote||typeof quote!=='object')return null;
+  const buy=normalizeUsd100(quote.buy),sell=normalizeUsd100(quote.sell);
+  if(!buy||!sell)return null;
+  const published_at=quote.publishedAt||quote.published_at||quote.updatedAt||root.publishedAt||root.published_at||root.updatedAt||json?.updatedAt||'';
+  // An undated JSON or future-dated rate cannot displace a dated market quote.
+  const ts=Date.parse(published_at);
+  if(!Number.isFinite(ts)||ts>Date.now()+10*60000)return null;
+  return {kifah:{buy,sell},published_at,source:'IQWealth',source_url:'https://iraqsm.com/fx',stale:quote.stale===true};
+}
+function parseIqwealthTelegram(html){
+  const chunks=String(html||'').split('tgme_widget_message_wrap');
+  for(let i=chunks.length-1;i>=0;i--){
+    const raw=chunks[i],txt=stripHtml(raw);
+    if(!/(?:الكفاح|كفاح|Kifah)/i.test(txt))continue;
+    const p=txt.search(/(?:الكفاح|كفاح|Kifah)/i);
+    const segment=txt.slice(p,p+400);
+    const buy=segment.match(/(?:^|\s)(?:الشراء|شراء|Buy)\s*[:=：\-]?\s*([0-9٠-٩۰-۹.,،]+)/i);
+    const sell=segment.match(/(?:^|\s)(?:البيع|بيع|Sell)\s*[:=：\-]?\s*([0-9٠-٩۰-۹.,،]+)/i);
+    const dm=raw.match(/datetime=["']([^"']+)["']/i);
+    const b=buy?normalizeUsd100(buy[1]):null,s=sell?normalizeUsd100(sell[1]):null;
+    if(!b||!s||!dm||!Number.isFinite(Date.parse(dm[1])))continue;
+    return {kifah:{buy:b,sell:s},published_at:dm[1],source:'Telegram @iqwealth_rates',source_url:IQW_TG_URL};
+  }
+  return null;
+}
+async function fetchIqwealthFx(){
+  const res=await fetch(IQW_FX_URL,{headers:{'Accept':'application/json','User-Agent':UA},
+    redirect:'follow',cf:{cacheTtl:90,cacheEverything:true}});
+  if(!res.ok)throw new Error('IQWealth HTTP '+res.status);
+  return parseIqwealthFx(await res.json());
+}
+
 async function marketResponse(){
   const old=await fallbackData();
+  const originalMeta=old.usd_meta||{};
   const data={
-    kifah:old.kifah||{},harithiya:old.harithiya||{},kukh:old.kukh||{},gold:old.gold||{},usd_meta:old.usd_meta||{},usd_source_time:old.usd_source_time||'',
-    kukh_rates:old.kukh_rates||{},gailany:old.gailany||{},hatwan:old.hatwan||{},cbi:{source:'البنك المركزي العراقي',source_url:CBI_URL,rates:{USD:null}},updated_at:new Date().toISOString(),error:''
+    kifah:old.kifah||{},harithiya:old.harithiya||{},kukh:old.kukh||{},gold:old.gold||{},
+    usd_meta:{...originalMeta},harithiya_meta:{...(old.harithiya_meta||originalMeta)},
+    usd_source_time:old.usd_source_time||'',kukh_rates:old.kukh_rates||{},
+    gailany:old.gailany||{},hatwan:old.hatwan||{},
+    cbi:{source:'البنك المركزي العراقي',source_url:CBI_URL,rates:{USD:null}},
+    updated_at:new Date().toISOString(),error:''
   };
   const errors=[];
-  const jobs=await Promise.allSettled([fetchText(TELEGRAM_URL),fetchText(KUKH_URL),fetchText(GAILANY_TG_URL),fetchText(HATWAN_URL),fetchCbiText(),fetchText(GOLD_URL)]);
-
+  // Rate sources are independent; failed sources must not erase working ones.
+  const jobs=await Promise.allSettled([
+    fetchText(TELEGRAM_URL),fetchIqwealthFx(),fetchText(IQW_TG_URL),
+    fetchText(KUKH_URL),fetchText(GAILANY_TG_URL),
+    fetchText(HATWAN_URL),fetchCbiText(),fetchText(GOLD_URL)
+  ]);
   if(jobs[0].status==='fulfilled'){
     const tg=parseTelegramBaghdad(jobs[0].value);
     if(tg){
-      data.kifah=tg.kifah; data.harithiya=tg.harithiya; data.usd_source_time=tg.source_time||'';
-      const state=ageMinutes(tg.published_at)<=90?'live':'stale';
-      data.usd_meta={source:'Telegram @dollariraqi',source_url:TELEGRAM_URL,published_at:tg.published_at,state,note:state==='live'?'Telegram @dollariraqi · مباشر':'Telegram @dollariraqi · آخر منشور متاح من القناة',source_time:tg.source_time||''};
+      data.harithiya=tg.harithiya;
+      data.harithiya_meta=makeMarketMeta(tg.source,tg.source_url,tg.published_at,'الحارثية · Telegram @dollariraqi',false);
+      if(publishedMs({published_at:tg.published_at})>=publishedMs(data.usd_meta)){
+        data.kifah=tg.kifah;
+        data.usd_meta=makeMarketMeta(tg.source,tg.source_url,tg.published_at,'الكفاح · Telegram @dollariraqi',false);
+        data.usd_source_time=tg.source_time||'';
+      }
     }else errors.push('usd-telegram-parse');
   }else errors.push('usd-telegram');
 
-  if(jobs[1].status==='fulfilled'){
-    const k=parseKukhLatest(jobs[1].value);
-    if(k){data.kukh={buy:k.buy,sell:k.sell,source:k.source,source_url:k.source_url,published_at:k.published_at};data.kukh_rates=k.rates||{};} else errors.push('kukh-parse');
-  }else errors.push('kukh');
+  if(jobs[1].status==='fulfilled'&&jobs[1].value){
+    const iqw=jobs[1].value;
+    if(publishedMs({published_at:iqw.published_at})>=publishedMs(data.usd_meta)){
+      data.kifah=iqw.kifah;
+      data.usd_meta=makeMarketMeta('IQWealth',iqw.source_url,iqw.published_at,'بورصة الكفاح · IQWealth',iqw.stale);
+      data.usd_source_time='';
+    }
+  }else errors.push('iqwealth-fx');
 
   if(jobs[2].status==='fulfilled'){
-    const g=parseGailanyLatest(jobs[2].value);
-    if(g) data.gailany={...g,checked_at:new Date().toISOString()}; else errors.push('gailany-parse');
-  }else errors.push('gailany');
+    const tg=parseIqwealthTelegram(jobs[2].value);
+    if(tg&&publishedMs({published_at:tg.published_at})>publishedMs(data.usd_meta)){
+      data.kifah=tg.kifah;
+      data.usd_meta=makeMarketMeta(tg.source,tg.source_url,tg.published_at,'بورصة الكفاح · @iqwealth_rates',false);
+      data.usd_source_time='';
+    }
+  }else errors.push('iqwealth-telegram');
+
+  // The fallback's updated_at represents a fetch, not a new market quote.
+  data.usd_meta.state=marketState(data.usd_meta);
+  data.harithiya_meta.state=marketState(data.harithiya_meta);
+  if(!data.usd_meta.published_at)data.usd_meta.state='unknown';
+  if(!data.harithiya_meta.published_at)data.harithiya_meta.state='unknown';
 
   if(jobs[3].status==='fulfilled'){
-    const h=parseHatwan(jobs[3].value);
-    if(h?.rates?.USD){const checked_at=new Date().toISOString();data.hatwan={...h,checked_at,published_at:hatwanPublishedAt(h.updated,checked_at)};} else errors.push('hatwan-parse');
-  }else errors.push('hatwan');
+    const k=parseKukhLatest(jobs[3].value);
+    if(k){data.kukh={buy:k.buy,sell:k.sell,source:k.source,source_url:k.source_url,published_at:k.published_at};data.kukh_rates=k.rates||{};}
+    else errors.push('kukh-parse');
+  }else errors.push('kukh');
 
   if(jobs[4].status==='fulfilled'){
-    const c=parseCbi(jobs[4].value);
-    if(c?.rates?.USD!==null && c?.rates?.USD!==undefined) data.cbi=c; else errors.push('cbi-parse');
-  }else errors.push('cbi');
+    const g=parseGailanyLatest(jobs[4].value);
+    if(g)data.gailany={...g,checked_at:new Date().toISOString()};else errors.push('gailany-parse');
+  }else errors.push('gailany');
 
   if(jobs[5].status==='fulfilled'){
-    const txt=stripHtml(jobs[5].value);
-    let k21=getGold(txt,'21');
-    let k24=getGold(txt,'24');
+    const h=parseHatwan(jobs[5].value);
+    if(h?.rates?.USD){const checked_at=new Date().toISOString();data.hatwan={...h,checked_at,published_at:hatwanPublishedAt(h.updated,checked_at)};}
+    else errors.push('hatwan-parse');
+  }else errors.push('hatwan');
+
+  if(jobs[6].status==='fulfilled'){
+    const c=parseCbi(jobs[6].value);
+    if(c?.rates?.USD!==null&&c?.rates?.USD!==undefined)data.cbi=c;else errors.push('cbi-parse');
+  }else errors.push('cbi');
+
+  if(jobs[7].status==='fulfilled'){
+    const txt=stripHtml(jobs[7].value);
+    let k21=getGold(txt,'21'),k24=getGold(txt,'24');
     let k18=k24?Math.round(k24*0.75):(k21?Math.round(k21*(18/21)):0);
-    if(!k24 && k21) k24=Math.round(k21*(24/21));
-    if(k21 && k24) data.gold={k18,k21,k24}; else errors.push('gold-parse');
+    if(!k24&&k21)k24=Math.round(k21*(24/21));
+    if(k21&&k24)data.gold={k18,k21,k24};else errors.push('gold-parse');
   }else errors.push('gold');
 
-  // The API always returns IQD per 100 USD as complete integer dinars.
-  // Normalize fallback quotes as well as live sources, without touching other currencies.
+  // Every USD quote is a full IQD / 100 USD integer, never a truncated '164'.
   for(const key of ['kifah','harithiya','kukh'])data[key]=normalizeUsdPair(data[key])||{};
   if(data.kukh_rates?.USD)data.kukh_rates.USD=normalizeUsdPair(data.kukh_rates.USD);
   if(data.gailany?.rates?.USD)data.gailany.rates.USD=normalizeUsdPair(data.gailany.rates.USD);
   if(data.hatwan?.rates?.USD)data.hatwan.rates.USD=normalizeUsdPair(data.hatwan.rates.USD);
-  data.updated_at=new Date().toISOString();
+  data.updated_at=new Date().toISOString(); // checked_at only, not a quote's age
   data.error=errors.join(', ');
-  return new Response(JSON.stringify(data,null,2),{status:200,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Access-Control-Allow-Origin':'*'}});
+  return new Response(JSON.stringify(data),{status:200,headers:{
+    'Content-Type':'application/json; charset=utf-8',
+    'Cache-Control':'no-store, no-cache, must-revalidate, max-age=0',
+    'Pragma':'no-cache','Access-Control-Allow-Origin':'*'
+  }});
 }
-
 
 /* MX Fuel: independently check published price references, never invent new prices. */
 const FUEL_PRICE_REFERENCES={
