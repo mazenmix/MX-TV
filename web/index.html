@@ -475,6 +475,25 @@ body{display:block;min-height:100dvh}
   .hero.clean-hero .mainprice{top:123px!important;font-size:clamp(45px,12.5vw,56px)!important}
   .hero.clean-hero .iqd{top:193px!important;font-size:17px!important}
 }
+
+/* Green pulsing direct-data monitoring badge. Published quote time remains separate. */
+.live.ready{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  direction:rtl!important;gap:9px!important;
+  background:linear-gradient(135deg,#103e2c,#0b2e23)!important;
+  color:#6af2ab!important;border:1px solid rgba(78,236,150,.68)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 0 18px rgba(16,194,104,.17)!important;
+}
+.live.ready i{
+  position:relative;flex:none;background:#36f49a!important;width:9px!important;height:9px!important;
+  border-radius:50%!important;box-shadow:0 0 0 2px rgba(54,244,154,.14),0 0 12px #36f49a!important;
+  animation:mx-live-pulse 1.65s ease-in-out infinite!important;
+}
+@keyframes mx-live-pulse{
+  0%,100%{box-shadow:0 0 0 2px rgba(54,244,154,.15),0 0 8px rgba(54,244,154,.75);opacity:1}
+  50%{box-shadow:0 0 0 8px rgba(54,244,154,0),0 0 19px rgba(54,244,154,1);opacity:.82}
+}
+@media(prefers-reduced-motion:reduce){.live.ready i{animation:none!important}}
 </style>
 </head>
 <body>
@@ -483,7 +502,7 @@ body{display:block;min-height:100dvh}
   <div class="brand abs">أسعار الصرف اليوم</div>
   <a class="betaLink abs" href="./beta.html">النسخة الموسعة هنا</a>
   <a class="betaLink converterButton abs" href="./converter.html">محول العملة السريع</a>
-  <div class="live abs" id="marketState"><i></i><span id="marketStateText">تحميل...</span></div>
+  <div class="live abs" id="marketState" aria-label="حالة التحديث التلقائي"><i aria-hidden="true"></i><span id="marketStateText">الاتصال...</span></div>
   <section class="hero abs clean-hero"><div class="accent abs"></div><div class="heroar abs">السعر الأعلى الآن لكل 100 دولار</div><div class="mainprice abs" id="highSell">—</div></section>
   
   
@@ -530,8 +549,10 @@ function renderUsdMeta(d){
   const ms=Date.parse(meta.published_at||'');
   const age=Number.isFinite(ms)?(Date.now()-ms)/60000:Infinity;
   const live=meta.state==='live'&&age>=-10&&age<=30;
-  box.classList.toggle('ready',live);
-  $('marketStateText').textContent=live?'LIVE':'آخر سعر';
+  // "مباشر" indicates the automatic monitoring connection is active,
+  // not that a new source quote was published this minute.
+  box.classList.add('ready');
+  $('marketStateText').textContent='مباشر';
   $('updated').textContent='آخر تحديث: '+(Number.isFinite(ms)?clockFromIso(meta.published_at):'غير متوفر');
   $('err').textContent='';
 }
@@ -560,7 +581,7 @@ async function refresh(){
     render(d);
   }catch(e){
     $('marketState').classList.remove('ready');
-    $('marketStateText').textContent=lastData?'STALE':'تعذر';
+    $('marketStateText').textContent='غير متصل';
     $('err').textContent=lastData?'تعذّر جلب تحديث جديد':'تعذّر تحميل الأسعار، حاول مرة ثانية';
     if(!lastData)$('updated').textContent='آخر تحديث: غير متوفر';
   }finally{b.disabled=false;b.textContent=old;b.style.background='#2470a8'}
