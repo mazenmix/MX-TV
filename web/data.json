@@ -8,15 +8,15 @@
     "sell": 164400
   },
   "kukh": {
-    "buy": 161500,
-    "sell": 162500,
+    "buy": 166250,
+    "sell": 166750,
     "source": "https://t.me/s/Kukh_alomlat",
-    "published_at": "2026-10-06T16:45:15+00:00"
+    "published_at": "2026-10-16T09:43:27+00:00"
   },
   "gold": {
-    "k18": 841042,
-    "k21": 981216,
-    "k24": 1121390
+    "k18": 839875,
+    "k21": 979854,
+    "k24": 1119833
   },
   "usd_meta": {
     "source": "Telegram @dollariraqi",
@@ -27,6 +27,6 @@
     "source_time": "13:50"
   },
   "usd_source_time": "13:50",
-  "updated_at": "2026-10-16T09:18:33.145317+03:00",
+  "updated_at": "2026-10-16T13:09:42.875881+03:00",
   "error": ""
 }
