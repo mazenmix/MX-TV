@@ -503,7 +503,7 @@ body{display:block;min-height:100dvh}
   <a class="betaLink abs" href="./beta.html">النسخة الموسعة</a>
   <a class="betaLink converterButton abs" href="https://mxmoney.pages.dev/" aria-label="فتح محول العملات السريع">محول العملات السريع</a>
   <div class="live abs" id="marketState" aria-label="حالة التحديث التلقائي"><i aria-hidden="true"></i><span id="marketStateText">الاتصال...</span></div>
-  <section class="hero abs clean-hero"><div class="accent abs"></div><div class="heroar abs">السعر الأعلى الآن لكل 100 دولار</div><div class="mainprice abs" id="highSell">—</div></section>
+  <section class="hero abs clean-hero"><div class="accent abs"></div><div class="heroar abs">سعر بيع الكفاح لكل 100 دولار</div><div class="mainprice abs" id="highSell">—</div></section>
   
   
   
@@ -511,7 +511,7 @@ body{display:block;min-height:100dvh}
   <section class="goldcard g18"><div class="kbadge abs">18K</div><div class="kar abs">عيار 18</div><div class="gprice abs" id="g18">—</div><div class="giqd abs">د.ع</div></section>
   <section class="goldcard g21"><div class="kbadge abs">21K</div><div class="kar abs">عيار 21</div><div class="gprice abs" id="g21">—</div><div class="giqd abs">د.ع</div></section>
   <section class="goldcard g24"><div class="kbadge abs">24K</div><div class="kar abs">عيار 24</div><div class="gprice abs" id="g24">—</div><div class="giqd abs">د.ع</div></section>
-  <section class="footer abs"><div class="updated abs" id="updated">آخر تحديث: —</div><div class="sig abs">MazenmiX</div><button class="refresh abs" id="refresh">تحديث الأسعار</button></section><div class="err abs" id="err"></div>
+  <section class="footer abs"><div class="updated abs" id="updated">آخر تحديث: —</div><div class="sig abs">MazenmiX · <a href="https://iraqsm.com/en" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline" title="مصدر الأسعار">IQWealth</a></div><button class="refresh abs" id="refresh">تحديث الأسعار</button></section><div class="err abs" id="err"></div>
 </div></div>
 <script>
 function normalizeUsd100(value) {
@@ -551,15 +551,14 @@ function renderUsdMeta(d){
   const live=meta.state==='live'&&age>=-10&&age<=30;
   // "مباشر" indicates the automatic monitoring connection is active,
   // not that a new source quote was published this minute.
-  box.classList.add('ready');
-  $('marketStateText').textContent='مباشر';
+  $('marketStateText').textContent=meta.stale?'بيانات متأخرة':'تحديث تلقائي';
+  box.classList.toggle('ready',!meta.stale);
   $('updated').textContent='آخر تحديث: '+(Number.isFinite(ms)?clockFromIso(meta.published_at):'غير متوفر');
   $('err').textContent='';
 }
 function render(d){
-  // The unified Baghdad quote is selected upstream from dated FX sources.
-  // No stale Harithiya or Kukh values can override the Baghdad headline.
-  const price=normalizeUsd100(d?.kifah?.buy);
+  // The Baghdad Kifah SELL quote comes exclusively from IQWealth's public FX JSON.
+  const price=normalizeUsd100(d?.kifah?.sell);
   if(!price)throw new Error('No validated Baghdad quote');
   $('highSell').textContent=fmt(price);
   for(const [id,key] of [['g18','k18'],['g21','k21'],['g24','k24']]){
@@ -577,7 +576,7 @@ async function refresh(){
     const r=await fetch(DATA_URL+'?t='+Date.now(),{cache:'no-store'});
     if(!r.ok)throw new Error('HTTP '+r.status);
     const d=await r.json();
-    if(!normalizeUsd100(d.kifah?.buy)||!normalizeUsd100(d.kifah?.sell))throw new Error('incomplete Kifah quote');
+    if(!normalizeUsd100(d.kifah?.sell))throw new Error('IQWealth SELL quote unavailable');
     render(d);
   }catch(e){
     $('marketState').classList.remove('ready');
@@ -587,7 +586,7 @@ async function refresh(){
   }finally{b.disabled=false;b.textContent=old;b.style.background='#2470a8'}
 }
 $('refresh').addEventListener('click',refresh);refresh();setInterval(refresh,60000);
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=26',{updateViaCache:'none'}).then(reg=>reg.update().catch(()=>{})).catch(()=>{})}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=27',{updateViaCache:'none'}).then(reg=>reg.update().catch(()=>{})).catch(()=>{})}
 </script>
 </body>
 </html>
