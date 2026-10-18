@@ -73,6 +73,17 @@ async function marketResponse(){
   return Response.json(payload,{headers:{'Cache-Control':'no-store','Access-Control-Allow-Origin':'*'}});
 }
 async function betaPageResponse(request,env){
+  // GitHub hosts only the expanded HTML page, not prices. All price calls
+  // inside this page go to /api/market, backed solely by IQWealth.
+  try{
+    const r=await fetch('https://raw.githubusercontent.com/mazenmix/MX-TV/main/web/beta.html?t='+Date.now(),
+      {cache:'no-store',headers:{Accept:'text/html','Cache-Control':'no-cache'}});
+    if(r.ok){
+      const html=await r.text();
+      return new Response(html,{status:200,headers:{'Content-Type':'text/html; charset=utf-8',
+        'Cache-Control':'no-store, no-cache, must-revalidate, max-age=0'}});
+    }
+  }catch(_){}
   try{
     const u=new URL(request.url);
     u.pathname='/beta.html';u.search='';
