@@ -1,32 +1,72 @@
 {
   "kifah": {
-    "buy": 168850,
-    "sell": 168900
-  },
-  "harithiya": {
-    "buy": 168700,
-    "sell": 168800
-  },
-  "kukh": {
     "buy": 168500,
-    "sell": 168900,
-    "source": "https://t.me/s/Kukh_alomlat",
-    "published_at": "2026-10-18T17:11:55+00:00"
+    "sell": 168500
   },
+  "harithiya": {},
+  "kukh": {},
+  "kukh_rates": {},
   "gold": {
-    "k18": 848864,
-    "k21": 990342,
-    "k24": 1131819
+    "k24": 936977,
+    "k21": 819855,
+    "k18": 702734
+  },
+  "gold_meta": {
+    "source": "IQWealth",
+    "source_url": "https://iraqsm.com/gold",
+    "as_of": "2026/10/18",
+    "generated_at": "2026-10-18T19:04:42.704Z"
+  },
+  "currencies": {
+    "perUsd": {
+      "USD": 1,
+      "EUR": 0.889614,
+      "GBP": 0.750845,
+      "TRY": 49.526995,
+      "AED": 3.6725,
+      "SAR": 3.75,
+      "KWD": 0.310445,
+      "JOD": 0.709,
+      "QAR": 3.64,
+      "BHD": 0.376,
+      "OMR": 0.384497,
+      "EGP": 53.459696,
+      "IRR": 1685077.186678,
+      "SYP": 121.876413,
+      "LBP": 89500,
+      "CNY": 6.702912,
+      "JPY": 158.001167,
+      "INR": 95.075677,
+      "PKR": 276.990158,
+      "RUB": 83.71924,
+      "CHF": 0.824614,
+      "CAD": 1.414714,
+      "AUD": 1.439806,
+      "SEK": 9.911257,
+      "NOK": 9.439231,
+      "MYR": 4.081627,
+      "KRW": 1334.772994
+    },
+    "asOf": "2026-10-18",
+    "generatedAt": "2026-10-18T19:18:06.762Z",
+    "source": "IQWealth"
   },
   "usd_meta": {
-    "source": "Telegram @dollariraqi",
-    "source_url": "https://t.me/s/dollariraqi",
-    "published_at": "2026-10-18T08:26:34+00:00",
-    "state": "stale",
-    "note": "المصدر الوحيد: Telegram @dollariraqi · آخر منشور متاح من القناة",
-    "source_time": "11:25"
+    "source": "IQWealth",
+    "source_url": "https://iraqsm.com/fx",
+    "published_at": "2026-10-18T12:27:07.000Z",
+    "stale": false,
+    "note": "Kifah sell (IQWealth)"
   },
-  "usd_source_time": "11:25",
-  "updated_at": "2026-10-18T21:53:10.342905+03:00",
-  "error": ""
+  "cbi": {
+    "source": "IQWealth",
+    "rates": {
+      "USD": 1510
+    },
+    "confirmed": "2026-10-07"
+  },
+  "source": "IQWealth",
+  "source_url": "https://iraqsm.com/en",
+  "updated_at": "2026-10-18T19:25:38.315Z",
+  "as_of": "2026-10-18"
 }
