@@ -1,298 +1,55 @@
-import json, re, html as htmlmod, urllib.request
-from datetime import datetime
-from zoneinfo import ZoneInfo
+#!/usr/bin/env python3
+"""Scheduled IQWealth snapshot for MX Dollar. No secondary market sources."""
+import json
+import urllib.request
 from pathlib import Path
-from urllib.parse import urljoin, unquote
 
-UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/153 Safari/537.36"
+BASE = "https://iraqsm.com/data/"
 OUT = Path(__file__).with_name("data.json")
-BAGHDAD = ZoneInfo("Asia/Baghdad")
-TELEGRAM_URL = "https://t.me/s/dollariraqi"
-SHFAQ_ECON = "https://api.shafaq.com/en/tags/Baghdad"
-ALSUMARIA_ECON = "https://www.alsumaria.tv/economy-news"
-ARABRATES_URL = "https://arabrates.net/iq/currency/usd/"
 
-def fetch(url):
-    req = urllib.request.Request(url, headers={
-        "User-Agent": UA,
-        "Accept-Language": "ar-IQ,ar;q=0.9,en;q=0.8",
-        "Cache-Control": "no-cache",
-    })
-    with urllib.request.urlopen(req, timeout=20) as r:
-        return r.read(5*1024*1024).decode("utf-8","replace")
+def load(name):
+    request = urllib.request.Request(BASE + name + ".json", headers={"Accept": "application/json", "User-Agent": "MazenmiX/1.0"})
+    with urllib.request.urlopen(request, timeout=20) as response:
+        payload = json.load(response)
+    if payload.get("publisher") != "IQWealth (iraqsm.com)":
+        raise ValueError(f"Unexpected {name} feed publisher")
+    return payload
 
-def strip(s):
-    s = re.sub(r"(?is)<script.*?</script>|<style.*?</style>", " ", s)
-    s = re.sub(r"(?s)<[^>]*>", "\n", s)
-    s = htmlmod.unescape(s).replace("\u200f"," ").replace("\u200e"," ")
-    return re.sub(r"\s+"," ",s).strip()
-
-def norm_price(s):
-    s=s.strip().replace("،",",")
-    # 1,580.00 -> 1580.00
-    if "," in s and "." in s:
-        s=s.replace(",","")
-    elif "," in s:
-        return int(s.replace(",",""))
-    if "." in s:
-        a,b=s.rsplit(".",1)
-        if len(b)==2:
-            return int(round(float(s)*100))
-        return int(s.replace(".",""))
-    n=int(s)
-    return n*100 if 1000 <= n <= 9999 else n
-
-def iso_dt(s):
-    if not s: return None
-    try:
-        return datetime.fromisoformat(s.replace("Z","+00:00"))
-    except Exception:
-        return None
-
-def age_minutes(iso):
-    d=iso_dt(iso)
-    if not d: return 10**9
-    if d.tzinfo is None: d=d.replace(tzinfo=BAGHDAD)
-    return (datetime.now(BAGHDAD)-d.astimezone(BAGHDAD)).total_seconds()/60
-
-def same_baghdad_day(iso):
-    d=iso_dt(iso)
-    if not d: return False
-    if d.tzinfo is None: d=d.replace(tzinfo=BAGHDAD)
-    return d.astimezone(BAGHDAD).date()==datetime.now(BAGHDAD).date()
-
-def parse_market(text,name):
-    for p in [
-        rf"{name}\s*([0-9]{{3,4}}(?:\.[0-9]{{2}})?)\s*\|\s*([0-9]{{3,4}}(?:\.[0-9]{{2}})?)",
-        rf"{name}\s*([0-9]{{1,3}}(?:[,،][0-9]{{3}}))\s*\|\s*([0-9]{{1,3}}(?:[,،][0-9]{{3}}))",
-    ]:
-        m=re.search(p,text)
-        if m:
-            return {"buy":norm_price(m.group(1)),"sell":norm_price(m.group(2))}
-    return None
-
-def parse_telegram_baghdad(body):
-    chunks=body.split("tgme_widget_message_wrap")
-    for raw in reversed(chunks):
-        txt=strip(raw)
-        if "كفاح" not in txt or "حارثية" not in txt:
-            continue
-        k=parse_market(txt,"كفاح")
-        h=parse_market(txt,"حارثية")
-        if not (k and h):
-            continue
-        dm=re.search(r'datetime="([^"]+)"',raw)
-        tm=re.search(r"تحديث\s*([0-9]{1,2}:[0-9]{2})",txt)
-        return {
-            "kifah":k,
-            "harithiya":h,
-            "published_at":dm.group(1) if dm else "",
-            "source_time":tm.group(1) if tm else "",
-            "source":"Telegram @dollariraqi",
-            "source_url":TELEGRAM_URL,
-        }
-    return None
-
-def anchor_candidates(body, base, must_words):
-    out=[]
-    for href,inner in re.findall(r'(?is)<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>',body):
-        title=strip(inner)
-        decoded=unquote(href)
-        hay=(title+" "+decoded).lower()
-        if all(w in hay for w in must_words):
-            url=urljoin(base,htmlmod.unescape(href))
-            if url not in out: out.append(url)
-    return out
-
-def parse_article_iso(body):
-    for p in [
-        r'(20\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?(?:Z|[+-]\d\d:\d\d))',
-        r'(20\d\d-\d\d-\d\d)\s*[|]\s*(\d\d:\d\d)',
-    ]:
-        m=re.search(p,body)
-        if m:
-            if len(m.groups())==1: return m.group(1)
-            return m.group(1)+"T"+m.group(2)+":00+03:00"
-    return ""
-
-def parse_common_baghdad_price(txt):
-    pats=[
-        r"Al[- ]Kifah\s+and\s+Al[- ]Harithiya[^0-9]{0,220}([0-9]{3}[,،][0-9]{3})",
-        r"Al[- ]Kifah\s+and\s+Al[- ]Harithiya[^0-9]{0,220}([0-9]{6})",
-        r"بورصتي\s+الكفاح\s+والحارثية[^0-9]{0,180}([0-9]{3}[,،][0-9]{3})",
-        r"بورصتي\s+الكفاح\s+والحارثية[^0-9]{0,180}([0-9]{6})",
-        r"بورصتي\s+الكفاح\s+والحارثية[^0-9]{0,180}([0-9]{3,4}(?:\.[0-9]{2})?)",
-    ]
-    for p in pats:
-        m=re.search(p,txt,re.I)
-        if m:
-            n=norm_price(m.group(1))
-            if 120000<=n<=220000:
-                return n
-    return 0
-
-def latest_shafaq():
-    try:
-        listing=fetch(SHFAQ_ECON)
-        candidates=anchor_candidates(listing,"https://api.shafaq.com",["dollar","baghdad"])
-        if not candidates:
-            candidates=anchor_candidates(listing,"https://api.shafaq.com",["usd","baghdad"])
-        for url in candidates[:12]:
-            body=fetch(url)
-            txt=strip(body)
-            price=parse_common_baghdad_price(txt)
-            published=parse_article_iso(body)
-            if price:
-                return {
-                    "kifah":{"buy":price,"sell":price},
-                    "harithiya":{"buy":price,"sell":price},
-                    "published_at":published,
-                    "source":"Shafaq News",
-                    "source_url":url,
-                    "note":"سعر بورصتي الكفاح والحارثية المنشور من مراسل شفق",
-                }
-    except Exception:
-        pass
-    return None
-
-def latest_alsumaria():
-    try:
-        listing=fetch(ALSUMARIA_ECON)
-        candidates=anchor_candidates(listing,"https://www.alsumaria.tv",["الدولار"])
-        for url in candidates[:15]:
-            body=fetch(url)
-            txt=strip(body)
-            if "الكفاح" not in txt or "الحارثية" not in txt: continue
-            price=parse_common_baghdad_price(txt)
-            published=parse_article_iso(body)
-            if price:
-                return {
-                    "kifah":{"buy":price,"sell":price},
-                    "harithiya":{"buy":price,"sell":price},
-                    "published_at":published,
-                    "source":"Alsumaria",
-                    "source_url":url,
-                    "note":"سعر بورصتي الكفاح والحارثية المنشور من السومرية",
-                }
-    except Exception:
-        pass
-    return None
-
-def arabrates_daily():
-    try:
-        body=fetch(ARABRATES_URL)
-        txt=strip(body)
-        bm=re.search(r"شراء السوق[^0-9]{0,120}([0-9]{1,3}(?:,[0-9]{3})(?:\.[0-9]{1,2})?|[0-9]{3,4}(?:\.[0-9]{1,2})?)",txt)
-        sm=re.search(r"بيع السوق[^0-9]{0,120}([0-9]{1,3}(?:,[0-9]{3})(?:\.[0-9]{1,2})?|[0-9]{3,4}(?:\.[0-9]{1,2})?)",txt)
-        if not (bm and sm): return None
-        buy=norm_price(bm.group(1)); sell=norm_price(sm.group(1))
-        if not (120000<=buy<=220000 and 120000<=sell<=220000): return None
-        now=datetime.now(BAGHDAD)
-        return {
-            "kifah":{"buy":buy,"sell":sell},
-            "harithiya":{"buy":buy,"sell":sell},
-            "published_at":now.replace(hour=0,minute=0,second=0,microsecond=0).isoformat(),
-            "source":"ArabRates",
-            "source_url":ARABRATES_URL,
-            "note":"تحديث يومي لسوق الكفاح والحارثية",
-        }
-    except Exception:
-        return None
-
-def choose_usd():
-    try:
-        tg=parse_telegram_baghdad(fetch(TELEGRAM_URL))
-    except Exception:
-        tg=None
-    if tg:
-        state="live" if age_minutes(tg.get("published_at",""))<=90 else "stale"
-        note="المصدر الوحيد: Telegram @dollariraqi"
-        if state=="stale":
-            note+=" · آخر منشور متاح من القناة"
-        meta={
-            "source":"Telegram @dollariraqi",
-            "source_url":TELEGRAM_URL,
-            "published_at":tg.get("published_at",""),
-            "state":state,
-            "note":note,
-            "source_time":tg.get("source_time",""),
-        }
-        return tg["kifah"],tg["harithiya"],meta
-    return None,None,{
-        "source":"Telegram @dollariraqi",
-        "source_url":TELEGRAM_URL,
-        "published_at":"",
-        "state":"stale",
-        "note":"تعذر جلب آخر منشور من قناة الدولار العراقي",
-        "source_time":"",
+def main():
+    fx = load("fx")
+    gold = load("gold")
+    currencies = load("currencies")
+    quote = fx.get("parallel", {})
+    buy, sell = float(quote["buy"]), float(quote["sell"])
+    published = quote["publishedAt"]
+    if not (800 <= buy <= 3500 and 800 <= sell <= 3500 and published):
+        raise ValueError("Invalid IQWealth cash quote")
+    karats = {}
+    for row in gold.get("gramByCarat", []):
+        k = int(row["karat"])
+        if k in (18, 21, 24) and 100000 < float(row["mithqalIqd"]) < 3000000:
+            karats["k" + str(k)] = round(float(row["mithqalIqd"]))
+    per_usd = {"USD": 1}
+    per_usd.update({k: float(v) for k, v in currencies.get("perUsd", {}).items()
+                   if len(k) == 3 and k.isupper() and 0 < float(v) < 1e9 and k != "IQD"})
+    data = {
+        "kifah": {"buy": round(buy * 100), "sell": round(sell * 100)},
+        "harithiya": {}, "kukh": {}, "kukh_rates": {},
+        "gold": karats,
+        "gold_meta": {"source": "IQWealth", "source_url": "https://iraqsm.com/gold",
+                      "as_of": gold.get("asOf"), "generated_at": gold.get("generatedAt")},
+        "currencies": {"perUsd": per_usd, "asOf": currencies.get("asOf"),
+                       "generatedAt": currencies.get("generatedAt"), "source": "IQWealth"},
+        "usd_meta": {"source": "IQWealth", "source_url": "https://iraqsm.com/fx",
+                     "published_at": published, "stale": quote.get("stale", False),
+                     "note": "Kifah sell (IQWealth)"},
+        "cbi": {"source": "IQWealth", "rates": {"USD": fx.get("official", {}).get("cbi")},
+                "confirmed": fx.get("official", {}).get("confirmed")},
+        "source": "IQWealth", "source_url": "https://iraqsm.com/en",
+        "updated_at": fx.get("generatedAt"), "as_of": fx.get("asOf")
     }
+    OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"IQWealth Kifah SELL: {sell} IQD/USD · published {published}")
 
-
-def parse_kukh_latest(body):
-    blocks=body.split("tgme_widget_message_wrap")
-    for raw in reversed(blocks):
-        txt=strip(raw)
-        if "سعر الان" not in txt and "سعر الصرف" not in txt:
-            continue
-        sm=re.search(r"البيع[\.\s]*([0-9]{3}(?:[,،][0-9]{3}))",txt)
-        bm=re.search(r"(?:الشراء|لشراء)[\.\s]*([0-9]{3}(?:[,،][0-9]{3}))",txt)
-        if sm and bm:
-            sell=int(sm.group(1).replace(",","").replace("،",""))
-            buy=int(bm.group(1).replace(",","").replace("،",""))
-            if 120000<=buy<=220000 and 120000<=sell<=220000:
-                tm=re.search(r'datetime="([^"]+)"',raw)
-                return {"buy":buy,"sell":sell,"source":"https://t.me/s/Kukh_alomlat","published_at":tm.group(1) if tm else ""}
-    return None
-
-def get_gold(txt,k):
-    m=re.search(rf"مثقال ذهب عيار\s*{k}[^0-9]{{0,100}}([0-9]{{1,3}}(?:,[0-9]{{3}}){{1,2}})\s*د\.ع",txt)
-    return int(m.group(1).replace(",","")) if m else 0
-
-old={}
-if OUT.exists():
-    try: old=json.loads(OUT.read_text(encoding="utf-8"))
-    except Exception: old={}
-
-errors=[]
-data={
-    "kifah":old.get("kifah",{}),
-    "harithiya":old.get("harithiya",{}),
-    "kukh":old.get("kukh",{}),
-    "gold":old.get("gold",{}),
-    "usd_meta":old.get("usd_meta",{}),
-    "usd_source_time":old.get("usd_source_time",""),
-}
-
-try:
-    k,h,meta=choose_usd()
-    if k and h:
-        data["kifah"]=k
-        data["harithiya"]=h
-        data["usd_meta"]=meta
-        data["usd_source_time"]=meta.get("source_time","")
-    else:
-        errors.append("usd-telegram")
-except Exception as e:
-    errors.append("usd:"+type(e).__name__)
-
-try:
-    kr=parse_kukh_latest(fetch("https://t.me/s/Kukh_alomlat"))
-    if kr: data["kukh"]=kr
-    else: errors.append("kukh-parse")
-except Exception as e:
-    errors.append("kukh:"+type(e).__name__)
-
-try:
-    gtxt=strip(fetch("https://mithqaly.com/%D8%A7%D8%B3%D8%B9%D8%A7%D8%B1-%D8%A7%D9%84%D8%B0%D9%87%D8%A8/"))
-    k21=get_gold(gtxt,"21"); k24=get_gold(gtxt,"24")
-    k18=round(k24*0.75) if k24 else (round(k21*(18/21)) if k21 else 0)
-    if not k24 and k21: k24=round(k21*(24/21))
-    if k21 and k24: data["gold"]={"k18":k18,"k21":k21,"k24":k24}
-    else: errors.append("gold-parse")
-except Exception as e:
-    errors.append("gold:"+type(e).__name__)
-
-data["updated_at"]=datetime.now(BAGHDAD).isoformat()
-data["error"]=", ".join(errors) if errors else ""
-OUT.write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-print(json.dumps(data,ensure_ascii=False))
+if __name__ == "__main__":
+    main()
