@@ -266,13 +266,11 @@ html[dir="ltr"] .updated{direction:ltr;justify-content:flex-start}
     <div class="status" id="status">جاري تحميل أسعار العملات…</div>
   </section>
 
-  <footer class="foot">MazenmiX</footer>
+  <footer class="foot">MazenmiX · <a href="https://iraqsm.com/en" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">Data: IQWealth</a></footer>
 </main>
 
 <script>
-const STREET_API='https://raw.githubusercontent.com/mazenmix/MX-Currency-/main/data/rates.json';
-const IRAQ_MARKET_API='/api/market';
-const FX_API='https://open.er-api.com/v6/latest/USD';
+const IRAQ_MARKET_API='/api/market'; // sole market source: IQWealth (iraqsm.com)
 const STREET_KINDS=new Set(['parallel','street','informal','open-market','cash-market','free-market']);
 
 const el={
@@ -375,38 +373,6 @@ function openPicker(side){const panel=side==='from'?el.fromPanel:el.toPanel,btn=
 function setLanguage(next){lang=next;localStorage.setItem('mx_converter_lang',lang);document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';el.langAr.classList.toggle('active',lang==='ar');el.langEn.classList.toggle('active',lang==='en');el.homeLink.querySelector('span:last-child').textContent=T[lang].home;el.subText.textContent=T[lang].sub;el.fromLabel.textContent=T[lang].from;el.toLabel.textContent=T[lang].to;el.fromSearch.placeholder=T[lang].search;el.toSearch.placeholder=T[lang].search;el.swap.setAttribute('aria-label',lang==='ar'?'عكس العملات':'Swap currencies');document.title=(lang==='ar'?'محول العملة السريع':'Quick Currency Converter')+' | MX Exchanger';syncSelected();renderOptions('from',el.fromSearch.value);renderOptions('to',el.toSearch.value);render(lastEdited)}
 function setUpdated(){const d=pairUpdatedDate();el.updatedText.textContent=T[lang].updated+': '+new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(d)}
 function renderMarketLine(){const sources=pairStreetSources(),isStreet=sources.length>0;if([fromCurrency,toCurrency].includes('IQD')&&streetMeta('IQD')){el.marketLine.style.display='flex';el.marketLine.classList.toggle('street',!meta.IQD.stale);el.marketText.textContent=T[lang].iraqBoard;return}if(isStreet){el.marketLine.style.display='flex';el.marketLine.classList.add('street');const directionAware=[fromCurrency,toCurrency].some(c=>{const m=streetMeta(c);return Number(m?.buy)>0&&Number(m?.sell)>0});el.marketText.textContent=`${T[lang].street} · ${sources.join(' + ')}${directionAware?' · '+T[lang].direction:''}`;return}el.marketLine.style.display='none';el.marketLine.classList.remove('street');el.marketText.textContent=''}
-async function applyIraqMarket(){
-  try{
-    const r=await fetch(IRAQ_MARKET_API+'?t='+Date.now(),{cache:'no-store'});
-    if(!r.ok)throw new Error('Iraq market HTTP '+r.status);
-    const d=await r.json();
-
-    // The homepage selects the highest BUY from recently published boards;
-    // older Harithiya/Kukh readings may be displayed but cannot win selection.
-    const fresh=(iso)=>{const ms=Date.parse(iso||'');return Number.isFinite(ms)&&Date.now()-ms<24*3600000&&Date.now()-ms>=-600000};
-    const boards=[
-      ['Kifah',d.kifah,d.usd_meta?.published_at],
-      ['Harithiya',d.harithiya,d.harithiya_meta?.published_at],
-      ['Kukh Alomlat',d.kukh,d.kukh?.published_at]
-    ].map(([name,q,published])=>[name,q?{buy:normalizeUsd100(q.buy),sell:normalizeUsd100(q.sell)}:null,published])
-     .filter(([,q])=>q?.buy>0&&q?.sell>0);
-    if(!boards.length)throw new Error('No Baghdad market quote');
-
-    const eligible=boards.filter(([name,,published])=>name==='Kifah'||fresh(published));
-    const [boardName,board,boardPublished]=(eligible.length?eligible:boards).reduce(
-      (best,cur)=>cur[1].buy>best[1].buy?cur:best
-    );
-    const buy100=Number(board.buy),sell100=Number(board.sell);
-    const buy=buy100/100,sell=sell100/100;
-    rates.IQD=buy;
-    meta.IQD={
-      kind:'parallel',
-      source:'MX Exchanger highest buy · '+boardName,
-      buy,sell,stale:!fresh(boardPublished),
-      updatedAt:boardPublished||undefined
-    };
-  }catch(_){}
-}
 function render(direction='from'){
   const r=crossRate(fromCurrency,toCurrency);syncSelected();renderMarketLine();setUpdated();
   if(!Number.isFinite(r)){el.status.className='status error';el.status.textContent=T[lang].unavailable;return}
@@ -415,12 +381,37 @@ function render(direction='from'){
   el.status.className='status';el.status.textContent=''
 }
 async function load(){
-  el.status.className='status';el.status.textContent=T[lang].loading;let loaded=false;
-  try{const r=await fetch(STREET_API+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('Street HTTP '+r.status);const d=await r.json();if(d.base!=='USD'||!d.rates)throw new Error('bad street data');rates=d.rates;meta=d.meta||{};const t=new Date(d.updatedAt||Date.now());bookUpdated=Number.isNaN(t.getTime())?new Date():t;loaded=true}catch(_){}
-  if(!loaded){try{const r=await fetch(FX_API+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('FX HTTP '+r.status);const d=await r.json();if(d.result!=='success'||!d.rates)throw new Error('bad fx data');rates=d.rates;meta={};bookUpdated=d.time_last_update_unix?new Date(d.time_last_update_unix*1000):new Date();loaded=true}catch(_){}}
-  if(!loaded){el.status.className='status error';el.status.textContent=T[lang].fetchError;return}
-  await applyIraqMarket();
-  codes=Object.keys(rates).filter(c=>/^[A-Z]{3}$/.test(c)).sort();renderOptions('from');renderOptions('to');render(lastEdited)
+  el.status.className='status';
+  el.status.textContent=T[lang].loading;
+  try{
+    const r=await fetch(IRAQ_MARKET_API+'?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw Error('IQWealth market HTTP '+r.status);
+    const d=await r.json();
+    const sell100=normalizeUsd100(d?.kifah?.sell);
+    const buy100=normalizeUsd100(d?.kifah?.buy);
+    if(!sell100||!buy100||d?.usd_meta?.source!=='IQWealth')throw Error('IQWealth Kifah quote missing');
+    // All conversions share the same published Kifah SELL quote as the main pages.
+    // The remaining currency reference ratios originate from iraqsm.com/data/currencies.json.
+    rates={USD:1,IQD:sell100/100};
+    for(const [code,value] of Object.entries(d.currencies?.perUsd||{})){
+      if(/^[A-Z]{3}$/.test(code)&&Number.isFinite(Number(value))&&Number(value)>0&&code!=='IQD')rates[code]=Number(value);
+    }
+    const date=d.usd_meta.published_at;
+    if(!date||!Number.isFinite(Date.parse(date)))throw Error('IQWealth published time missing');
+    meta={IQD:{kind:'parallel',source:'IQWealth · Kifah SELL',
+      buy:sell100/100,sell:sell100/100,stale:d.usd_meta.stale===true,
+      updatedAt:date}};
+    const t=new Date(d.currencies?.generatedAt||date);
+    bookUpdated=Number.isNaN(t.getTime())?new Date(date):t;
+    codes=Object.keys(rates).filter(c=>/^[A-Z]{3}$/.test(c)).sort();
+    renderOptions('from');renderOptions('to');render(lastEdited);
+    if(d.usd_meta.stale){el.status.className='status error';el.status.textContent=lang==='ar'?'سعر IQWealth المنشور قديم':'IQWealth quote is stale';}
+  }catch(_){
+    rates={};meta={};bookUpdated=null;codes=[];renderOptions('from');renderOptions('to');
+    render(lastEdited);
+    el.status.className='status error';el.status.textContent=T[lang].fetchError;
+    el.updatedText.textContent=T[lang].updated+': —';
+  }
 }
 function schedule(side){lastEdited=side;clearTimeout(timer);timer=setTimeout(()=>render(side),120)}
 el.fromAmount.addEventListener('input',()=>{formatLive(el.fromAmount);schedule('from')});el.toAmount.addEventListener('input',()=>{formatLive(el.toAmount);schedule('to')});el.fromAmount.addEventListener('focus',()=>lastEdited='from');el.toAmount.addEventListener('focus',()=>lastEdited='to');
