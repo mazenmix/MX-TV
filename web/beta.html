@@ -3,15 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#07111f">
+<meta name="theme-color" content="#071524">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>أسعار الصرف اليوم</title>
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <style>
-:root{--bg:#06101d;--panel:#0b1b2d;--panel2:#0e2238;--line:#214765;--gold:#ffca42;--green:#17e7a0;--red:#ff4f67;--text:#f5f8fc;--muted:#91a7bc}
+:root{color-scheme:dark;--bg:#071524;--panel:#0b1b2d;--panel2:#0e2238;--line:#214765;--gold:#ffca42;--green:#17e7a0;--red:#ff4f67;--text:#f5f8fc;--muted:#91a7bc}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{margin:0;min-width:280px;min-height:100vh;overflow-x:hidden;background:radial-gradient(circle at 50% -10%,#103253 0,#071524 38%,#040b14 100%);color:var(--text);font-family:"Segoe UI",Tahoma,Arial,sans-serif}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(10,33,55,.15),rgba(0,0,0,.15)),radial-gradient(circle at 14% 0,rgba(255,194,50,.07),transparent 25%)}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;min-height:100%;background:var(--bg)}
+body{margin:0;min-width:280px;min-height:100vh;min-height:100dvh;overflow-x:hidden;background:var(--bg);color:var(--text);font-family:"Segoe UI",Tahoma,Arial,sans-serif;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+
 a{color:inherit;text-decoration:none}
 .wrap{width:min(1800px,96vw);margin:auto;padding:clamp(12px,1.2vw,24px) 0 clamp(24px,2vw,42px)}
 .top{display:flex;align-items:center;justify-content:space-between;direction:ltr;gap:12px;min-height:52px}
