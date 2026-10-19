@@ -134,7 +134,7 @@ a{color:inherit;text-decoration:none}
 
   </section>
 
-  <div class="error" id="error"></div><div class="foot">MazenmiX · <a href="https://iraqsm.com/en" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">الأسعار: IQWealth</a></div>
+  <div class="error" id="error"></div><div class="foot">MazenmiX</div>
 </div>
 <script>
 const $=id=>document.getElementById(id);let market=null;
@@ -172,7 +172,7 @@ function render(d){
   $('bagBuy').textContent=fmt(sell);
   const published=d.usd_meta?.published_at;
   const stamp=stampBaghdad(published);
-  $('heroUpdate').textContent='وقت نشر IQWealth: '+stamp+(d.usd_meta?.stale?' · بيانات متأخرة':'');
+  $('heroUpdate').textContent='وقت النشر: '+stamp+(d.usd_meta?.stale?' · بيانات متأخرة':'');
   setPair('usd',quote,true);
   // IQWealth's perUsd values are reference mid-rates, NOT cash bid/ask.
   const per=d.currencies?.perUsd||{};
