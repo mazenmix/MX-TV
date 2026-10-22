@@ -1,0 +1,112 @@
+name: Protect MX Dollar web source
+on:
+  push:
+    branches: [main]
+    paths:
+      - web/index.html
+      - web/beta.html
+      - scripts/protect-mxdollar.cjs
+      - .github/workflows/protect-mxdollar.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: protect-mxdollar-production
+  cancel-in-progress: false
+jobs:
+  protect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install minifier, obfuscator, and browser tests
+        run: npm install --no-save --no-package-lock --no-audit --no-fund javascript-obfuscator@4.1.1 html-minifier-terser@7.2.0 clean-css@5.3.3 playwright@1.58.2
+      - name: Protect standard and expanded HTML
+        run: node scripts/protect-mxdollar.cjs
+      - name: Validate standalone production assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in web/index.html web/beta.html; do
+            grep -q 'data-mxd-protected="1"' "$file"
+            if grep -E -q '<script[^>]*>[^<[:space:]]' "$file"; then echo "Inline app source remains in $file"; exit 1; fi
+            if grep -E -q '<style[[:space:]>]' "$file"; then echo "Inline CSS source remains in $file"; exit 1; fi
+          done
+          test -n "$(find web/assets -name 'mxd-*.js' -print -quit)"
+          test -n "$(find web/assets -name 'mxd-*.css' -print -quit)"
+          for file in web/assets/mxd-*.js; do node --check "$file"; done
+          if grep -R -n 'sourceMappingURL=' web/index.html web/beta.html web/assets/mxd-*.js; then
+            echo "Unexpected source map"; exit 1
+          fi
+      - name: Install Chromium for mobile and desktop checks
+        run: npx playwright install --with-deps chromium
+      - name: Verify render, prices, styles, and beta interactions
+        shell: bash
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory web >/tmp/mxdollar-http.log 2>&1 &
+          node - <<'NODE'
+          const {chromium}=require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            try{
+              const fixture={
+                kifah:{buy:153000,sell:155000},
+                usd_meta:{state:'current',published_at:new Date().toISOString(),stale:false},
+                gold:{k18:510000,k21:590000,k24:675000},
+                currencies:{perUsd:{EUR:0.92,GBP:0.78,TRY:42,AED:3.67,SAR:3.75}},
+                updated_at:new Date().toISOString()
+              };
+              for(const width of [390,1280]){
+                const context=await browser.newContext({viewport:{width,height:850}});
+                await context.route('**/api/market*',route=>route.fulfill({
+                  status:200,contentType:'application/json',body:JSON.stringify(fixture)
+                }));
+                await context.route('**/api/fuel*',route=>route.fulfill({
+                  status:200,contentType:'application/json',
+                  body:JSON.stringify({sources:{federal:{ok:true},erbil:{ok:true}},attempted_at:new Date().toISOString()})
+                }));
+                for(const [url,priceSelector] of [['/','#highSell'],['/beta.html','#bagBuy']]){
+                  const page=await context.newPage(),errors=[],missing=[];
+                  page.on('pageerror',e=>errors.push(e.message));
+                  page.on('response',r=>{if(r.url().includes('/assets/mxd-')&&r.status()>=400)missing.push(r.url());});
+                  await page.goto('http://127.0.0.1:8765'+url,{waitUntil:'domcontentloaded',timeout:20000});
+                  await page.waitForFunction(selector=>
+                    document.querySelector(selector)?.textContent?.includes('155,000'),priceSelector,{timeout:16000});
+                  const title=await page.title();
+                  const cssCount=await page.locator('link[rel="stylesheet"][href*="/assets/mxd-"]').count();
+                  const jsCount=await page.locator('script[data-mxd-protected="1"]').count();
+                  if(!title||cssCount!==1||jsCount!==1)throw Error('Missing secured resources '+url);
+                  if(url.includes('beta')){
+                    await page.locator('.fuel-tab[data-city="erbil"]').click();
+                    const selected=(await page.locator('#fuelCity').textContent()||'');
+                    if(!selected.includes('أربيل'))throw Error('Beta city controls not working: '+selected);
+                  }else{
+                    await page.locator('#refresh').click();
+                    await page.waitForFunction(()=>document.querySelector('#highSell')?.textContent?.includes('155,000'));
+                  }
+                  if(errors.length||missing.length)throw Error(url+' '+width+' errors: '+errors.join(' | ')+missing.join(' | '));
+                  console.log('PASS',width,url,'live price render, protected CSS/JS, UI');
+                  await page.close();
+                }
+                await context.close();
+              }
+            }finally{await browser.close();}
+          })().catch(e=>{console.error(e);process.exitCode=1;});
+          NODE
+      - name: Publish verified obfuscated sources
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/index.html web/beta.html web/assets/mxd-*.js web/assets/mxd-*.css
+          if git diff --cached --quiet; then
+            echo "Production files already protected."
+          else
+            git commit -m "Publish protected MX Dollar standard and beta web assets"
+            git push origin HEAD:main
+          fi
