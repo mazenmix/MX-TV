@@ -14,8 +14,8 @@
   "gold_meta": {
     "source": "IQWealth",
     "source_url": "https://iraqsm.com/gold",
-    "as_of": "2026/10/25",
-    "generated_at": "2026-10-25T21:30:54.120Z"
+    "as_of": "2026/10/26",
+    "generated_at": "2026-10-25T22:01:55.091Z"
   },
   "currencies": {
     "perUsd": {
@@ -48,7 +48,7 @@
       "KRW": 1324.821047
     },
     "asOf": "2026-10-25",
-    "generatedAt": "2026-10-25T21:34:54.077Z",
+    "generatedAt": "2026-10-25T22:05:54.290Z",
     "source": "IQWealth"
   },
   "usd_meta": {
@@ -67,6 +67,6 @@
   },
   "source": "IQWealth",
   "source_url": "https://iraqsm.com/en",
-  "updated_at": "2026-10-25T21:30:07.018Z",
+  "updated_at": "2026-10-25T22:30:13.329Z",
   "as_of": "2026-10-25"
 }
