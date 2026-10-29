@@ -7,15 +7,15 @@
   "kukh": {},
   "kukh_rates": {},
   "gold": {
-    "k24": 1094690,
-    "k21": 957855,
-    "k18": 821015
+    "k24": 1094960,
+    "k21": 958090,
+    "k18": 821225
   },
   "gold_meta": {
     "source": "IQWealth",
     "source_url": "https://iraqsm.com/gold",
-    "as_of": "2026/10/28",
-    "generated_at": "2026-10-28T20:10:23.006Z"
+    "as_of": "2026/10/29",
+    "generated_at": "2026-10-28T23:45:01.668Z"
   },
   "currencies": {
     "perUsd": {
@@ -48,7 +48,7 @@
       "KRW": 1326.806219
     },
     "asOf": "2026-10-28",
-    "generatedAt": "2026-10-28T20:22:13.302Z",
+    "generatedAt": "2026-10-28T23:12:19.842Z",
     "source": "IQWealth"
   },
   "usd_meta": {
@@ -67,6 +67,6 @@
   },
   "source": "IQWealth",
   "source_url": "https://iraqsm.com/en",
-  "updated_at": "2026-10-28T20:04:13.793Z",
+  "updated_at": "2026-10-28T23:36:06.211Z",
   "as_of": "2026-10-28"
 }
