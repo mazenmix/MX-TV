@@ -15,7 +15,7 @@
     "source": "IQWealth",
     "source_url": "https://iraqsm.com/gold",
     "as_of": "2026/11/01",
-    "generated_at": "2026-11-01T13:47:30.744Z"
+    "generated_at": "2026-11-01T14:18:25.549Z"
   },
   "currencies": {
     "perUsd": {
@@ -67,6 +67,6 @@
   },
   "source": "IQWealth",
   "source_url": "https://iraqsm.com/en",
-  "updated_at": "2026-11-01T13:36:49.028Z",
+  "updated_at": "2026-11-01T14:07:05.711Z",
   "as_of": "2026-11-01"
 }
