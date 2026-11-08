@@ -15,7 +15,7 @@
     "source": "IQWealth",
     "source_url": "https://iraqsm.com/gold",
     "as_of": "2026/11/08",
-    "generated_at": "2026-11-08T09:03:33.651Z"
+    "generated_at": "2026-11-08T15:10:56.827Z"
   },
   "currencies": {
     "perUsd": {
@@ -48,13 +48,13 @@
       "KRW": 1355.382119
     },
     "asOf": "2026-11-08",
-    "generatedAt": "2026-11-08T08:03:59.475Z",
+    "generatedAt": "2026-11-08T09:11:20.236Z",
     "source": "IQWealth"
   },
   "usd_meta": {
     "source": "IQWealth",
     "source_url": "https://iraqsm.com/fx",
-    "published_at": "2026-11-08T08:31:51.000Z",
+    "published_at": "2026-11-08T11:07:39.000Z",
     "stale": false,
     "note": "Kifah sell (IQWealth)"
   },
@@ -67,6 +67,6 @@
   },
   "source": "IQWealth",
   "source_url": "https://iraqsm.com/en",
-  "updated_at": "2026-11-08T08:49:16.789Z",
+  "updated_at": "2026-11-08T14:51:28.847Z",
   "as_of": "2026-11-08"
 }
