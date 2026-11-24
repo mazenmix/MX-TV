@@ -1,21 +1,21 @@
 {
   "kifah": {
-    "buy": 169200,
-    "sell": 169200
+    "buy": 169150,
+    "sell": 169150
   },
   "harithiya": {},
   "kukh": {},
   "kukh_rates": {},
   "gold": {
-    "k24": 984355,
-    "k21": 861310,
-    "k18": 738265
+    "k24": 969380,
+    "k21": 848210,
+    "k18": 727035
   },
   "gold_meta": {
     "source": "IQWealth",
     "source_url": "https://iraqsm.com/gold",
     "as_of": "2026/11/24",
-    "generated_at": "2026-11-24T09:32:08.118Z"
+    "generated_at": "2026-11-24T18:07:58.415Z"
   },
   "currencies": {
     "perUsd": {
@@ -48,13 +48,13 @@
       "KRW": 1343.513843
     },
     "asOf": "2026-11-24",
-    "generatedAt": "2026-11-24T08:02:54.893Z",
+    "generatedAt": "2026-11-24T18:12:47.971Z",
     "source": "IQWealth"
   },
   "usd_meta": {
     "source": "IQWealth",
     "source_url": "https://iraqsm.com/fx",
-    "published_at": "2026-11-24T07:58:20.000Z",
+    "published_at": "2026-11-24T16:01:00.000Z",
     "stale": false,
     "note": "Kifah sell (IQWealth)"
   },
@@ -67,6 +67,6 @@
   },
   "source": "IQWealth",
   "source_url": "https://iraqsm.com/en",
-  "updated_at": "2026-11-24T09:30:03.642Z",
+  "updated_at": "2026-11-24T18:10:10.829Z",
   "as_of": "2026-11-24"
 }
